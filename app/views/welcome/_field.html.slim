@@ -1,0 +1,6 @@
+- disabled = if defined?(disabled) then disabled else 'false' end
+
+.form-group
+  label.col-sm-2.control-label for=id = label_text
+  .col-sm-8.col-md-offset-1
+    input.form-control type='text' id=id disabled=disabled

@@ -1,0 +1,18 @@
+form.form-horizontal role='form'
+
+.radio
+  label
+    input type='radio' name='datetime'
+    | Manual
+
+label.control-label for='datetime' Date
+.datetime.date.input-group data-date-format="YYYY-MM-DD hh:mm:ss"
+  input.form-control#datetime type='text'
+  span.input-group-addon
+    = fa_icon 'calendar lg'
+  
+
+.radio
+  label
+    input type='radio' name='datetime'
+    | User NTP

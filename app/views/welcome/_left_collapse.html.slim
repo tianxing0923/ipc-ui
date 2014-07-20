@@ -1,0 +1,50 @@
+.panel-group#setting_group
+  .panel.panel-default
+    .panel-heading
+      h4.panel-title data-toggle="collapse" data-parent="#setting_group" data-target="#system"
+        | System
+    .panel-collapse.collapse.in#system
+      .panel-body
+        ui.nav.nav-pills.nav-stacked role="tablist"
+          li.active
+            a href="javascript:void(0)" Base Information
+          li
+            a href="javascript:void(0)" Users
+          li
+            a href="javascript:void(0)" Datetime
+          li
+            a href="javascript:void(0)" Upgrade
+            
+  .panel.panel-default
+    .panel-heading
+      h4.panel-title data-toggle="collapse" data-parent="#setting_group" data-target="#video"
+        | Video
+    .panel-collapse.collapse#video
+      .panel-body
+        ui.nav.nav-pills.nav-stacked role="tablist"
+          li
+            a href="javascript:void(0)" Stream
+          li
+            a href="javascript:void(0)" Scene
+            
+  .panel.panel-default
+    .panel-heading
+      h4.panel-title data-toggle="collapse" data-parent="#setting_group" data-target="#osd"
+        | OSD
+    .panel-collapse.collapse#osd
+      .panel-body
+        ui.nav.nav-pills.nav-stacked role="tablist"
+          li
+            a href="javascript:void(0)" OSD
+            
+  .panel.panel-default
+    .panel-heading
+      h4.panel-title data-toggle="collapse" data-parent="#setting_group" data-target="#network"
+        | Network
+    .panel-collapse.collapse#network
+      .panel-body
+        ui.nav.nav-pills.nav-stacked role="tablist"
+          li
+            a href="javascript:void(0)" Interface
+          li
+            a href="javascript:void(0)" Port
