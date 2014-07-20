@@ -7,13 +7,13 @@
       .panel-body
         ui.nav.nav-pills.nav-stacked role="tablist"
           li.active
-            a href="javascript:void(0)" Base Information
+            a href="javascript:void(0)" ng-click="changeType('base_info')" Base Information
           li
-            a href="javascript:void(0)" Users
+            a href="javascript:void(0)" ng-click="changeType('users')" Users
           li
-            a href="javascript:void(0)" Datetime
+            a href="javascript:void(0)" ng-click="changeType('datetime')" Datetime
           li
-            a href="javascript:void(0)" Upgrade
+            a href="javascript:void(0)" ng-click="changeType('upgrade')" Upgrade
             
   .panel.panel-default
     .panel-heading
@@ -23,9 +23,9 @@
       .panel-body
         ui.nav.nav-pills.nav-stacked role="tablist"
           li
-            a href="javascript:void(0)" Stream
+            a href="javascript:void(0)" ng-click="changeType('stream')" Stream
           li
-            a href="javascript:void(0)" Scene
+            a href="javascript:void(0)" ng-click="changeType('scene')" Scene
             
   .panel.panel-default
     .panel-heading
@@ -35,7 +35,7 @@
       .panel-body
         ui.nav.nav-pills.nav-stacked role="tablist"
           li
-            a href="javascript:void(0)" OSD
+            a href="javascript:void(0)" ng-click="changeType('osd')" OSD
             
   .panel.panel-default
     .panel-heading
@@ -45,6 +45,6 @@
       .panel-body
         ui.nav.nav-pills.nav-stacked role="tablist"
           li
-            a href="javascript:void(0)" Interface
+            a href="javascript:void(0)" ng-click="changeType('interface')" Interface
           li
-            a href="javascript:void(0)" Port
+            a href="javascript:void(0)" ng-click="changeType('port')" Port
