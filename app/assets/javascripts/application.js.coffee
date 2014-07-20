@@ -5,4 +5,5 @@
 #= require moment
 #= require bootstrap
 #= require bootstrap-datetimepicker
+#= require bootstrap-switch
 #= require_tree .

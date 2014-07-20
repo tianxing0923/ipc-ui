@@ -1,0 +1,9 @@
+form.form-horizontal.row role='form'
+  .row
+    = render 'osd_section', osd_type: 'device_name', title: 'Device Name'
+    = render 'osd_section', osd_type: 'comment', title: 'Comment'
+  .row
+    = render 'osd_section', osd_type: 'frame_rate', title: 'Frame Rate'
+    = render 'osd_section', osd_type: 'bit_rate', title: 'Bit Rate'
+    
+  = render 'save_button'

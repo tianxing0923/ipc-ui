@@ -46,6 +46,7 @@ gem 'slim-rails'
 gem 'momentjs-rails', '~> 2.5.0'
 gem 'font-awesome-rails'
 gem 'bootstrap3-datetimepicker-rails', '~> 3.0.0.2'
+gem 'bootstrap-switch-rails'
 
 group :development do
   gem 'thin'
