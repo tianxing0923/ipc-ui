@@ -1,6 +1,10 @@
 - disabled = if defined?(disabled) then disabled else 'false' end
+- group_ng = defined?(group_ng).nil? ? group_ng : {disabled: false}
 
-.form-group
+.form-group *group_ng
   label.col-sm-2.control-label for=id = label_text
   .col-sm-8.col-md-offset-1
-    input.form-control type='text' id=id ng-model=id disabled=disabled
+    - if defined?(input_ng)
+      input.form-control type='text' id=id ng-model=id *input_ng
+    - else
+      input.form-control type='text' id=id ng-model=id disabled=disabled

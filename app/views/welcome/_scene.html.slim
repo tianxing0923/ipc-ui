@@ -4,16 +4,16 @@
     .radio
       label
         | 50HZ
-        input type='radio'
+        input type='radio' ng-model="scene" ng-value="0"
     br 
     .radio
       label
         | 60HZ
-        input type='radio'
+        input type='radio' ng-model="scene" ng-value="1"
     br   
     .radio
       label
         | Composite
-        input type='radio'
+        input type='radio' ng-model="scene" ng-value="2"
     br
     = render 'save_button'

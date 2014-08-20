@@ -2,6 +2,9 @@
   .col-md-3
     = render 'left_collapse'
   .col-md-9 ng-switch='type'
+    .message.bg-success ng-if='message_type == 1'{{message}}
+    .message.bg-danger ng-if='message_type == 2' {{message}}
+    
     .setting ng-switch-when='base_info' ng-controller='BaseInfoController'
       = render 'base_info'
     .setting ng-switch-when='users' ng-controller='UsersController'

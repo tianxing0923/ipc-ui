@@ -4,15 +4,15 @@
       .form-group
         label.col-sm-2.control-label for='network_method' Method
         .col-sm-8.col-md-offset-1
-          select.form-control
-            option Static
-            option DHCP
-            option PPPOE
+          select.form-control ng-model='autoconf'
+            option value='0' Static
+            option value='1' DHCP
+            option value='2' PPPOE
             
-      = render 'field', id: 'network_username', label_text: 'Username'
-      = render 'field', id: 'network_password', label_text: 'Password'
-      = render 'field', id: 'network_address', label_text: 'Address'
-      = render 'field', id: 'network_netmask', label_text: 'Netmask'
-      = render 'field', id: 'network_gateway', label_text: 'Gateway'
-      = render 'field', id: 'network_primary_dns', label_text: 'Primary DNS'
-      = render 'field', id: 'network_second_dns', label_text: 'Second DNS'
+      = render 'field', id: 'network_username', label_text: 'Username', group_ng: {'ng-if' => 'canShow()'}
+      = render 'field', id: 'network_password', label_text: 'Password', group_ng: {'ng-if' => 'canShow()'}
+      = render 'field', id: 'network_address', label_text: 'Address', input_ng: {'ng-disabled' => 'canEdit()'}
+      = render 'field', id: 'network_netmask', label_text: 'Netmask', input_ng: {'ng-disabled' => 'canEdit()'}
+      = render 'field', id: 'network_gateway', label_text: 'Gateway', input_ng: {'ng-disabled' => 'canEdit()'}
+      = render 'field', id: 'network_primary_dns', label_text: 'Primary DNS', input_ng: {'ng-disabled' => 'canEdit()'}
+      = render 'field', id: 'network_second_dns', label_text: 'Second DNS', input_ng: {'ng-disabled' => 'canEdit()'}

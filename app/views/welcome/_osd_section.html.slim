@@ -5,26 +5,26 @@
       .form-group
         label.col-sm-3.control-label for="#{osd_type}_display" Display
         .col-sm-4
-          input.switch#device_name_display type='checkbox'
+          input.switch#device_name_display type='checkbox' ng-model="#{osd_type}_display"
 
       .form-group
         label.col-sm-3.control-label for="#{osd_type}_font_size" Font Size
         .col-sm-8
-          input.form-control#device_name_font_size type='number'
+          input.form-control#device_name_font_size type='number' ng-model="#{osd_type}_font_size"
           
       .form-group
         label.col-sm-3.control-label for="#{osd_type}_left" Left
         .col-sm-3
-          input.form-control#device_left type='number'
+          input.form-control#device_left type='number' ng-model="#{osd_type}_left"
         label.col-sm-2.control-label for="#{osd_type}_top" Top
         .col-sm-3
-          input.form-control#device_top type='number'
+          input.form-control#device_top type='number'ng-model="#{osd_type}_top"
 
       .form-group
         label.col-sm-3.control-label for="#{osd_type}_color" Color
         .col-sm-8
           .input-group.color-pick
-            input.form-control#device_name_color type='text'
+            input.form-control#device_name_color type='text' ng-model="#{osd_type}_color"
             span.input-group-addon
               i
   
