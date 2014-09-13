@@ -1,5 +1,5 @@
 - disabled = if defined?(disabled) then disabled else 'false' end
-- group_ng = defined?(group_ng).nil? ? group_ng : {disabled: false}
+- group_ng = if defined?(group_ng) and group_ng.present? then group_ng else {disabled: false} end
 
 .form-group *group_ng
   label.col-sm-2.control-label for=id = label_text
