@@ -12,8 +12,8 @@ ipcApp.controller 'SettingController', [
   '$scope'
   '$timeout'
   ($scope, $timeout) ->
-    $scope.type = 'interface'
-    $scope.url = 'http://ipcbf.info/api/1.0'
+    $scope.type = 'base_info'
+    $scope.url = 'http://192.168.1.98/api/1.0'
     $scope.message_type = 0
     $scope.message = ''
     timer = null
@@ -61,11 +61,6 @@ ipcApp.controller 'BaseInfoController', [
           device_name: $scope.device_name
           comment: $scope.comment
           location: $scope.location
-          manufacturer: $scope.manufacturer
-          model: $scope.model
-          firmware: $scope.firmware
-          hardware: $scope.hardware
-          serial: $scope.serial
       .success ->
         $scope.$parent.success('Save Success')
 ]
@@ -172,16 +167,19 @@ ipcApp.controller 'OsdController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    $http.get "#{$scope.$parent.url}/scene.json",
+    $http.get "#{$scope.$parent.url}/osd.json",
       params:
         'items[]': ['datetime', 'device_name', 'comment', 'frame_rate', 'bit_rate']
     .success (data) ->
+      console.log data.items
       for osd in data.items
         $scope["#{osd['name']}_display"] = osd['isshow']
         $scope["#{osd['name']}_font_size"] = osd['size']
+        $scope["#{osd['name']}_left"] = osd['x']
+        $scope["#{osd['name']}_top"] = osd['y']
 
     $scope.save = ->
-      $http.put "#{$scope.$parent.url}/scene.json",
+      $http.put "#{$scope.$parent.url}/osd.json",
         items:
           scenario: $scope.scene
       .success ->
@@ -218,7 +216,7 @@ ipcApp.controller 'InterfaceController', [
       parseInt($scope.autoconf) == 2
       
     $scope.canEdit = ->
-      parseInt($scope.autoconf) == 1
+      parseInt($scope.autoconf) != 0
 ]
 
 ipcApp.controller 'PortController', [
