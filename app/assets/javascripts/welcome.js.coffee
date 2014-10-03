@@ -8,6 +8,13 @@ $ ->
 
 ipcApp = angular.module 'ipcApp', ['frapontillo.bootstrap-switch']
 
+ipcApp.controller 'HomeController', [
+  '$scope'
+  '$timeout'
+  ($scope, $timeout) ->
+
+]
+
 ipcApp.controller 'SettingController', [
   '$scope'
   '$timeout'

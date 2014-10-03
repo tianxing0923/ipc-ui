@@ -1,6 +1,17 @@
-$navbar-ipc-bg: #222;
-$navbar-ipc-hover-bg: #000;
+$navbar-ipc-bg: #008DEF;
+$navbar-ipc-hover-bg: #0883D7;
 $navbar-ipc-color: #fff;
+
+.btn-primary {
+  background: $navbar-ipc-bg;
+}
+.bootstrap-switch {
+  .bootstrap-switch-handle-on, .bootstrap-switch-handle-off {
+    &.bootstrap-switch-primary {
+      background: $navbar-ipc-bg;
+    }
+  }
+}
 
 // 顶部导航
 .navbar-ipc {
@@ -26,15 +37,46 @@ $navbar-ipc-color: #fff;
   }
 }
 
-$sidebar-bg: #f5f5f5;
-$sidebar-color: #444;
-$sidebar-active-color: #000;
-$sidebar-collapse-bg: #e4e4e4;
-$sidebar-collapse-color: #777;
-$sidebar-collapse-active-color: #000;
+$sidebar-bg: #253C4C;
+$sidebar-color: #A0B3C0;
+$sidebar-active-color: #fff;
+$sidebar-collapse-bg: #3F5666;
+$sidebar-collapse-color: #A0B3C0;
+$sidebar-collapse-active-color: #fff;
 
+
+.home-wrap {
+  .device-control {
+    height: 250px;
+    background: #fff;
+  }
+  .collapse-block {
+    height: 80px;
+    width: 10px;
+    position: absolute;
+    top: 45%;
+    left: 265px;
+    background: #000;
+  }
+
+  .home-footer {
+    background: $sidebar-bg;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 50px;
+  }
+}
 // 左侧导航
 @media screen and (min-width: 768px) {
+  .home-sidebar-mask {
+    position: fixed;
+    top: 54px;
+    left: 0;
+    bottom: 40px;
+    background: $sidebar-bg;
+  }
   .sidebar-mask {
     position: fixed;
     top: 54px;
@@ -92,7 +134,7 @@ $sidebar-collapse-active-color: #000;
       .nav-pills {
         &>li {
           &>a {
-            color: $sidebar-collapse-color;
+            color: $sidebar-color;
           }
           &>a:hover{
             background: transparent;
