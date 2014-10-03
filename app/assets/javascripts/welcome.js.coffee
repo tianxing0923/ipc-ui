@@ -167,8 +167,8 @@ ipcApp.controller 'PrivacyBlockController', [
     targetURL = 'rtsp://192.168.1.100:8554/liveStream'
     if vlc
       vlc.playlist.items.clear()
-      var options = [':rtsp-tcp']
-      var itemId = vlc.playlist.add(targetURL,'',options)
+      options = [':rtsp-tcp']
+      itemId = vlc.playlist.add(targetURL,'',options)
       options = [];
       if itemId != -1
         vlc.playlist.playItem(itemId)
