@@ -3,11 +3,11 @@ h3 Privacy Block
 
 form.form-inline.form-ipc
   .image-wrap style='background: #ddd;width:70%;min-height: 300px;'
-    object classid='clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921' width='640' height='480' id='vlc' events='True'>
-    param name='MRL' value='rtsp://192.168.1.100:8554/liveStream'
-    param name='AutoPlay' value='True'
-    param name='Volume' value='50'
-    EMBED pluginspage='http://www.videolan.org' type='application/x-vlc-plugin' version='VideoLAN.VLCPlugin.2' width='640' height='480' toolbar='true' loop='true' text='Waiting for video' name='vlc'
+    object classid='clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921' width='640' height='480' id='vlc' events='True'
+      param name='MRL' value='rtsp://192.168.1.100:8554/liveStream'
+      param name='AutoPlay' value='True'
+      param name='Volume' value='50'
+      embed pluginspage='http://www.videolan.org' type='application/x-vlc-plugin' version='VideoLAN.VLCPlugin.2' width='640' height='480' toolbar='true' loop='true' text='Waiting for video' name='vlc'
   .form-group
     select.form-control.input-sm
       option value='0' region1
