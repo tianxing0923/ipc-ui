@@ -8,13 +8,13 @@
     .panel-collapse.collapse#system
       .panel-body
         ul.nav.nav-pills.nav-stacked role="tablist"
-          li.active
+          li ng-class="{active: type=='base_info'}"
             a href="javascript:;" ng-click="changeType('base_info')" Base Information
-          li
+          li ng-class="{active: type=='users'}"
             a href="javascript:;" ng-click="changeType('users')" Users
-          li
+          li ng-class="{active: type=='datetime'}"
             a href="javascript:;" ng-click="changeType('datetime')" Datetime
-          li
+          li ng-class="{active: type=='maintenance'}"
             a href="javascript:;" ng-click="changeType('maintenance')" Maintenance
             
   .panel.panel-default
@@ -26,11 +26,11 @@
     .panel-collapse.collapse#video
       .panel-body
         ul.nav.nav-pills.nav-stacked role="tablist"
-          li
+          li ng-class="{active: type=='stream'}"
             a href="javascript:;" ng-click="changeType('stream')" Stream
-          li
+          li ng-class="{active: type=='image'}"
             a href="javascript:;" ng-click="changeType('image')" Image
-          li
+          li ng-class="{active: type=='privacy_block'}"
             a href="javascript:;" ng-click="changeType('privacy_block')" Privacy Block
             
   .panel.panel-default
@@ -42,9 +42,9 @@
     .panel-collapse.collapse#osd
       .panel-body
         ul.nav.nav-pills.nav-stacked role="tablist"
-          li
+          li ng-class="{active: type=='osd'}"
             a href="javascript:;" ng-click="changeType('osd')" OSD
-          li
+          li ng-class="{active: type=='szyc'}"
             a href="javascript:;" ng-click="changeType('szyc')" SZYC
             
   .panel.panel-default
@@ -56,9 +56,9 @@
     .panel-collapse.collapse#network
       .panel-body
         ul.nav.nav-pills.nav-stacked role="tablist"
-          li
+          li ng-class="{active: type=='interface'}"
             a href="javascript:;" ng-click="changeType('interface')" Interface
-          li
+          li ng-class="{active: type=='port'}"
             a href="javascript:;" ng-click="changeType('port')" Port
 
   .panel.panel-default
@@ -70,13 +70,13 @@
     .panel-collapse.collapse.in#event
       .panel-body
         ul.nav.nav-pills.nav-stacked role="tablist"
-          li
+          li ng-class="{active: type=='input'}"
             a href="javascript:;" ng-click="changeType('input')" Input
-          li
+          li ng-class="{active: type=='output'}"
             a href="javascript:;" ng-click="changeType('output')" Output
-          li
+          li ng-class="{active: type=='motion_detect'}"
             a href="javascript:;" ng-click="changeType('motion_detect')" Motion Detect
-          li
+          li ng-class="{active: type=='video_coverage'}"
             a href="javascript:;" ng-click="changeType('video_coverage')" Video Coverage
-          li
+          li ng-class="{active: type=='event_process'}"
             a href="javascript:;" ng-click="changeType('event_process')" Event Process
