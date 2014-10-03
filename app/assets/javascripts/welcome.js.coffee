@@ -163,25 +163,28 @@ ipcApp.controller 'PrivacyBlockController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    if window.document['vlc']
-      vlc = window.document['vlc'];
-    if navigator.appName.indexOf('Microsoft Internet') == -1
-      if document.embeds && document.embeds['vlc']
-        vlc = document.embeds['vlc'];
-    else
-      vlc = document.getElementById('vlc');
-    targetURL = 'rtsp://192.168.1.100:8554/liveStream'
-    if vlc
-      vlc.playlist.items.clear()
-      options = [':rtsp-tcp']
-      itemId = vlc.playlist.add(targetURL,'',options)
-      options = [];
-      if itemId != -1
-        vlc.playlist.playItem(itemId)
-      else
-        alert('cannot play at the moment !')
-
+    play();
 ]
+
+play = ->
+  debugger
+  if window.document['vlc']
+    vlc = window.document['vlc'];
+  if navigator.appName.indexOf('Microsoft Internet') == -1
+    if document.embeds && document.embeds['vlc']
+      vlc = document.embeds['vlc'];
+  else
+    vlc = document.getElementById('vlc');
+  targetURL = 'rtsp://192.168.1.100:8554/liveStream'
+  if vlc
+    vlc.playlist.items.clear()
+    options = [':rtsp-tcp']
+    itemId = vlc.playlist.add(targetURL,'',options)
+    options = [];
+    if itemId != -1
+      vlc.playlist.playItem(itemId)
+    else
+      alert('cannot play at the moment !')
 
 ipcApp.controller 'SceneController', [
   '$scope'
