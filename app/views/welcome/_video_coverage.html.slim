@@ -1,0 +1,29 @@
+h3 Video Coverage
+= render 'setting_breadcrumb', menu: 'Event', sub_menu: 'Video Coverage'
+
+.form-ipc-bg.clearfix
+  .image-wrap.pull-left
+  .sensitivity-wrap.clearfix
+    .form-horizontal.col-sm-12
+      .form-group
+        .col-lg-3
+          p.form-control-static Sensitivity
+        .col-lg-9
+          p.form-control-static 1 (1 - 100)
+        .col-lg-12 slider plugin
+      .form-group
+        .col-lg-3
+          select.form-control.input-sm
+            option value='0' region1
+            option value='1' region2
+        .col-lg-9
+          input.switch#watermark bs-switch=true type='checkbox' name='watermark' ng-model='watermark'
+  hr
+  .row
+    .col-sm-12
+      h4 Schedule
+    .col-sm-12
+      div style='background: #ddd;height:300px;'
+
+form.form-horizontal.form-ipc-footer role='form'
+  = render 'save_button'

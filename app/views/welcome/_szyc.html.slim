@@ -1,0 +1,10 @@
+h3 OSD
+= render 'setting_breadcrumb', menu: 'OSD', sub_menu: 'SZYC'
+
+form.form-horizontal.form-ipc.clearfix role='form'
+  = render 'field', id: 'train_no', label_text: 'Train No.'
+  = render 'field', id: 'carriage_no', label_text: 'Carriage No.'
+  = render 'field', id: 'index_no', label_text: 'Index No.'
+
+form.form-horizontal.form-ipc-footer role='form'
+  = render 'save_button'

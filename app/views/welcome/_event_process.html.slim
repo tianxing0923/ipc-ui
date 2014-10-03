@@ -1,0 +1,11 @@
+h3 Event Process
+= render 'setting_breadcrumb', menu: 'Event', sub_menu: 'Event Process'
+
+.form-ipc-bg.clearfix
+  .row
+    = render 'event_process_section', event_process_type: 'io', title: 'I/O'
+    = render 'event_process_section', event_process_type: 'motion_detect', title: 'Motion Detect'
+    = render 'event_process_section', event_process_type: 'video_coverage', title: 'Video Coverage'
+
+form.form-horizontal.form-ipc-footer role='form'
+  = render 'save_button'

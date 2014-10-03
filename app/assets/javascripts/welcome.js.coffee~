@@ -13,7 +13,7 @@ ipcApp.controller 'SettingController', [
   '$timeout'
   ($scope, $timeout) ->
     $scope.type = 'base_info'
-    $scope.url = 'http://192.168.1.100/api/1.0'
+    $scope.url = 'http://192.168.1.98/api/1.0'
     $scope.message_type = 0
     $scope.message = ''
     timer = null
@@ -109,7 +109,7 @@ ipcApp.controller 'DateTimeController', [
 
 
 
-ipcApp.controller 'MaintenanceController', [
+ipcApp.controller 'UpgradeController', [
   '$scope'
   '$http'
   ($scope, $http) ->
@@ -143,20 +143,6 @@ ipcApp.controller 'StreamController', [
           bit_rate_value: parseInt($scope.bit_rate_value)
       .success ->
         $scope.$parent.success('Save Success')
-]
-
-ipcApp.controller 'ImageController', [
-  '$scope'
-  '$http'
-  ($scope, $http) ->
-
-]
-
-ipcApp.controller 'PrivacyBlockController', [
-  '$scope'
-  '$http'
-  ($scope, $http) ->
-    
 ]
 
 ipcApp.controller 'SceneController', [
@@ -198,13 +184,6 @@ ipcApp.controller 'OsdController', [
           scenario: $scope.scene
       .success ->
         $scope.$parent.success('Save Success')
-]
-
-ipcApp.controller 'SzycController', [
-  '$scope'
-  '$http'
-  ($scope, $http) ->
-    
 ]
 
 ipcApp.controller 'InterfaceController', [
@@ -261,46 +240,3 @@ ipcApp.controller 'PortController', [
       .success ->
         $scope.$parent.success('Save Success')
 ]
-
-
-ipcApp.controller 'InputController', [
-  '$scope'
-  '$http'
-  ($scope, $http) ->
-    $scope.input = 0
-    $scope.input_on = true
-]
-
-ipcApp.controller 'OutputController', [
-  '$scope'
-  '$http'
-  ($scope, $http) ->
-    $scope.output1_normal = true
-    $scope.output1_trigger = false
-    $scope.output1_period = 1000
-    $scope.output2_normal = true
-    $scope.output2_trigger = false
-    $scope.output2_period = 2000
-]
-
-ipcApp.controller 'MotionDetectController', [
-  '$scope'
-  '$http'
-  ($scope, $http) ->
-    
-]
-
-ipcApp.controller 'VideoCoverageController', [
-  '$scope'
-  '$http'
-  ($scope, $http) ->
-
-]
-
-ipcApp.controller 'EventProcessController', [
-  '$scope'
-  '$http'
-  ($scope, $http) ->
-    
-]
-

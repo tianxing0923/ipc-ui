@@ -1,0 +1,16 @@
+h3 Privacy Block
+= render 'setting_breadcrumb', menu: 'Video', sub_menu: 'Privacy Block'
+
+form.form-inline.form-ipc
+  .image-wrap style='background: #ddd;width:70%;min-height: 300px;'
+  .form-group
+    select.form-control.input-sm
+      option value='0' region1
+      option value='1' region2
+  .form-group
+    input.switch#watermark bs-switch=true type='checkbox' name='watermark' ng-model='watermark'
+  .form-group
+    button.btn.btn-sm type='button' #000000
+
+form.form-horizontal.form-ipc-footer role='form'
+  = render 'save_button'

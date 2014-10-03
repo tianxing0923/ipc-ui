@@ -1,0 +1,31 @@
+h3 Maintenance
+= render 'setting_breadcrumb', menu: 'System', sub_menu: 'Maintenance'
+
+form.form-horizontal.form-ipc role='form'
+  .form-group
+    .col-sm-3.text-right
+      button.btn.btn-warning  type='button' Soft reset
+    .col-sm-5
+      p.form-control-static reset to factory settings except network parameter
+  .form-group
+    .col-sm-3.text-right
+      button.btn.btn-warning  type='button' Hard reset
+    .col-sm-5
+      p.form-control-static reset to factory settings
+  .form-group
+    .col-sm-3.text-right
+      button.btn.btn-warning  type='button' Reboot
+    .col-sm-5
+      p.form-control-static
+  hr
+  .form-group
+    label.col-sm-3.control-label for='upgrade' Upgrade
+    .datetime.date.col-sm-5
+      input.form-control#upgrade type='file'
+  .form-group.hide
+    .col-sm-5.col-sm-offset-3
+      .progress
+        .progress-bar role='progressbar' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100' 0%
+
+form.form-horizontal.form-ipc-footer role='form'
+  = render 'save_button'

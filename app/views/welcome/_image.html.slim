@@ -1,0 +1,43 @@
+h3 Image
+= render 'setting_breadcrumb', menu: 'Video', sub_menu: 'Image'
+
+form.form-horizontal.form-ipc.clearfix role='form'
+  div.form-inline
+    label.control-label for='watermark' Watermark
+    input.switch#watermark bs-switch=true type='checkbox' name='watermark' ng-model='watermark'
+    label.control-label for='dnr' 3D DNR
+    input.switch#dnr bs-switch=true type='checkbox' name='dnr' ng-model='dnr'
+  hr
+  .form-group
+    label.col-sm-3.control-label Brightness
+    .col-sm-5 slider plugin
+    .col-sm-4
+      p.form-control-static 128 (0 - 255)
+  .form-group
+    label.col-sm-3.control-label Chrominance
+    .col-sm-5 slider plugin
+    .col-sm-4
+      p.form-control-static 128 (0 - 255)
+  .form-group
+    label.col-sm-3.control-label Contrast
+    .col-sm-5 slider plugin
+    .col-sm-4
+      p.form-control-static 128 (0 - 255)
+  .form-group
+    label.col-sm-3.control-label Saturation
+    .col-sm-5 slider plugin
+    .col-sm-4
+      p.form-control-static 128 (0 - 255)
+  hr
+  .form-group
+    label.col-sm-3.control-label Scence
+    .col-sm-9
+      label.checkbox-inline
+        input type='checkbox' value='50' 50Hz
+      label.checkbox-inline
+        input type='checkbox' value='60' 60Hz
+      label.checkbox-inline
+        input type='checkbox' value='composite' Composite
+
+form.form-horizontal.form-ipc-footer role='form'
+  = render 'save_button'

@@ -1,32 +1,238 @@
-.container {
-  margin-top: 20px;
-}
+$navbar-ipc-bg: #222;
+$navbar-ipc-hover-bg: #000;
+$navbar-ipc-color: #fff;
 
-h4.panel-title {
-  cursor: pointer;
-}
+// 顶部导航
+.navbar-ipc {
+  background: $navbar-ipc-bg;
+  color: $navbar-ipc-color;
+  border-radius: 0;
+  margin: 0;
+  font-size: 16px;
 
-.message {
-  padding: 15px;
-  margin: 0 0 15px 0;
-}
+  .navbar-nav {
+    &>li>a {
+      color: $navbar-ipc-color;
 
-.setting {
-  border: solid #ddd 1px;
-  padding: 20px;
-  
-  .new-user {
-    margin-bottom: 10px;
-    i {
-      margin-left: 5px;
+      &:hover{
+        background: $navbar-ipc-hover-bg;
+      }
     }
-  }
-  table.users {
-    .operation {
-      i {
-        margin-left: 5px;
+    &>li.active {
+      a {
+        background: $navbar-ipc-hover-bg;
       }
     }
   }
 }
 
+$sidebar-bg: #f5f5f5;
+$sidebar-color: #444;
+$sidebar-active-color: #000;
+$sidebar-collapse-bg: #e4e4e4;
+$sidebar-collapse-color: #777;
+$sidebar-collapse-active-color: #000;
+
+// 左侧导航
+@media screen and (min-width: 768px) {
+  .sidebar-mask {
+    position: fixed;
+    top: 54px;
+    left: 0;
+    bottom: 0;
+    background: $sidebar-bg;
+  }
+}
+.sidebar {
+  margin-left: -15px;
+  margin-right: -15px;
+  background-color: $sidebar-bg;
+  margin-bottom: 0;
+  color: $sidebar-color;
+
+  .panel {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+
+    .panel-heading {
+      background: transparent;
+      color: $sidebar-color;
+      cursor: pointer;
+      border-radius: 0;
+
+      .panel-title {
+        color: $sidebar-active-color;
+        font-weight: bold;
+
+        .fa-caret-right {
+          display: none;
+        }
+        .fa-caret-down {
+          display: block;
+        }
+      }
+      &.collapsed {
+        color: $sidebar-color;
+
+        .fa-caret-right {
+          display: block;
+        }
+        .fa-caret-down {
+          display: none;
+        }
+      }
+    }
+    .panel-collapse {
+      background: $sidebar-collapse-bg;
+
+      .panel-body {
+        border: 0;
+      }
+      .nav-pills {
+        &>li {
+          &>a {
+            color: $sidebar-collapse-color;
+          }
+          &>a:hover{
+            background: transparent;
+            color: $sidebar-collapse-active-color;
+            font-weight: bold;
+          }
+          &.active {
+            &>a, &>a:hover,&>:focus {
+              color: $sidebar-collapse-active-color;
+              background: transparent;
+              font-weight: bold;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.message {
+  margin-top: 20px;
+}
+
+$form-bg: #f5f5f5;
+
+.form-ipc-bg {
+    padding: 20px;
+    background: $form-bg;
+}
+
+// 设置内容区域
+.setting-wrap {
+  .form-ipc {
+    padding: 20px 0 5px 0;
+    background: $form-bg;
+  }
+  .form-ipc-footer {
+    margin-top: 15px;
+  }
+  .form-inline {
+    .control-label {
+      padding: 0 15px 0 40px;
+    }
+  }
+}
+
+.users {
+  .switch-label {
+    margin:  0 20px;
+  }
+  .new-user {
+    margin-left: 20px;
+    position: relative;
+    vertical-align: middle;
+
+    .fa-user {
+      font-size: 20px;
+    }
+    .fa-plus {
+      position: absolute;
+      left: 13px;
+      font-size: 12px;
+    }
+  }
+  .users-wrap {
+    padding: 0 20px;
+
+    table.users {
+      .operation {
+        a {
+          margin: 0 5px;
+        }
+      }
+    }
+  }
+}
+
+.maintenance {
+  .form-ipc {
+    button {
+      width: 100px;
+    }
+  }
+}
+
+.privacy-block {
+  .form-ipc {
+    padding-bottom: 20px;
+
+    .image-wrap {
+      margin: 0 0 20px 20px;
+    }
+    .form-group {
+      margin: 0 20px;
+    }
+  }
+}
+
+.osd {
+  .nav-tabs {
+    border: 0;
+    margin-bottom: -1px;
+
+    li {
+      &.active > a {
+        background: $form-bg;
+        border: 0;
+      }
+      & > a {
+        border: 0;
+      }
+    }
+  }
+  .bootstrap-switch, .btn-color {
+    width: 100%;
+  }
+}
+
+.input {
+  .form-ipc {
+    padding-bottom: 20px;
+  }
+  .form-control {
+    margin-right: 20px;
+  }
+}
+
+.output {
+  .input-group {
+    width: 223px;
+  }
+}
+
+.motion-detect, .video-coverage {
+  .image-wrap {
+    width: 500px;
+    height: 300px;
+    background: #ddd;
+  }
+  .sensitivity-wrap {
+    margin-left: 520px;
+  }
+}

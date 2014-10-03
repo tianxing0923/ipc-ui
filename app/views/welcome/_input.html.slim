@@ -1,0 +1,17 @@
+h3 Input
+= render 'setting_breadcrumb', menu: 'Event', sub_menu: 'Input'
+
+form.form-horizontal.form-ipc.clearfix role='form'
+  .form-inline.col-sm-12
+    select.form-control.input-sm#input_name ng-model='input'
+      option value='0' input1
+      option value='1' input2
+      option value='2' input3
+    input.switch#input_on bs-switch=true type='checkbox' name='input_on' ng-model='input_on'
+  .col-sm-12
+    h4 Schedule
+  .col-sm-12
+    div style='background: #ddd;height:300px;'
+
+form.form-horizontal.form-ipc-footer role='form'
+  = render 'save_button'

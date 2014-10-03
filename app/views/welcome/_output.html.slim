@@ -1,0 +1,13 @@
+h3 Output
+= render 'setting_breadcrumb', menu: 'Event', sub_menu: 'Output'
+
+form.form-horizontal.form-ipc role='form'
+  = render 'field_switch', id: 'output1_normal', label_text: 'Output1 normal'
+  = render 'field_switch', id: 'output1_trigger', label_text: 'Output1 trigger'
+  = render 'field_group', id: 'output1_period', label_text: 'Output1 period', type: 'number', min: 1, max: 3600, addon_text: '(1 - 3600) Secs'
+  = render 'field_switch', id: 'output2_normal', label_text: 'Output2 normal'
+  = render 'field_switch', id: 'output2_trigger', label_text: 'Output2 trigger'
+  = render 'field_group', id: 'output2_period', label_text: 'Output2 period', type: 'number', min: 1, max: 3600, addon_text: '(1 - 3600) Secs'
+
+form.form-horizontal.form-ipc-footer role='form'
+  = render 'save_button'

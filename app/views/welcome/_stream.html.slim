@@ -1,91 +1,82 @@
-form.form-horizontal role='form'
-  .form-group
-    label.col-sm-2.control-label for='stream_profile' Profile
-    .col-sm-4.col-md-offset-1
-      select.form-control#stream_profile ng-model='stream_profile'
-        option value='0' Main
-        option value='1' Baseline
-        option value='2' High
-        
-  .form-group
-    label.col-sm-2.control-label for='flip' Flip
-    .col-sm-4.col-md-offset-1
-      input.switch#flip bs-switch=true type='checkbox' name='flip' ng-model='flip'
-      
-  .form-group
-    label.col-sm-2.control-label for='mirrow' Mirrow
-    .col-sm-4.col-md-offset-1
-      input.switch#mirrow bs-switch=true type='checkbox' name='mirrow' ng-model='mirrow'
-  br
-  .row
-    .col-sm-6
-      .panel.panel-default
-        .panel-heading Master
-        .panel-body
-          .form-group
-            label.col-sm-2.control-label for='master_resolution' Resolution
-            .col-sm-8.col-md-offset-2
-              select.form-control#master_resolution ng-model='quanlity'
-                option value='0' 1080P
-                option value='1' 960H
-                option value='2' 720P
-                option value='3' D1
+h3 Stream
+= render 'setting_breadcrumb', menu: 'Video', sub_menu: 'Stream'
 
-          .form-group
-            label.col-sm-2.control-label for='master_bit_rate_ctrl' BitRate Ctrl
-            .col-sm-8.col-md-offset-2
-              select.form-control#master_bit_rate_ctrl ng-model='bit_rate'
-                option value='0' CBR
-                option value='1' VBR
-                
-          .form-group
-            label.col-sm-2.control-label for='master_bit_rate' BitRate
-            .col-sm-8.col-md-offset-2
-              .input-group
-                input.form-control#master_bit_rate type='text' ng-model='bit_rate_value'
-                span.input-group-addon Kbps
+form.form-horizontal.form-ipc.clearfix role='form'
+  div.form-inline
+    label.control-label for='stream_profile' Profile
+    select.form-control#stream_profile ng-model='stream_profile'
+      option value='0' Main
+      option value='1' Baseline
+      option value='2' High
+    label.control-label for='flip' Flip
+    input.switch#flip bs-switch=true type='checkbox' name='flip' ng-model='flip'
+    label.control-label for='mirrow' Mirrow
+    input.switch#mirrow bs-switch=true type='checkbox' name='mirrow' ng-model='mirrow'
+  hr
+  .col-sm-6
+    .panel.panel-default
+      .panel-heading
+        strong Master
+      .panel-body
+        .form-group
+          label.col-sm-3.control-label for='master_resolution' Resolution
+          .col-sm-8
+            select.form-control#master_resolution ng-model='quanlity'
+              option value='0' 1080P
+              option value='1' 960H
+              option value='2' 720P
+              option value='3' D1
+        .form-group
+          label.col-sm-3.control-label for='master_frame_rate' Frame Rate 
+          .col-sm-8
+            .input-group
+              input.form-control#master_frame_rate type='number' min='1' max='30' ng-model='frame_rate'
+              span.input-group-addon 
+                | (1-30) fps
+        .form-group
+          label.col-sm-3.control-label for='master_bit_rate_ctrl' Bit Rate Ctrl
+          .col-sm-8
+            select.form-control#master_bit_rate_ctrl ng-model='bit_rate'
+              option value='0' CBR
+              option value='1' VBR
+        .form-group
+          label.col-sm-3.control-label for='master_bit_rate' Bit Rate
+          .col-sm-8
+            .input-group
+              input.form-control#master_bit_rate type='number' ng-model='bit_rate_value'
+              span.input-group-addon Kbps
+  .col-sm-6
+    .panel.panel-default
+      .panel-heading
+        strong Slave
+      .panel-body
+        .form-group
+          label.col-sm-3.control-label for='slave_resolution' Resolution
+          .col-sm-8
+            select.form-control#slave_resolution
+              option value='0' 1080P
+              option value='1' 960H
+              option value='2' 720P
+              option value='3' D1
+        .form-group
+          label.col-sm-3.control-label for='slave_frame_rate' Frame Rate
+          .col-sm-8
+            .input-group
+              input.form-control#slave_frame_rate type='number' min='1' max='30'
+              span.input-group-addon
+                | (1-30) fps
+        .form-group
+          label.col-sm-3.control-label for='slave_bit_rate_ctrl' Bit Rate Ctrl
+          .col-sm-8
+            select.form-control#slave_bit_rate_ctrl
+              option value='0' CBR
+              option value='1' VBR
+        .form-group
+          label.col-sm-3.control-label for='slave_bit_rate' Bit Rate
+          .col-sm-8
+            .input-group
+              input.form-control#slave_bit_rate type='number'
+              span.input-group-addon Kbps
 
-          .form-group
-            label.col-sm-2.control-label for='master_frame_rate' FrameRate 
-            .col-sm-8.col-md-offset-2
-              .input-group
-                input.form-control#master_frame_rate type='text' ng-model='frame_rate'
-                span.input-group-addon 
-                  | (1-30) fps
-          
-    .col-sm-6
-      .panel.panel-default
-        .panel-heading Slave
-        .panel-body
-          .form-group
-            label.col-sm-2.control-label for='slave_resolution' Resolution
-            .col-sm-8.col-md-offset-2
-              select.form-control#slave_resolution
-                option value='0' 1080P
-                option value='1' 960H
-                option value='2' 720P
-                option value='3' D1
-
-          .form-group
-            label.col-sm-2.control-label for='slave_bit_rate_ctrl' BitRate Ctrl
-            .col-sm-8.col-md-offset-2
-              select.form-control#slave_bit_rate_ctrl
-                option value='0' CBR
-                option value='1' VBR
-
-          .form-group
-            label.col-sm-2.control-label for='slave_bit_rate' BitRate
-            .col-sm-8.col-md-offset-2
-              .input-group
-                input.form-control#slave_bit_rate type='text'
-                span.input-group-addon Kbps
-
-          .form-group
-            label.col-sm-2.control-label for='slave_frame_rate' FrameRate
-            .col-sm-8.col-md-offset-2
-              .input-group
-                input.form-control#slave_frame_rate type='text'
-                span.input-group-addon
-                  | (1-30) fps
-  br
+form.form-horizontal.form-ipc-footer role='form'
   = render 'save_button'

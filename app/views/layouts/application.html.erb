@@ -1,15 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>IpcWebUI</title>
+  <title>易迅格IP摄像头</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
-  <div class="container">
+  <div class="navbar navbar-ipc" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">
+          <img alt="logo" src="/">
+        </a>
+        <p class="navbar-text">易迅格IP摄像头</p>
+      </div>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="#"><i class="fa fa-video-camera"></i> 实时预览</a>
+        </li>
+        <li class="active">
+          <a href="/"><i class="fa fa-cog"></i> 参数设置</a>
+        </li>
+        <li>
+          <a href="#"><i class="fa fa-play-circle"></i> 视频回放</a>
+        </li>
+        <li>
+          <a href="#"><i class="fa fa-info-circle"></i> 系统信息</a>
+        </li>
+        <li>
+          <a href="#"><i class="fa fa-book"></i> 系统日志</a>
+        </li>
+        <li>
+          <a href="#"><i class="fa fa-sign-out"></i> 退出</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
     <%= yield %>
   </div>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
 </body>
 </html>

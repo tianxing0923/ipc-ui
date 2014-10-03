@@ -1,25 +1,46 @@
 .row ng-app='ipcApp' ng-controller='SettingController'
-  .col-md-3
+  .col-sm-2.sidebar-mask
+  .col-sm-2
     = render 'left_collapse'
-  .col-md-9 ng-switch='type'
-    .message.bg-success ng-if='message_type == 1'{{message}}
-    .message.bg-danger ng-if='message_type == 2' {{message}}
-    
-    .setting ng-switch-when='base_info' ng-controller='BaseInfoController'
+  .col-sm-10 ng-switch='type'
+    .message.alert.alert-success.alert-dismissible role='alert' ng-if='message_type == 1'
+      button.close type='button'  data-dismiss='alert'
+        span aria-hidden='true' &times
+      | {{message}}
+    .message.alert.alert-danger.alert-dismissible role='alert' ng-if='message_type == 2'
+      button.close type='button'  data-dismiss='alert'
+        span aria-hidden='true' &times
+      | {{message}}
+    .setting-wrap.base-info ng-switch-when='base_info' ng-controller='BaseInfoController'
       = render 'base_info'
-    .setting ng-switch-when='users' ng-controller='UsersController'
+    .setting-wrap.users ng-switch-when='users' ng-controller='UsersController'
       = render 'users'
-    .setting ng-switch-when='datetime' ng-controller='DateTimeController'
+    .setting-wrap.datetime ng-switch-when='datetime' ng-controller='DateTimeController'
       = render 'datetime'
-    .setting ng-switch-when='upgrade' ng-controller='UpgradeController'
-      = render 'upgrade'
-    .setting ng-switch-when='stream' ng-controller='StreamController'
+    .setting-wrap.maintenance ng-switch-when='maintenance' ng-controller='MaintenanceController'
+      = render 'maintenance'
+    .setting-wrap.stream ng-switch-when='stream' ng-controller='StreamController'
       = render 'stream'
-    .setting ng-switch-when='scene' ng-controller='SceneController'
-      = render 'scene'
-    .setting ng-switch-when='osd' ng-controller='OsdController'
+    .setting-wrap.image ng-switch-when='image' ng-controller='ImageController'
+      = render 'image'
+    .setting-wrap.privacy-block ng-switch-when='privacy_block' ng-controller='PrivacyBlockController'
+      = render 'privacy_block'
+    .setting-wrap.osd ng-switch-when='osd' ng-controller='OsdController'
       = render 'osd'
-    .setting ng-switch-when='interface' ng-controller='InterfaceController'
+    .setting-wrap.szyc ng-switch-when='szyc' ng-controller='SzycController'
+      = render 'szyc'
+    .setting-wrap.interface ng-switch-when='interface' ng-controller='InterfaceController'
       = render 'interface'
-    .setting ng-switch-when='port' ng-controller='PortController'
+    .setting-wrap.port ng-switch-when='port' ng-controller='PortController'
       = render 'port'
+    .setting-wrap.input ng-switch-when='input' ng-controller='InputController'
+      = render 'input'
+    .setting-wrap.output ng-switch-when='output' ng-controller='OutputController'
+      = render 'output'
+    .setting-wrap.motion-detect ng-switch-when='motion_detect' ng-controller='MotionDetectController'
+      = render 'motion_detect'
+    .setting-wrap.video-coverage ng-switch-when='video_coverage' ng-controller='VideoCoverageController'
+      = render 'video_coverage'
+    .setting-wrap.event-process ng-switch-when='event_process' ng-controller='EventProcessController'
+      = render 'event_process'
+

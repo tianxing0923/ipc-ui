@@ -1,11 +1,18 @@
-form.form-horizontal.row role='form'
-  .row
+h3 OSD
+= render 'setting_breadcrumb', menu: 'OSD', sub_menu: 'OSD'
+
+ul.nav.nav-tabs role='tablist'
+  li.active
+    a href='javascript:;' Master
+  li
+    a href='javascript:;' Slave
+
+form.form-horizontal.form-ipc.clearfix role='form'
     = render 'osd_section', osd_type: 'device_name', title: 'Device Name'
     = render 'osd_section', osd_type: 'comment', title: 'Comment'
-  .row
     = render 'osd_section', osd_type: 'frame_rate', title: 'Frame Rate'
     = render 'osd_section', osd_type: 'bit_rate', title: 'Bit Rate'
-  .row
     = render 'osd_section', osd_type: 'datetime', title: 'Datetime'
-    
+
+form.form-horizontal.form-ipc-footer role='form'
   = render 'save_button'

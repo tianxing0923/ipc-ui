@@ -1,7 +1,10 @@
-form.form-horizontal role='form'
+h3 Datetime
+= render 'setting_breadcrumb', menu: 'System', sub_menu: 'Datetime'
+
+form.form-horizontal.form-ipc role='form'
   .form-group
-    label.col-md-offset-1.col-sm-2.control-label for='timezone' TimeZone
-    .input-group.col-sm-5.col-md-offset-1
+    label.col-sm-3.control-label for='timezone' TimeZone
+    .col-sm-5
       = select_tag 'timezone', options_for_select(ActiveSupport::TimeZone.all.map{|tz| [tz.to_s, 'GMT ' + tz.formatted_offset]}), class: 'form-control'
   br
   .row
@@ -11,11 +14,12 @@ form.form-horizontal role='form'
         | Manual
   br    
   .form-group
-    label.col-md-offset-1.col-sm-2.control-label for='datetime' Date
-    .datetime.date.input-group.col-sm-5.col-md-offset-1 data-date-format="YYYY-MM-DD hh:mm:ss"
-      input.form-control#datetime type='text' ng-model='datetime'
-      span.input-group-addon
-        = fa_icon 'calendar lg'
+    label.col-sm-3.control-label for='datetime' Date
+    .col-sm-5
+      .input-group.datetime.date data-date-format="YYYY-MM-DD hh:mm:ss"
+        input.form-control#datetime type='text' ng-model='datetime'
+        span.input-group-addon
+          = fa_icon 'calendar lg'
   br
   .row
     .radio.col-md-offset-2
@@ -23,11 +27,11 @@ form.form-horizontal role='form'
         label
           input type='radio' ng-model="datetimeType" value="1"
           | User NTP
-  
+  br
   .form-group    
-    label.col-md-offset-1.col-sm-2.control-label.control-label for='ntp_server' NTP Server
-    .input-group.col-sm-5.col-md-offset-1
-      input.form-control#ntp_server type='text' ng-model='ntpServer'
-      
-  = render 'save_button'
+    label.col-sm-3.control-label for='ntp_server' NTP Server
+    .col-sm-5
+        input.form-control#ntp_server type='text' ng-model='ntpServer'
 
+form.form-horizontal.form-ipc-footer role='form'
+  = render 'save_button'

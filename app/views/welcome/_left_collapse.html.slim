@@ -1,50 +1,82 @@
-.panel-group#setting_group
+.panel-group.sidebar#setting_group
   .panel.panel-default
-    .panel-heading
-      h4.panel-title data-toggle="collapse" data-parent="#setting_group" data-target="#system"
+    .panel-heading.collapsed data-toggle="collapse" data-parent="#setting_group" data-target="#system"
+      h4.panel-title
         | System
-    .panel-collapse.collapse.in#system
+        i.fa.fa-caret-right.pull-right
+        i.fa.fa-caret-down.pull-right
+    .panel-collapse.collapse#system
       .panel-body
         ui.nav.nav-pills.nav-stacked role="tablist"
           li.active
-            a href="javascript:void(0)" ng-click="changeType('base_info')" Base Information
+            a href="javascript:;" ng-click="changeType('base_info')" Base Information
           li
-            a href="javascript:void(0)" ng-click="changeType('users')" Users
+            a href="javascript:;" ng-click="changeType('users')" Users
           li
-            a href="javascript:void(0)" ng-click="changeType('datetime')" Datetime
+            a href="javascript:;" ng-click="changeType('datetime')" Datetime
           li
-            a href="javascript:void(0)" ng-click="changeType('upgrade')" Upgrade
+            a href="javascript:;" ng-click="changeType('maintenance')" Maintenance
             
   .panel.panel-default
-    .panel-heading
-      h4.panel-title data-toggle="collapse" data-parent="#setting_group" data-target="#video"
+    .panel-heading.collapsed data-toggle="collapse" data-parent="#setting_group" data-target="#video"
+      h4.panel-title
         | Video
+        i.fa.fa-caret-right.pull-right
+        i.fa.fa-caret-down.pull-right
     .panel-collapse.collapse#video
       .panel-body
         ui.nav.nav-pills.nav-stacked role="tablist"
           li
-            a href="javascript:void(0)" ng-click="changeType('stream')" Stream
+            a href="javascript:;" ng-click="changeType('stream')" Stream
           li
-            a href="javascript:void(0)" ng-click="changeType('scene')" Scene
+            a href="javascript:;" ng-click="changeType('image')" Image
+          li
+            a href="javascript:;" ng-click="changeType('privacy_block')" Privacy Block
             
   .panel.panel-default
-    .panel-heading
-      h4.panel-title data-toggle="collapse" data-parent="#setting_group" data-target="#osd"
+    .panel-heading.collapsed data-toggle="collapse" data-parent="#setting_group" data-target="#osd"
+      h4.panel-title
         | OSD
+        i.fa.fa-caret-right.pull-right
+        i.fa.fa-caret-down.pull-right
     .panel-collapse.collapse#osd
       .panel-body
         ui.nav.nav-pills.nav-stacked role="tablist"
           li
-            a href="javascript:void(0)" ng-click="changeType('osd')" OSD
+            a href="javascript:;" ng-click="changeType('osd')" OSD
+          li
+            a href="javascript:;" ng-click="changeType('szyc')" SZYC
             
   .panel.panel-default
-    .panel-heading
-      h4.panel-title data-toggle="collapse" data-parent="#setting_group" data-target="#network"
+    .panel-heading.collapsed data-toggle="collapse" data-parent="#setting_group" data-target="#network"
+      h4.panel-title
         | Network
+        i.fa.fa-caret-right.pull-right
+        i.fa.fa-caret-down.pull-right
     .panel-collapse.collapse#network
       .panel-body
         ui.nav.nav-pills.nav-stacked role="tablist"
           li
-            a href="javascript:void(0)" ng-click="changeType('interface')" Interface
+            a href="javascript:;" ng-click="changeType('interface')" Interface
           li
-            a href="javascript:void(0)" ng-click="changeType('port')" Port
+            a href="javascript:;" ng-click="changeType('port')" Port
+
+  .panel.panel-default
+    .panel-heading data-toggle="collapse" data-parent="#setting_group" data-target="#event"
+      h4.panel-title
+        | Event
+        i.fa.fa-caret-right.pull-right
+        i.fa.fa-caret-down.pull-right
+    .panel-collapse.collapse.in#event
+      .panel-body
+        ui.nav.nav-pills.nav-stacked role="tablist"
+          li
+            a href="javascript:;" ng-click="changeType('input')" Input
+          li
+            a href="javascript:;" ng-click="changeType('output')" Output
+          li
+            a href="javascript:;" ng-click="changeType('motion_detect')" Motion Detect
+          li
+            a href="javascript:;" ng-click="changeType('video_coverage')" Video Coverage
+          li
+            a href="javascript:;" ng-click="changeType('event_process')" Event Process
