@@ -32,12 +32,13 @@ form.form-horizontal.form-ipc.clearfix role='form'
   .form-group
     label.col-sm-3.control-label Scence
     .col-sm-9
-      label.checkbox-inline
-        input type='checkbox' value='50' 50Hz
-      label.checkbox-inline
-        input type='checkbox' value='60' 60Hz
-      label.checkbox-inline
-        input type='checkbox' value='composite' Composite
+      p.form-control-static
+        input type='radio' id='scence11' name='scence1' value='50' ng-model='scence1' ng-icheck=''
+        label.icheck-label for='scence11' 50Hz
+        input type='radio' id='scence12' name='scence1' value='60' ng-model='scence1' ng-icheck=''
+        label.icheck-label for='scence12' 60Hz
+        input type='radio' id='scence13' name='scence1' value='composite' ng-model='scence1' ng-icheck=''
+        label.icheck-label for='scence13' Composite
 
 form.form-horizontal.form-ipc-footer role='form'
   = render 'save_button'

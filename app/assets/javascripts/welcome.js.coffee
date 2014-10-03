@@ -1,12 +1,32 @@
-$ ->
+# $ ->
   # $('ui.nav.nav-pills.nav-stacked li a').click ->
   #   $('ui.nav.nav-pills.nav-stacked li.active').removeClass('active')
   #   $(this).parent('li').addClass('active')
 
-  $('.datetime').datetimepicker()
-  $('.color-pick').colorpicker()
-
 ipcApp = angular.module 'ipcApp', ['frapontillo.bootstrap-switch']
+angular.module('ipcApp').directive('ngIcheck', ($compile) ->
+  return {
+    restrict: 'A',
+    require: '?ngModel',
+    link: ($scope, $element, $attrs, $ngModel) ->
+      if (!$ngModel)
+        return
+      $($element).iCheck({
+        checkboxClass: 'icheckbox_square-blue',
+        radioClass: 'iradio_square-blue',
+        increaseArea: '20%'
+      }).on('ifClicked', (event) ->
+        if ($attrs.type == 'checkbox')
+          $scope.$apply( ->
+            $ngModel.$setViewValue(!($ngModel.$modelValue == undefined ? false : $ngModel.$modelValue))
+          )
+        else
+          $scope.$apply( ->
+            $ngModel.$setViewValue($attrs.value);
+          )
+      )
+  }
+)
 
 ipcApp.controller 'HomeController', [
   '$scope'
@@ -85,6 +105,8 @@ ipcApp.controller 'DateTimeController', [
   '$scope'
   '$http'
   ($scope, $http) ->
+    $('.datetime').datetimepicker()
+
     $http.get "#{$scope.$parent.url}/datetime.json",
       params:
         'items[]': ['timezone', 'use_ntp', 'ntp_server', 'datetime']
@@ -92,6 +114,7 @@ ipcApp.controller 'DateTimeController', [
       $scope.datetimeType = data.items.use_ntp.int_value
       $scope.datetime = data.items.datetime.str_value
       $scope.ntpServer = data.items.ntp_server.str_value
+      $('[name="datetimeType"][value="' + $scope.datetimeType + '"]').iCheck('check')
 
     $scope.save = ->
       $http.put "#{$scope.$parent.url}/datetime.json",
@@ -156,18 +179,27 @@ ipcApp.controller 'ImageController', [
   '$scope'
   '$http'
   ($scope, $http) ->
+    $scope.watermark = true
+    $scope.dnr = false
+    $scope.scence = 50
 
+    $('[name="scence1"][value="' + $scope.scence + '"]').iCheck('check')
 ]
 
 ipcApp.controller 'PrivacyBlockController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    play();
+    $('.color-input').colorpicker().on('changeColor', (e) ->
+      $(this).css('background', e.color.toHex())
+    )
+
+    $scope.region = 1
+    $scope.privacy_switch = true
+    $scope.color = '#008def'
 ]
 
 play = ->
-  debugger
   if window.document['vlc']
     vlc = window.document['vlc'];
   if navigator.appName.indexOf('Microsoft Internet') == -1
@@ -208,6 +240,10 @@ ipcApp.controller 'OsdController', [
   '$scope'
   '$http'
   ($scope, $http) ->
+    $('.color-input').colorpicker().on('changeColor', (e) ->
+      $(this).css('background', e.color.toHex())
+    )
+
     $http.get "#{$scope.$parent.url}/osd.json",
       params:
         'items[]': ['datetime', 'device_name', 'comment', 'frame_rate', 'bit_rate']
@@ -296,6 +332,12 @@ ipcApp.controller 'InputController', [
   ($scope, $http) ->
     $scope.input = 0
     $scope.input_on = true
+
+    times = new DateSelect('input_canvas')
+
+    $scope.save = ->
+      selected = times.getSelectedCells()
+      console.log selected
 ]
 
 ipcApp.controller 'OutputController', [
@@ -315,13 +357,23 @@ ipcApp.controller 'MotionDetectController', [
   '$http'
   ($scope, $http) ->
     
+    times = new DateSelect('montion_detect_canvas')
+
+    $scope.save = ->
+      selected = times.getSelectedCells()
+      console.log selected
 ]
 
 ipcApp.controller 'VideoCoverageController', [
   '$scope'
   '$http'
   ($scope, $http) ->
+    
+    times = new DateSelect('video_coverage_canvas')
 
+    $scope.save = ->
+      selected = times.getSelectedCells()
+      console.log selected
 ]
 
 ipcApp.controller 'EventProcessController', [

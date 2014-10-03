@@ -8,25 +8,22 @@ form.form-horizontal.form-ipc role='form'
       = select_tag 'timezone', options_for_select(ActiveSupport::TimeZone.all.map{|tz| [tz.to_s, 'GMT ' + tz.formatted_offset]}), class: 'form-control'
   br
   .row
-    .radio.col-md-offset-2
-      label
-        input type='radio' ng-model="datetimeType" value="0"
-        | Manual
+    .col-md-offset-2
+      input type='radio' id='manual' name="datetimeType" value="0" ng-model='datetimeType' ng-icheck=''
+      label.icheck-label for='manual' Manual
   br    
   .form-group
     label.col-sm-3.control-label for='datetime' Date
     .col-sm-5
-      .input-group.datetime.date data-date-format="YYYY-MM-DD hh:mm:ss"
-        input.form-control#datetime type='text' ng-model='datetime'
+      .input-group data-date-format="YYYY-MM-DD hh:mm:ss"
+        input.form-control.datetime#datetime type='text' ng-model='datetime'
         span.input-group-addon
           = fa_icon 'calendar lg'
   br
   .row
-    .radio.col-md-offset-2
-      .radio
-        label
-          input type='radio' ng-model="datetimeType" value="1"
-          | User NTP
+    .col-md-offset-2
+      input type='radio' id='user_ntp' name="datetimeType" value="1" ng-model='datetimeType' ng-icheck=''
+      label.icheck-label for='user_ntp' User NTP
   br
   .form-group    
     label.col-sm-3.control-label for='ntp_server' NTP Server

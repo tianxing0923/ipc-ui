@@ -5,12 +5,12 @@
     .panel-body
       .form-group
         .col-sm-12
-          .checkbox
-            label
-              input type='checkbox' value='' Record
-          .checkbox
-            label
-              input type='checkbox' value='' Sound
-          .checkbox
-            label
-              input type='checkbox' value='' Output1
+          p
+            input type='checkbox' id='record#{event_process_type}' name='scence1' value='record' ng-model='record' ng-icheck=''
+            label.icheck-label for='record#{event_process_type}' Record
+          p
+            input type='checkbox' id='sound#{event_process_type}' name='scence1' value='sound' ng-model='sound' ng-icheck=''
+            label.icheck-label for='sound#{event_process_type}' Sound
+          p
+            input type='checkbox' id='output1#{event_process_type}' name='scence1' value='output1' ng-model='output1' ng-icheck=''
+            label.icheck-label for='output1#{event_process_type}' Output1

@@ -12,6 +12,12 @@ $navbar-ipc-color: #fff;
     }
   }
 }
+.icheck-label {
+  padding-left: 15px;
+  padding-right: 30px;
+  margin-bottom: 0;
+  vertical-align: bottom;
+}
 
 // 顶部导航
 .navbar-ipc {
@@ -55,7 +61,7 @@ $sidebar-collapse-active-color: #fff;
     width: 10px;
     position: absolute;
     top: 45%;
-    left: 265px;
+    right: -10px;
     background: #000;
   }
 
@@ -230,6 +236,10 @@ $form-bg: #f5f5f5;
     .form-group {
       margin: 0 20px;
     }
+  }
+  .color-input {
+    width: 100px;
+    border: 0;
   }
 }
 

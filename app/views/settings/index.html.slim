@@ -15,7 +15,7 @@
       = render 'base_info'
     .setting-wrap.users ng-switch-when='users' ng-controller='UsersController'
       = render 'users'
-    .setting-wrap.datetime ng-switch-when='datetime' ng-controller='DateTimeController'
+    .setting-wrap.datetime-wrap ng-switch-when='datetime' ng-controller='DateTimeController'
       = render 'datetime'
     .setting-wrap.maintenance ng-switch-when='maintenance' ng-controller='MaintenanceController'
       = render 'maintenance'
