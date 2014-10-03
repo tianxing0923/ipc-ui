@@ -1,10 +1,6 @@
-# $ ->
-  # $('ui.nav.nav-pills.nav-stacked li a').click ->
-  #   $('ui.nav.nav-pills.nav-stacked li.active').removeClass('active')
-  #   $(this).parent('li').addClass('active')
-
 ipcApp = angular.module 'ipcApp', ['frapontillo.bootstrap-switch']
-angular.module('ipcApp').directive('ngIcheck', ($compile) ->
+
+ipcApp.directive('ngIcheck', ($compile) ->
   return {
     restrict: 'A',
     require: '?ngModel',
@@ -25,6 +21,65 @@ angular.module('ipcApp').directive('ngIcheck', ($compile) ->
             $ngModel.$setViewValue($attrs.value);
           )
       )
+  }
+)
+
+ipcApp.directive('ngSlider', ($compile) ->
+  return {
+    restrict: 'A',
+    require: '?ngModel',
+    link: ($scope, $element, $attrs, $ngModel) ->
+      if (!$ngModel)
+        return
+      $($element).noUiSlider({
+        start: [ $scope[$attrs.ngModel] ],
+        step: 1,
+        connect: 'lower',
+        range: {
+          'min': [ parseInt($attrs.min, 10) || 0 ],
+          'max': [ parseInt($attrs.max, 10) || 100 ]
+        }
+      }).on('slide', (e, val) ->
+        $scope[$attrs.ngModel] = parseInt(val)
+        $scope.$apply()
+      )
+  }
+)
+
+ipcApp.directive('ngShelter', ($compile) ->
+  return {
+    restrict: 'A',
+    require: '?ngModel',
+    link: ($scope, $element, $attrs, $ngModel) ->
+      if (!$ngModel)
+        return
+      $parent = $($element).parent()
+      parent_pos = $parent.offset()
+      parent_size = {
+        width: $parent.width(),
+        height: $parent.height()
+      }
+      minWidth = parseInt($attrs.minWidth, 10) || 50
+      minHeight = parseInt($attrs.minHeight, 10) || 50
+      $($element).resizable({
+        containment: $parent,
+        minWidth: minWidth,
+        minHeight: minHeight
+      }).draggable({
+        containment: $parent,
+        stop: (e, ui)->
+          ui_size = {
+            width: $(this).width(),
+            height: $(this).height()
+          }
+          ui_pos = ui.position
+          if ui_pos.left + ui_size.width > parent_size.width
+            $(this).css('left', parent_size.width - ui_size.width)
+          if ui_pos.top + ui_size.height > parent_size.height
+            $(this).css('top', parent_size.height - ui_size.height)
+      })
+# [ parent_pos.left, parent_pos.top, parent_size.width - minWidth + 8, parent_size.height - minHeight + 2 ]
+
   }
 )
 
@@ -96,7 +151,7 @@ ipcApp.controller 'UsersController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    
+    $scope.authentication = true
 ]
 
 
@@ -179,6 +234,10 @@ ipcApp.controller 'ImageController', [
   '$scope'
   '$http'
   ($scope, $http) ->
+    $scope.brightness = 50
+    $scope.chrominance = 30
+    $scope.contrast = 80
+    $scope.saturation = 0
     $scope.watermark = true
     $scope.dnr = false
     $scope.scence = 50
@@ -356,7 +415,9 @@ ipcApp.controller 'MotionDetectController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    
+    $scope.sensitivity = 50
+    $scope.detect_regional = [100, 100, 200, 200]
+    $scope.detect_switch = true
     times = new DateSelect('montion_detect_canvas')
 
     $scope.save = ->
@@ -368,6 +429,9 @@ ipcApp.controller 'VideoCoverageController', [
   '$scope'
   '$http'
   ($scope, $http) ->
+    $scope.sensitivity = 70
+    $scope.coverage_regional = [100, 100, 200, 200]
+    $scope.coverage_switch = true
     
     times = new DateSelect('video_coverage_canvas')
 

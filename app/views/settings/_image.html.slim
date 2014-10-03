@@ -10,24 +10,36 @@ form.form-horizontal.form-ipc.clearfix role='form'
   hr
   .form-group
     label.col-sm-3.control-label Brightness
-    .col-sm-5 slider plugin
+    .col-sm-5
+      .brightness-slider ng-slider='' ng-model='brightness' min='0' max='255'
     .col-sm-4
-      p.form-control-static 128 (0 - 255)
+      p.form-control-static
+        span ng-bind='brightness'
+        | &nbsp;(0 - 255)
   .form-group
     label.col-sm-3.control-label Chrominance
-    .col-sm-5 slider plugin
+    .col-sm-5
+      .chrominance-slider ng-slider='' ng-model='chrominance' min='0' max='255'
     .col-sm-4
-      p.form-control-static 128 (0 - 255)
+      p.form-control-static
+        span ng-bind='chrominance'
+        | &nbsp;(0 - 255)
   .form-group
     label.col-sm-3.control-label Contrast
-    .col-sm-5 slider plugin
+    .col-sm-5
+      .contrast-slider ng-slider='' ng-model='contrast' min='0' max='255'
     .col-sm-4
-      p.form-control-static 128 (0 - 255)
+      p.form-control-static
+        span ng-bind='contrast'
+        | &nbsp;(0 - 255)
   .form-group
     label.col-sm-3.control-label Saturation
-    .col-sm-5 slider plugin
+    .col-sm-5
+      .saturation-slider ng-slider='' ng-model='saturation' min='0' max='255'
     .col-sm-4
-      p.form-control-static 128 (0 - 255)
+      p.form-control-static
+        span ng-bind='saturation'
+        | &nbsp;(0 - 255)
   hr
   .form-group
     label.col-sm-3.control-label Scence

@@ -4,7 +4,7 @@
 var DateSelect = (function () {
     function DateSelect(canvasId) {
         this.$el = $('#' + canvasId);
-        this.weekTitleWidth = 50;
+        this.weekTitleWidth = 60;
         this.cellSize = 0;
         this.borderWidth = 1;
         this.borderColor = '#c5cace';
@@ -196,9 +196,9 @@ var DateSelect = (function () {
                 }
                 days = ['全部', '日', '一', '二', '三', '四', '五', '六'];
                 _results = [];
-                _results.push(this.ctx.fillText(days[0], this.cellSize / 2 - 12, this.cellSize / 2 + 6));
+                _results.push(this.ctx.fillText(days[0], this.weekTitleWidth / 2 - 12, this.cellSize / 2 + 6));
                 for (j = 1; j <= 7; j++) {
-                    _results.push(this.ctx.fillText(days[j], this.cellSize / 2 - 6, this.cellSize / 2 + (this.cellSize * j) + 6));
+                    _results.push(this.ctx.fillText(days[j], this.weekTitleWidth / 2 - 6, this.cellSize / 2 + (this.cellSize * j) + 6));
                 }
                 return _results;
             });
