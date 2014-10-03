@@ -12,7 +12,7 @@ ipcApp.controller 'HomeController', [
   '$scope'
   '$timeout'
   ($scope, $timeout) ->
-
+    $scope.flip = true
 ]
 
 ipcApp.controller 'SettingController', [
@@ -163,7 +163,17 @@ ipcApp.controller 'PrivacyBlockController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    
+    vlc = getVLC('vlc')
+    targetURL = 'rtsp://192.168.1.100:8554/liveStream'
+    if vlc
+      vlc.playlist.items.clear()
+      var options = [':rtsp-tcp']
+      var itemId = vlc.playlist.add(targetURL,'',options)
+      options = [];
+      if itemId != -1
+        vlc.playlist.playItem(itemId)
+      else
+        alert('cannot play at the moment !')
 ]
 
 ipcApp.controller 'SceneController', [
