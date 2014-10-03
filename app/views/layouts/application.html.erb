@@ -3,8 +3,12 @@
 <head>
   <title>易迅格IP摄像头</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
+
+  <!--[if lt IE 9]>
+  <script src="/assets/respond.min.js"></script>
+  <![endif]-->
 </head>
 <body>
   <div class="navbar navbar-ipc" role="navigation">

@@ -1,10 +1,11 @@
-.row.home-wrap ng-app='ipcApp' ng-controller='HomeController'
-  .col-sm-2.home-sidebar-mask.left
-    .collapse-block
-  .col-sm-2
-    .device-control
+.home-wrap
+  .row ng-app='ipcApp' ng-controller='HomeController'
+    .col-sm-2.home-sidebar-mask.left
+      .collapse-block
+    .col-sm-2
+      .device-control
 
-  .col-sm-10
-    | hehe
-.home-footer
-  input.switch#flip bs-switch=true type='checkbox' name='flip' switch-on-text='Master' switch-off-text='Slave' switch-on-color='#008DEF' switch-off-color='#000' ng-model='flip'
+    .col-sm-10
+      | hehe
+  .home-footer
+    input.switch#flip bs-switch=true type='checkbox' name='flip' switch-on-text='Master' switch-off-text='Slave' switch-on-color='#008DEF' switch-off-color='#000' ng-model='flip'
