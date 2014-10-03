@@ -7,3 +7,4 @@
 #= require bootstrap-datetimepicker
 #= require bootstrap-switch
 #= require_tree .
+#= stub respond.min.js
