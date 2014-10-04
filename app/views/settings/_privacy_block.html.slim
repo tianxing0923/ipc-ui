@@ -1,21 +1,25 @@
 h3 Privacy Block
 = render 'setting_breadcrumb', menu: 'Video', sub_menu: 'Privacy Block'
 
-form.form-inline.form-ipc
-  .image-wrap style='background: #ddd;width:70%;min-height: 300px;'
-    object classid='clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921' width='640' height='480' id='vlc' events='True'
+form.form-inline.form-ipc-bg
+  .vlc-wrap
+    .shelter ng-show='privacy_switch' ng-shelter='' ng-model='coverage_regional' minWidth='50' minHeight='50'
+    object classid='clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921' width='750' height='560' id='vlc' events='True'
       param name='MRL' value='rtsp://192.168.1.100:8554/liveStream'
       param name='AutoPlay' value='True'
       param name='Volume' value='50'
-      embed pluginspage='http://www.videolan.org' type='application/x-vlc-plugin' version='VideoLAN.VLCPlugin.2' width='640' height='480' toolbar='true' loop='true' text='Waiting for video' name='vlc'
+      embed pluginspage='http://www.videolan.org' type='application/x-vlc-plugin' version='VideoLAN.VLCPlugin.2' width='750' height='560' toolbar='true' loop='true' text='Waiting for video' name='vlc'
   .form-group
     select.form-control.input-sm ng-model='region'
       option value='1' region1
       option value='2' region2
   .form-group
-    input.switch#privacy_switch bs-switch=true type='checkbox' name='privacy_switch' ng-model='privacy_switch'
+    input.switch#privacy_switch ng-bswitch='' type='checkbox' name='privacy_switch' ng-model='privacy_switch'
   .form-group
-    input.form-control.input-sm.color-input type='text' readonly='readonly' ng-style='bgStyle' ng-model='color'
+    input.form-control.input-sm.color-input type='text' ng-color='' readonly='readonly' ng-model='shelter_color'
+
+  button.btn.btn-default ng-click='play_v()' play
+  button.btn.btn-default ng-click='stop_v()' stop
 
 form.form-horizontal.form-ipc-footer role='form'
   = render 'save_button'

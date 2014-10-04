@@ -4,17 +4,17 @@ h3 Maintenance
 form.form-horizontal.form-ipc role='form'
   .form-group
     .col-sm-3.text-right
-      button.btn.btn-warning  type='button' Soft reset
+      button.btn.btn-warning  type='button' ng-click='soft_reset()' Soft reset
     .col-sm-5
       p.form-control-static reset to factory settings except network parameter
   .form-group
     .col-sm-3.text-right
-      button.btn.btn-warning  type='button' Hard reset
+      button.btn.btn-warning  type='button' ng-click='hard_reset()' Hard reset
     .col-sm-5
       p.form-control-static reset to factory settings
   .form-group
     .col-sm-3.text-right
-      button.btn.btn-warning  type='button' Reboot
+      button.btn.btn-warning  type='button' ng-click='reboot()' Reboot
     .col-sm-5
       p.form-control-static
   hr
@@ -22,10 +22,25 @@ form.form-horizontal.form-ipc role='form'
     label.col-sm-3.control-label for='upgrade' Upgrade
     .col-sm-5
       input.form-control#upgrade type='file'
-  .form-group.hide
+    .col-sm-4
+      button.btn.btn-success ng-click='upload_file()' Upload
+  .form-group ng-class='{hide: !upgrading}'
     .col-sm-5.col-sm-offset-3
       .progress
-        .progress-bar role='progressbar' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100' 0%
+        .progress-bar role='progressbar' aria-valuenow='{{progress_val}}' aria-valuemin='0' aria-valuemax='100' ng-style='{width: progress_val + "%"}' ng-bind-template='{{progress_val}} %'
 
 form.form-horizontal.form-ipc-footer role='form'
   = render 'save_button'
+
+.modal.fade#confirm_modal
+  .modal-dialog.modal-sm
+    .modal-content
+      .modal-header
+        button type='button' class='close' data-dismiss='modal'
+          span aria-hidden='true' &times;
+          span.sr-only Close
+        h4.modal-title Confirm
+      .modal-body ng-bind='confirm_content'
+      .modal-footer
+        button.btn.btn-default type='button' data-dismiss='modal' Cancel
+        button.btn.btn-primary type='button' ng-click='reset_or_reboot()' Ok

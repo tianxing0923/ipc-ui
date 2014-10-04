@@ -1,11 +1,11 @@
 .panel-group.sidebar#setting_group
   .panel.panel-default
-    .panel-heading.collapsed data-toggle="collapse" data-parent="#setting_group" data-target="#system"
+    .panel-heading data-toggle="collapse" data-parent="#setting_group" data-target="#system"
       h4.panel-title
         | System
         i.fa.fa-caret-right.pull-right
         i.fa.fa-caret-down.pull-right
-    .panel-collapse.collapse#system
+    .panel-collapse.collapse.in#system
       .panel-body
         ul.nav.nav-pills.nav-stacked role="tablist"
           li ng-class="{active: type=='base_info'}"
@@ -62,12 +62,12 @@
             a href="javascript:;" ng-click="changeType('port')" Port
 
   .panel.panel-default
-    .panel-heading data-toggle="collapse" data-parent="#setting_group" data-target="#event"
+    .panel-heading.collapsed data-toggle="collapse" data-parent="#setting_group" data-target="#event"
       h4.panel-title
         | Event
         i.fa.fa-caret-right.pull-right
         i.fa.fa-caret-down.pull-right
-    .panel-collapse.collapse.in#event
+    .panel-collapse.collapse#event
       .panel-body
         ul.nav.nav-pills.nav-stacked role="tablist"
           li ng-class="{active: type=='input'}"

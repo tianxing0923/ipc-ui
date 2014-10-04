@@ -6,7 +6,7 @@
       .form-group
         label.col-sm-4.control-label for="#{osd_type}_display" Display
         .col-sm-6
-          input.switch id="#{osd_type}_display" bs-switch=true type='checkbox' ng-model="#{osd_type}_display"
+          input id="#{osd_type}_display" ng-bswitch='' type='checkbox' ng-model="#{osd_type}_display"
 
       .form-group
         label.col-sm-4.control-label for="#{osd_type}_font_size" Font Size
@@ -30,8 +30,4 @@
       .form-group
         label.col-sm-4.control-label for="#{osd_type}_color" Color
         .col-sm-6
-          input.form-control.input-sm.color-input type='text' readonly='readonly' ng-style='bgStyle' ng-model='#{osd_type}_color'
-            / input.form-control#device_name_color type='text' ng-model="#{osd_type}_color"
-            / span.input-group-addon
-            /   i
-  
+          input.form-control.input-sm.color-input type='text' ng-color='' readonly='readonly' ng-model='#{osd_type}_color'

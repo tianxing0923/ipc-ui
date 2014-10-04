@@ -8,27 +8,31 @@ form.form-horizontal.form-ipc role='form'
       = select_tag 'timezone', options_for_select(ActiveSupport::TimeZone.all.map{|tz| [tz.to_s, 'GMT ' + tz.formatted_offset]}), class: 'form-control'
   br
   .row
-    .col-md-offset-2
-      input type='radio' id='manual' name="datetimeType" value="0" ng-model='datetimeType' ng-icheck=''
+    .col-sm-offset-2
+      input type='radio' id='manual' name="datetime_type" value="0" ng-model='datetime_type' ng-icheck=''
       label.icheck-label for='manual' Manual
   br    
   .form-group
     label.col-sm-3.control-label for='datetime' Date
     .col-sm-5
       .input-group data-date-format="YYYY-MM-DD hh:mm:ss"
-        input.form-control.datetime#datetime type='text' ng-model='datetime'
+        input.form-control id='datetime' type='text' ng-model='datetime' ng-datetime=''
         span.input-group-addon
           = fa_icon 'calendar lg'
+    .col-sm-4
+      p.form-control-static.text-danger ng-bind="datetime_msg"
   br
   .row
-    .col-md-offset-2
-      input type='radio' id='user_ntp' name="datetimeType" value="1" ng-model='datetimeType' ng-icheck=''
+    .col-sm-offset-2
+      input type='radio' id='user_ntp' name="datetime_type" value="1" ng-model='datetime_type' ng-icheck=''
       label.icheck-label for='user_ntp' User NTP
   br
   .form-group    
     label.col-sm-3.control-label for='ntp_server' NTP Server
     .col-sm-5
-        input.form-control#ntp_server type='text' ng-model='ntpServer'
+        input.form-control id='ntp_server' type='text' ng-model='ntp_server'
+    .col-sm-4
+      p.form-control-static.text-danger ng-bind="ntp_server_msg"
 
 form.form-horizontal.form-ipc-footer role='form'
   = render 'save_button'

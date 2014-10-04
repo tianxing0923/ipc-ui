@@ -8,3 +8,7 @@
 #= require bootstrap-switch
 #= require_tree .
 #= stub respond.min.js
+#= stub angular-bootstrap-switch.js
+#= stub angular-bootstrap-switch.min.js
+#= stub html5shiv.min.js
+#= stub excanvas.min.js

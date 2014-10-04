@@ -1,4 +1,18 @@
-ipcApp = angular.module 'ipcApp', ['frapontillo.bootstrap-switch']
+play = ->
+  if window.document['vlc']
+    vlc = window.document['vlc'];
+  if navigator.appName.indexOf('Microsoft Internet') == -1
+    if document.embeds && document.embeds['vlc']
+      vlc = document.embeds['vlc'];
+  else
+    vlc = document.getElementById('vlc');
+  if vlc
+    vlc.MRL = "rtsp://192.168.1.100:8554/liveStream";
+    vlc.playlist.stop();
+    vlc.playlist.play();
+
+# ipcApp = angular.module 'ipcApp', ['frapontillo.bootstrap-switch']
+ipcApp = angular.module 'ipcApp', []
 
 ipcApp.directive('ngIcheck', ($compile) ->
   return {
@@ -21,6 +35,29 @@ ipcApp.directive('ngIcheck', ($compile) ->
             $ngModel.$setViewValue($attrs.value);
           )
       )
+      if $attrs.value == $scope[$attrs.ngModel]
+        $($element).iCheck('check')
+  }
+)
+
+ipcApp.directive('ngBswitch', ($compile) ->
+  return {
+    restrict: 'A',
+    require: '?ngModel',
+    link: ($scope, $element, $attrs, $ngModel) ->
+      if (!$ngModel)
+        return
+      $el = $($element)
+      $el.bootstrapSwitch().on('switchChange.bootstrapSwitch', (e, state) ->
+        $scope.$apply( ->
+          $ngModel.$setViewValue(state);
+        )
+      )
+      if $scope[$attrs.ngModel]
+        $el.bootstrapSwitch('state', true, true)
+      $scope.$watch($attrs.ngModel, (newValue) ->
+        $el.bootstrapSwitch('state', newValue || false, true);
+      )
   }
 )
 
@@ -40,9 +77,27 @@ ipcApp.directive('ngSlider', ($compile) ->
           'max': [ parseInt($attrs.max, 10) || 100 ]
         }
       }).on('slide', (e, val) ->
-        $scope[$attrs.ngModel] = parseInt(val)
-        $scope.$apply()
+        $scope.$apply( ->
+          $ngModel.$setViewValue(parseInt(val));
+        )
       )
+  }
+)
+
+ipcApp.directive('ngColor', ($compile) ->
+  return {
+    restrict: 'A',
+    require: '?ngModel',
+    link: ($scope, $element, $attrs, $ngModel) ->
+      if (!$ngModel)
+        return
+      $el = $($element)
+      $el.colorpicker().on('changeColor', (e) ->
+        $scope[$attrs.ngModel] = e.color.toHex()
+        $el.css('background', e.color.toHex())
+      )
+      if $scope[$attrs.ngModel]
+        $el.colorpicker('setValue', $scope[$attrs.ngModel])
   }
 )
 
@@ -54,34 +109,58 @@ ipcApp.directive('ngShelter', ($compile) ->
       if (!$ngModel)
         return
       $parent = $($element).parent()
-      parent_pos = $parent.offset()
       parent_size = {
         width: $parent.width(),
         height: $parent.height()
       }
-      minWidth = parseInt($attrs.minWidth, 10) || 50
-      minHeight = parseInt($attrs.minHeight, 10) || 50
-      $($element).resizable({
+      rect = $scope[$attrs.ngModel]
+      $($element).css({
+        left: rect.x,
+        top: rect.y,
+        width: rect.width,
+        height: rect.height
+      }).resizable({
         containment: $parent,
-        minWidth: minWidth,
-        minHeight: minHeight
+        minWidth: parseInt($attrs.minWidth, 10) || 50,
+        minHeight: parseInt($attrs.minHeight, 10) || 50,
+        stop: (e, ui) ->
+          rect.width = ui.size.width
+          rect.height = ui.size.height
+          $scope.$apply( ->
+            $ngModel.$setViewValue(rect)
+          )
       }).draggable({
         containment: $parent,
-        stop: (e, ui)->
-          ui_size = {
-            width: $(this).width(),
-            height: $(this).height()
-          }
-          ui_pos = ui.position
-          if ui_pos.left + ui_size.width > parent_size.width
-            $(this).css('left', parent_size.width - ui_size.width)
-          if ui_pos.top + ui_size.height > parent_size.height
-            $(this).css('top', parent_size.height - ui_size.height)
+        stop: (e, ui) ->
+          if ui.position.left + rect.width > parent_size.width
+            rect.x = parent_size.width - rect.width
+            $(this).css('left', rect.x)
+          if ui.position.top + rect.height > parent_size.height
+            rect.y = parent_size.height - rect.height
+            $(this).css('top', rect.y)
+          $scope.$apply( ->
+            $ngModel.$setViewValue({
+              x: rect.y,
+              y: rect.y,
+              width: rect.width,
+              height: rect.height
+            })
+          )
       })
-# [ parent_pos.left, parent_pos.top, parent_size.width - minWidth + 8, parent_size.height - minHeight + 2 ]
-
   }
 )
+
+ipcApp.directive('ngDatetime', ($compile) ->
+  return {
+    restrict: 'A',
+    require: '?ngModel',
+    link: ($scope, $element, $attrs, $ngModel) ->
+      if (!$ngModel)
+        return
+      $($element).datetimepicker()
+  }
+)
+
 
 ipcApp.controller 'HomeController', [
   '$scope'
@@ -120,24 +199,54 @@ ipcApp.controller 'SettingController', [
       , 3000
 ]
 
+
 ipcApp.controller 'BaseInfoController', [
   '$scope'
   '$http'
   ($scope, $http) ->
+
     $http.get "#{$scope.$parent.url}/base_info.json",
       params:
         'items[]': ['device_name', 'comment', 'location', 'manufacturer', 'model', 'serial', 'firmware', 'hardware']
     .success (data) ->
-      $scope.device_name = data.items.device_name
-      $scope.comment = data.items.comment
       $scope.serial = data.items.serial
-      $scope.location = data.items.location
+      $scope.mac = data.items.mac
       $scope.manufacturer = data.items.manufacturer
       $scope.model = data.items.model
       $scope.firmware = data.items.firmware
       $scope.hardware = data.items.hardware
-      
+      $scope.device_name = data.items.device_name
+      $scope.comment = data.items.comment
+      $scope.location = data.items.location
+
+    $scope.device_name_msg = ''
+    $scope.comment_msg = ''
+    $scope.location_msg = ''
+
+    valid = (msg_name, value, msg) ->
+      if value && value.length > 32
+        $scope[msg_name] = 'Length cannot exceed 32 characters'
+      else
+        $scope[msg_name] = ''
+
+    $scope.$watch('device_name', (newValue) ->
+      if !newValue
+        $scope.device_name_msg = 'Can not be empty'
+      else if newValue.length > 32
+        $scope.device_name_msg = 'Length cannot exceed 32 characters'
+      else
+        $scope.device_name_msg = ''
+    )
+    $scope.$watch('comment', (newValue) ->
+      valid('comment_msg', newValue)
+    )
+    $scope.$watch('location', (newValue) ->
+      valid('location_msg', newValue)
+    )
+
     $scope.save = ->
+      if $scope.device_name_msg || $scope.comment_msg || $scope.location_msg
+        return
       $http.put "#{$scope.$parent.url}/base_info.json",        
         items:
           device_name: $scope.device_name
@@ -151,55 +260,213 @@ ipcApp.controller 'UsersController', [
   '$scope'
   '$http'
   ($scope, $http) ->
+    $scope.operate_type = ''
     $scope.authentication = true
+    $scope.add_user_name = ''
+    $scope.add_password = ''
+    $scope.add_role = 'user'
+    $scope.add_user_msg = ''
+    $scope.current_user = ''
+    $scope.items = []
+
+    get_user_list = ->
+      # $http.get "#{$scope.$parent.url}/user_list.json"
+      # .success (data) ->
+      #   $scope.items = data
+      $scope.items = [
+        {username: 'tangc', password: '123', role: 'administrator'},
+        {username: 'tianx', password: '456', role: 'user'}
+      ]
+
+    get_user_list()
+
+    show_msg = (type, msg) ->
+      $scope.ajax_msg = {
+        type: type,
+        content: 'Success'
+      }
+      $('#msg_modal').modal()
+      setTimeout(->
+        $('#msg_modal').modal('hide')
+      , 2000)
+
+    $scope.show_add_modal = ->
+      $scope.operate_type = 'add'
+      $scope.add_user_name = ''
+      $scope.add_password = ''
+      $scope.add_role = 'user'
+      $scope.add_user_msg = ''
+      $('#user_modal').modal()
+      return
+
+    $scope.show_edit_modal = (item) ->
+      $scope.operate_type = 'edit'
+      $scope.add_user_name = item.username
+      $scope.add_password = item.password
+      $scope.add_role = item.role
+      $scope.add_user_msg = ''
+      $('#user_modal').modal()
+      return
+
+    $scope.show_delete_modal = (item) ->
+      $scope.operate_type = 'delete'
+      $scope.current_user = item.username
+      $('#confirm_modal').modal()
+      return
+
+    $scope.add_or_edit_user = ->
+      reg = /^\w-+|$/
+      if $scope.add_user_name == ''
+        return $scope.add_user_msg = 'Please enter the username'
+      else if $scope.add_user_name.length > 16 || !reg.test($scope.add_user_name)
+        return $scope.add_user_msg = 'Please enter the correct user name'
+      else if $scope.add_password == ''
+        return $scope.add_user_msg = 'Please enter the password'
+      else if $scope.add_password.length > 16
+        return $scope.add_user_msg = 'Password length can not exceed 16'
+      else if $scope.add_role == ''
+        return $scope.add_user_msg = 'Please select a role'
+      $http.put "#{$scope.$parent.url}/#{$scope.operate_type}_user.json",        
+        user_name: $scope.add_user_name
+        password: $scope.add_password
+        role: $scope.add_role
+      .success (msg) ->
+        $('#user_modal').modal('hide')
+        show_msg('alert-success', msg)
+        get_user_list()
+      .error (msg) ->
+        $('#user_modal').modal('hide')
+        show_msg('alert-danger', msg)
+
+    $scope.delete_user = ->
+      $http.put "#{$scope.$parent.url}/#{$scope.operate_type}_user.json",
+        user_name: $scope.current_user
+      .success (msg) ->
+        $('#confirm_modal').modal('hide')
+        show_msg('alert-success', msg)
+        get_user_list()
+      .error (msg) ->
+        $('#confirm_modal').modal('hide')
+        show_msg('alert-danger', msg)
+
+    $scope.save = ->
 ]
-
-
 
 ipcApp.controller 'DateTimeController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    $('.datetime').datetimepicker()
+    # $http.get "#{$scope.$parent.url}/datetime.json",
+    #   params:
+    #     'items[]': ['timezone', 'use_ntp', 'ntp_server', 'datetime']
+    # .success (data) ->
+    #   $scope.timezone = data.items.timezone
+    #   $scope.datetime_type = data.items.use_ntp.int_value
+    #   $scope.datetime = data.items.datetime.str_value
+    #   $scope.ntp_server = data.items.ntp_server.str_value
+    $scope.datetime_type = '1'
+    $scope.datetime = '2014'
+    $scope.ntp_server = ''
 
-    $http.get "#{$scope.$parent.url}/datetime.json",
-      params:
-        'items[]': ['timezone', 'use_ntp', 'ntp_server', 'datetime']
-    .success (data) ->
-      $scope.datetimeType = data.items.use_ntp.int_value
-      $scope.datetime = data.items.datetime.str_value
-      $scope.ntpServer = data.items.ntp_server.str_value
-      $('[name="datetimeType"][value="' + $scope.datetimeType + '"]').iCheck('check')
+    $scope.datetime_msg = ''
+    $scope.ntp_server_msg = ''
+
+    valid = (msg_name, value, msg) ->
+      if !value
+        $scope[msg_name] = 'Can not be empty'
+      else if value.length > 32
+        $scope[msg_name] = 'Length cannot exceed 32 characters'
+      else
+        $scope[msg_name] = ''
+
+    $scope.$watch('datetime_type', (newValue) ->
+      if $scope.datetime_type == '0'
+        valid('datetime_msg', $scope.datetime)
+        $scope.ntp_server_msg = ''
+      else if $scope.datetime_type == '1'
+        valid('ntp_server_msg', $scope.ntp_server)
+        $scope.datetime_msg = ''
+    )
+    $scope.$watch('datetime', (newValue) ->
+      if $scope.datetime_type == '0'
+        valid('datetime_msg', newValue)
+    )
+    $scope.$watch('ntp_server', (newValue) ->
+      if $scope.datetime_type == '1'
+        valid('ntp_server_msg', newValue)
+    )
 
     $scope.save = ->
+      console.log $scope.datetime, $scope.ntp_server
+      if $scope.datetime_msg || $scope.ntp_server_msg
+        return
       $http.put "#{$scope.$parent.url}/datetime.json",
         items:
           timezone:
             int_value: 1
             str_value: ''
           use_ntp:
-            int_value: $scope.datetimeType
+            int_value: $scope.datetime_type
             str_value: ''
           ntp_server:
-            int_value: if $scope.datetimeType == 0 then 0 else 1
-            str_value: $scope.ntpServer
+            int_value: if $scope.datetime_type == '0' then 0 else 1
+            str_value: $scope.ntp_server
           datetime:
-            int_value: if $scope.datetimeType == 0 then 1 else 0
+            int_value: if $scope.datetime_type == '0' then 1 else 0
             str_value: $scope.datetime
       .success ->
         $scope.$parent.success('Save Success')
 ]
 
-
-
-
-
 ipcApp.controller 'MaintenanceController', [
   '$scope'
   '$http'
   ($scope, $http) ->
+    $scope.operate_type = ''
+    $scope.confirm_content = ''
+    $scope.upgrading = false
+    $scope.progress_val = 0
 
+    show_confirm = ->
+      $('#confirm_modal').modal()
+
+    hide_confirm = ->
+      $('#confirm_modal').modal('hide')
+
+    $scope.soft_reset = ->
+      $scope.operate_type = 'soft_reset'
+      $scope.confirm_content = 'Are you sure you want to soft reset ?'
+      show_confirm()
+
+    $scope.hard_reset = ->
+      $scope.operate_type = 'hard_reset'
+      $scope.confirm_content = 'Are you sure you want to hard reset ?'
+      show_confirm()
+
+    $scope.reboot = ->
+      $scope.operate_type = 'reboot'
+      $scope.confirm_content = 'Are you sure you want to reboot ?'
+      show_confirm()
+
+    $scope.reset_or_reboot = ->
+      $http.put "#{$scope.$parent.url}/#{$scope.operate_type}.json"
+      .success (msg) ->
+        hide_confirm()
+        $scope.$parent.success('Success')
+      .error (msg) ->
+        hide_confirm()
+        $scope.$parent.error('Error')
+
+    $scope.upload_file = ->
+      $scope.upgrading = true
+      temp = setInterval(->
+        $scope.progress_val = $scope.progress_val + 10
+        $scope.$apply()
+        if $scope.progress_val == 100
+          clearInterval(temp)
+      , 1000)
 ]
+
 
 ipcApp.controller 'StreamController', [
   '$scope'
@@ -240,42 +507,40 @@ ipcApp.controller 'ImageController', [
     $scope.saturation = 0
     $scope.watermark = true
     $scope.dnr = false
-    $scope.scence = 50
-
-    $('[name="scence1"][value="' + $scope.scence + '"]').iCheck('check')
+    $scope.scence = '50'
 ]
 
 ipcApp.controller 'PrivacyBlockController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    $('.color-input').colorpicker().on('changeColor', (e) ->
-      $(this).css('background', e.color.toHex())
-    )
-
     $scope.region = 1
     $scope.privacy_switch = true
-    $scope.color = '#008def'
-]
+    $scope.shelter_color = '#008def'
+    $scope.coverage_regional = {
+      x: 200,
+      y: 150,
+      width: 300,
+      height: 100
+    }
 
-play = ->
-  if window.document['vlc']
-    vlc = window.document['vlc'];
-  if navigator.appName.indexOf('Microsoft Internet') == -1
-    if document.embeds && document.embeds['vlc']
-      vlc = document.embeds['vlc'];
-  else
-    vlc = document.getElementById('vlc');
-  targetURL = 'rtsp://192.168.1.100:8554/liveStream'
-  if vlc
-    vlc.playlist.items.clear()
-    options = [':rtsp-tcp']
-    itemId = vlc.playlist.add(targetURL,'',options)
-    options = [];
-    if itemId != -1
-      vlc.playlist.playItem(itemId)
-    else
-      alert('cannot play at the moment !')
+    $scope.play_v = ->
+      play()
+
+    $scope.stop_v = ->
+      if window.document['vlc']
+        vlc = window.document['vlc'];
+      if navigator.appName.indexOf('Microsoft Internet') == -1
+        if document.embeds && document.embeds['vlc']
+          vlc = document.embeds['vlc'];
+      else
+        vlc = document.getElementById('vlc');
+      if vlc
+        vlc.playlist.stop();
+
+    $scope.save = ->
+      console.log($scope.shelter_color)
+]
 
 ipcApp.controller 'SceneController', [
   '$scope'
@@ -299,15 +564,10 @@ ipcApp.controller 'OsdController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    $('.color-input').colorpicker().on('changeColor', (e) ->
-      $(this).css('background', e.color.toHex())
-    )
-
     $http.get "#{$scope.$parent.url}/osd.json",
       params:
         'items[]': ['datetime', 'device_name', 'comment', 'frame_rate', 'bit_rate']
     .success (data) ->
-      console.log data.items
       for osd in data.items
         $scope["#{osd['name']}_display"] = osd['isshow']
         $scope["#{osd['name']}_font_size"] = osd['size']
@@ -326,8 +586,14 @@ ipcApp.controller 'SzycController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    
+    $scope.train_no = '123123'
+    $scope.carriage_no = 'SDFSDF'
+    $scope.index_no = '12313'
+
+    $scope.save = ->
+
 ]
+
 
 ipcApp.controller 'InterfaceController', [
   '$scope'
@@ -341,7 +607,6 @@ ipcApp.controller 'InterfaceController', [
       $scope.autoconf = data.items.autoconf
       $scope.network_username = data.items.pppoe.username
       $scope.network_password = data.items.pppoe.password
-
       $scope.network_address = data.items.address.ipaddr
       $scope.network_netmask = data.items.address.netmask
       $scope.network_gateway = data.items.address.gateway
@@ -370,16 +635,40 @@ ipcApp.controller 'PortController', [
       params:
         'items[]': ['server_port']
     .success (data) ->
-      console.log data.items.server_port
       $scope.http_port = data.items.server_port.http
+      $scope.ftp_port = data.items.server_port.ftp
       $scope.rtsp_port = data.items.server_port.rtsp
 
+    $scope.http_port_msg = ''
+    $scope.ftp_port_msg = ''
+    $scope.rtsp_port_msg = ''
+
+    valid = (msg_name, value) ->
+      reg = /^[0-9]*$/
+      if value && !reg.test(value)
+        $scope[msg_name] = 'Please enter number'
+      else
+        $scope[msg_name] = ''
+
+    $scope.$watch('http_port', (newValue) ->
+      valid('http_port_msg', newValue)
+    )
+    $scope.$watch('ftp_port', (newValue) ->
+      valid('ftp_port_msg', newValue)
+    )
+    $scope.$watch('rtsp_port', (newValue) ->
+      valid('rtsp_port_msg', newValue)
+    )
+
     $scope.save = ->
+      if $scope.http_port_msg || $scope.ftp_port_msg || $scope.rtsp_port_msg
+        return
       $http.put "#{$scope.$parent.url}/network.json",
         items:
           server_port:
-            http: parseInt($scope.http_port)
-            rtsp: parseInt($scope.rtsp_port)
+            http: parseInt($scope.http_port, 10)
+            ftp: parseInt($scope.ftp_port, 10)
+            rtsp: parseInt($scope.rtsp_port, 10)
       .success ->
         $scope.$parent.success('Save Success')
 ]
@@ -416,13 +705,18 @@ ipcApp.controller 'MotionDetectController', [
   '$http'
   ($scope, $http) ->
     $scope.sensitivity = 50
-    $scope.detect_regional = [100, 100, 200, 200]
+    $scope.detect_regional = {
+      x: 100,
+      y: 100,
+      width: 200,
+      height: 200
+    }
     $scope.detect_switch = true
     times = new DateSelect('montion_detect_canvas')
 
     $scope.save = ->
       selected = times.getSelectedCells()
-      console.log selected
+      console.log $scope.detect_regional
 ]
 
 ipcApp.controller 'VideoCoverageController', [

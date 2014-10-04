@@ -2,7 +2,7 @@ h3 Video Coverage
 = render 'setting_breadcrumb', menu: 'Event', sub_menu: 'Video Coverage'
 
 .form-ipc-bg.clearfix
-  .image-wrap.pull-left
+  .vlc-wrap.pull-left
     .shelter ng-show='coverage_switch' ng-shelter='' ng-model='coverage_regional' minWidth='50' minHeight='50'
     object classid='clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921' width='100%' height='100%' id='vlc' events='True'
       param name='MRL' value='rtsp://192.168.1.100:8554/liveStream'
@@ -26,14 +26,15 @@ h3 Video Coverage
             option value='0' region1
             option value='1' region2
         .col-lg-9
-          input.switch#coverage_switch bs-switch=true type='checkbox' name='coverage_switch' ng-model='coverage_switch'
+          input#coverage_switch ng-bswitch='' type='checkbox' name='coverage_switch' ng-model='coverage_switch'
   hr
   .row
     .col-sm-12
       h4 Schedule
     .col-sm-12
-      div
-        canvas id='video_coverage_canvas'
+      div.canvas-wrap
+        .label-bg
+        canvas id='video_coverage_canvas' width='782' height='242'
 
 form.form-horizontal.form-ipc-footer role='form'
   = render 'save_button'

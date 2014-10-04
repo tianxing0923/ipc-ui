@@ -5,10 +5,11 @@ form.form-horizontal.form-ipc role='form'
   .form-group
     .col-sm-12
       label.switch-label video access authentication
-      input.switch bs-switch=true type='checkbox' name='authentication' ng-model='authentication'
-      a.new-user href='javascript:;'
-          = fa_icon 'user'
-          = fa_icon 'plus'
+      input#authentication_switch ng-bswitch='' type='checkbox' name='authentication' ng-model='authentication'
+      button.btn.btn-success.new-user data-target='.add-user-modal' ng-click='show_add_modal()'
+        = fa_icon 'user'
+        = fa_icon 'plus'
+        | &nbsp;&nbsp;&nbsp;Add User
   .form-group
     .col-sm-12
       .users-wrap
@@ -16,16 +17,66 @@ form.form-horizontal.form-ipc role='form'
           thead
             tr
               th Username
-              th Password
+              th Role
               th Operation
             tr
           tbody
-            tr
-              td admin
-              td administrator
+            tr ng-repeat='item in items'
+              td ng-bind='item.username'
+              td ng-bind='item.role'
               td.operation
-                a href='javascript:;' title='Edit' = fa_icon 'edit lg'
-                a href='javascript:;' title='Delete' = fa_icon 'trash-o lg'
+                a href='javascript:;' title='Edit' ng-click='show_edit_modal(item)' = fa_icon 'edit lg'
+                a href='javascript:;' title='Delete' ng-click='show_delete_modal(item)' = fa_icon 'trash-o lg'
 
 form.form-horizontal.form-ipc-footer role='form'
   = render 'save_button'
+
+.modal.fade#user_modal
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button type='button' class='close' data-dismiss='modal'
+          span aria-hidden='true' &times;
+          span.sr-only Close
+        h4.modal-title Add User
+      .modal-body
+        form.form-horizontal
+          .form-group
+            label.control-label.col-sm-3 for='user_name' Username
+            .col-sm-8
+              input.form-control type='text' id='user_name' ng-model='add_user_name'
+          .form-group
+            label.control-label.col-sm-3 for='password' Password
+            .col-sm-8
+              input.form-control type='password' id='password' ng-model='add_password'
+          .form-group
+            label.control-label.col-sm-3 for='role' Role
+            .col-sm-8
+              select.form-control id='role' ng-model='add_role'
+                option value='admin' administrator
+                option value='operator' operator
+                option value='user' user
+      .modal-footer
+        span.text-danger.pull-left ng-bind='add_user_msg'
+        button.btn.btn-default type='button' data-dismiss='modal' Cancel
+        button.btn.btn-primary type='button' ng-click='add_or_edit_user()' Ok
+
+.modal.fade#msg_modal
+  .modal-dialog.modal-sm
+    .modal-content
+      .modal-body.np
+        .alert.nbm role='alert' ng-class='ajax_msg.type'
+          | {{ajax_msg.content}}
+
+.modal.fade#confirm_modal
+  .modal-dialog.modal-sm
+    .modal-content
+      .modal-header
+        button type='button' class='close' data-dismiss='modal'
+          span aria-hidden='true' &times;
+          span.sr-only Close
+        h4.modal-title Confirm
+      .modal-body Are you sure you want to delete ?
+      .modal-footer
+        button.btn.btn-default type='button' data-dismiss='modal' Cancel
+        button.btn.btn-primary type='button' ng-click='delete_user()' Ok

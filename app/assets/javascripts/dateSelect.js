@@ -8,8 +8,8 @@ var DateSelect = (function () {
         this.cellSize = 0;
         this.borderWidth = 1;
         this.borderColor = '#c5cace';
-        this.width = 0;
-        this.height = 0;
+        this.width = 782;
+        this.height = 242;
         this.selectFrameColor = 'red';
         this.selectCellColor = '#55abff';
         this.selectedCellColor = '#3493ef';
@@ -35,13 +35,21 @@ var DateSelect = (function () {
             this.draw();
         },
         initSize: function () {
-            var cvsWidth = this.$el.parent().width();
-            this.cellSize = (cvsWidth - this.weekTitleWidth - this.borderWidth * 2) / 24;
-            this.$el[0].width = this.width = cvsWidth;
-            this.$el[0].height = this.height = this.cellSize * 8 + 2;
+            this.cellSize = (this.width - this.weekTitleWidth - this.borderWidth * 2) / 24;
+        },
+        getIEVersion: function () {
+            var v = 9;
+            var ua = navigator.userAgent.toLowerCase();
+            if (window.ActiveXObject)
+                v = ua.match(/msie ([\d.]+)/)[1];
+            return parseInt(v, 10);
         },
         initCanvas: function () {
-            this.ctx = this.$el[0].getContext('2d');
+            var canvas = this.$el[0];
+            if (this.getIEVersion() < 9) {
+                canvas = window.G_vmlCanvasManager.initElement(canvas);
+            }
+            this.ctx = canvas.getContext('2d');
         },
         drawSomeThing: function (drawMethod, strokeStyle, fillStyle) {
             this.ctx.save();
