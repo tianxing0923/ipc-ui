@@ -3,8 +3,8 @@ h3 SZYC
 
 form.form-horizontal.form-ipc.clearfix role='form'
   = render 'field', id: 'train_no', label_text: 'Train No.'
-  = render 'field', id: 'carriage_no', label_text: 'Carriage No.'
-  = render 'field', id: 'index_no', label_text: 'Index No.'
+  = render 'field_group', id: 'carriage_no', label_text: 'Carriage No.', addon_text: '1 - 32'
+  = render 'field_group', id: 'index_no', label_text: 'Index No.', addon_text: '1 - 8'
 
 form.form-horizontal.form-ipc-footer role='form'
   = render 'save_button'

@@ -11,3 +11,5 @@
       -else
         input.form-control class=cls type='text' id=id ng-model=id
       .input-group-addon = addon_text
+  .col-sm-4
+    p.form-control-static.text-danger ng-bind="#{id}_msg"

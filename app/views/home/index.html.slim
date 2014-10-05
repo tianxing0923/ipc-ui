@@ -1,5 +1,5 @@
-.home-wrap
-  .row ng-app='ipcApp' ng-controller='HomeController'
+.home-wrap ng-controller='HomeController'
+  .row
     .col-sm-2.home-sidebar-mask.left
       .collapse-block
     .col-sm-2
@@ -8,4 +8,28 @@
     .col-sm-10
       | hehe
   .home-footer
-    input.switch#flip bs-switch=true type='checkbox' name='flip' switch-on-text='Master' switch-off-text='Slave' switch-on-color='#008DEF' switch-off-color='#000' ng-model='flip'
+    .stream-control.pull-left
+      .btn-group
+        button.btn.btn-stream ng-class="{active: current_stream == 'master'}" type='button' ng-click='change_stream("master")' 主码流
+        button.btn.btn-stream ng-class="{active: current_stream == 'slave'}" type='button' ng-click='change_stream("slave")' 次码流
+    .screen-control.pull-right
+      a.fa.fa-list href='javascript:;' title='报警信息'
+      a.fa.fa-video-camera href='javascript:;' title='开启/关闭录屏'
+      a.fa.fa-search-plus href='javascript:;' title='放大'
+      a.fa.fa-arrows-alt href='javascript:;' title='全屏'
+      a.fa.fa-camera href='javascript:;' title='抓拍'
+      .ptz-position
+        .bg-origin
+          .handle
+    .play-control
+      .microphone-wrap
+        i.fa.fa-microphone
+        .microphone-slider
+          div ng-slider='' ng-model='microphone' min='0' max='100'
+      button.btn.btn-play type='button' ng-click='play()'
+        i.fa.fa-play
+      .volume-wrap
+        i.fa.fa-volume-down
+        .volume-slider
+          div ng-slider='' ng-model='volume' min='0' max='100'
+

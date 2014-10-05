@@ -27,10 +27,8 @@ form.form-horizontal.form-ipc role='form'
   .form-group ng-class='{hide: !upgrading}'
     .col-sm-5.col-sm-offset-3
       .progress
-        .progress-bar role='progressbar' aria-valuenow='{{progress_val}}' aria-valuemin='0' aria-valuemax='100' ng-style='{width: progress_val + "%"}' ng-bind-template='{{progress_val}} %'
-
-form.form-horizontal.form-ipc-footer role='form'
-  = render 'save_button'
+        .progress-bar.progress-bar-striped.active role='progressbar' aria-valuenow='{{progress_val}}' aria-valuemin='0' aria-valuemax='100' ng-style='{width: progress_val + "%"}' ng-bind-template='{{progress_val}} %'
+      .alert.alert-info 升级过程将会持续 1-10 分钟，请不要断开电源和网络连接。
 
 .modal.fade#confirm_modal
   .modal-dialog.modal-sm

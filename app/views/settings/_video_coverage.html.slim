@@ -12,20 +12,19 @@ h3 Video Coverage
   .sensitivity-wrap.clearfix
     .form-horizontal.col-sm-12
       .form-group
-        .col-lg-3
+        .col-lg-4
           p.form-control-static Sensitivity
-        .col-lg-9
+        .col-lg-8
           p.form-control-static
             span ng-bind='sensitivity'
             | &nbsp;(1 - 100)
         .col-lg-12
           .sensitivity-slider ng-slider='' ng-model='sensitivity' min='0' max='100'
-      .form-group
-        .col-lg-3
-          select.form-control.input-sm
+      .form-group.nbm
+        .col-lg-12
+          select.form-control.input-sm.sel-region
             option value='0' region1
             option value='1' region2
-        .col-lg-9
           input#coverage_switch ng-bswitch='' type='checkbox' name='coverage_switch' ng-model='coverage_switch'
   hr
   .row

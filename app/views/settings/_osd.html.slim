@@ -2,17 +2,19 @@ h3 OSD
 = render 'setting_breadcrumb', menu: 'OSD', sub_menu: 'OSD'
 
 ul.nav.nav-tabs role='tablist'
-  li.active
-    a href='javascript:;' Master
-  li
-    a href='javascript:;' Slave
+  li ng-class='{active: osd_type == 0}'
+    a href='javascript:;' ng-click='changeOsd(0)' Master
+  li ng-class='{active: osd_type == 1}'
+    a href='javascript:;' ng-click='changeOsd(1)' Slave
 
 form.form-horizontal.form-ipc.clearfix role='form'
-    = render 'osd_section', osd_type: 'device_name', title: 'Device Name'
-    = render 'osd_section', osd_type: 'comment', title: 'Comment'
-    = render 'osd_section', osd_type: 'frame_rate', title: 'Frame Rate'
-    = render 'osd_section', osd_type: 'bit_rate', title: 'Bit Rate'
-    = render 'osd_section', osd_type: 'datetime', title: 'Datetime'
+  = render 'osd_section', osd_type: 'device_name', title: 'Device Name'
+  = render 'osd_section', osd_type: 'comment', title: 'Comment'
+  = render 'osd_section', osd_type: 'frame_rate', title: 'Frame Rate'
+  = render 'osd_section', osd_type: 'bit_rate', title: 'Bit Rate'
+  = render 'osd_section', osd_type: 'datetime', title: 'Datetime'
+  .col-sm-12
+    p.text-danger ng-bind='valid_msg'
 
 form.form-horizontal.form-ipc-footer role='form'
   = render 'save_button'

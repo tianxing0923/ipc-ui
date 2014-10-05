@@ -2,9 +2,12 @@ h3 Port
 = render 'setting_breadcrumb', menu: 'Network', sub_menu: 'Port'
 
 form.form-horizontal.form-ipc role='form'
-  = render 'field', id: 'http_port', label_text: 'HTTP'
-  = render 'field', id: 'ftp_port', label_text: 'FTP'
-  = render 'field', id: 'rtsp_port', label_text: 'RTSP'
+  = render 'field', id: 'http_port', type: 'number', label_text: 'HTTP'
+  = render 'field', id: 'ftp_port', type: 'number', label_text: 'FTP'
+  = render 'field', id: 'rtsp_port', type: 'number', label_text: 'RTSP'
+  .form-group
+    .col-sm-offset-3.col-sm-9
+      p.text-danger ng-bind='common_msg'
 
 form.form-horizontal.form-ipc-footer role='form'
   = render 'save_button'
