@@ -2,7 +2,7 @@
   .col-sm-2.sidebar-mask
   .col-sm-2
     = render 'left_collapse'
-  .col-sm-10 ng-switch='type'
+  .col-sm-10.setting-content ng-switch='type'
     .message.alert.alert-success.alert-dismissible role='alert' ng-if='message_type == 1'
       button.close type='button'  data-dismiss='alert'
         span aria-hidden='true' &times
@@ -25,6 +25,8 @@
       = render 'image'
     .setting-wrap.privacy-block ng-switch-when='privacy_block' ng-controller='PrivacyBlockController'
       = render 'privacy_block'
+    .setting-warp.day-night-mode ng-switch-when='day_night_mode' ng-controller='DayNightModeController'
+      = render 'day_night_mode'
     .setting-wrap.osd ng-switch-when='osd' ng-controller='OsdController'
       = render 'osd'
     .setting-wrap.szyc ng-switch-when='szyc' ng-controller='SzycController'

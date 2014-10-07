@@ -6,7 +6,7 @@ form.form-horizontal.form-ipc role='form'
     .col-sm-12
       label.switch-label video access authentication
       input#authentication_switch ng-bswitch='' type='checkbox' name='authentication' ng-model='authentication'
-      button.btn.btn-success.new-user data-target='.add-user-modal' ng-click='show_add_modal()'
+      button.btn.btn-sm.btn-success.new-user data-target='.add-user-modal' ng-click='show_add_modal()'
         = fa_icon 'user'
         = fa_icon 'plus'
         | &nbsp;&nbsp;&nbsp;Add User
@@ -38,13 +38,13 @@ form.form-horizontal.form-ipc-footer role='form'
         button type='button' class='close' data-dismiss='modal'
           span aria-hidden='true' &times;
           span.sr-only Close
-        h4.modal-title Add User
+        h4.modal-title ng-bind='add_title'
       .modal-body
         form.form-horizontal
           .form-group
             label.control-label.col-sm-3 for='user_name' Username
             .col-sm-8
-              input.form-control type='text' id='user_name' ng-model='add_user_name'
+              input.form-control type='text' id='user_name' ng-model='add_user_name' ng-disabled='operate_type == "edit"'
           .form-group
             label.control-label.col-sm-3 for='password' Password
             .col-sm-8
@@ -53,7 +53,7 @@ form.form-horizontal.form-ipc-footer role='form'
             label.control-label.col-sm-3 for='role' Role
             .col-sm-8
               select.form-control id='role' ng-model='add_role'
-                option value='admin' administrator
+                option value='administrator' administrator
                 option value='operator' operator
                 option value='user' user
       .modal-footer

@@ -5,18 +5,18 @@ form.form-horizontal.form-ipc role='form'
   .form-group
     label.col-sm-3.control-label for='timezone' TimeZone
     .col-sm-5
-      = select_tag 'timezone', options_for_select(ActiveSupport::TimeZone.all.map{|tz| [tz.to_s, 'GMT ' + tz.formatted_offset]}), class: 'form-control'
+      = select_tag 'timezone', options_for_select(ActiveSupport::TimeZone.all.map{|tz| [tz.to_s, tz.to_s]}), class: 'form-control', 'ng-model' => 'timezone'
   br
   .row
     .col-sm-offset-2
-      input type='radio' id='manual' name="datetime_type" value="0" ng-model='datetime_type' ng-icheck=''
+      input type='radio' id='manual' name="datetime_type" value='1' ng-model='datetime_type' ng-icheck=''
       label.icheck-label for='manual' Manual
   br    
   .form-group
     label.col-sm-3.control-label for='datetime' Date
     .col-sm-5
-      .input-group data-date-format="YYYY-MM-DD hh:mm:ss"
-        input.form-control id='datetime' type='text' ng-model='datetime' ng-datetime=''
+      .input-group
+        input.form-control id='datetime' type='text' ng-model='datetime' ng-datetime='' data-date-format="YYYY-MM-DD hh:mm:ss"
         span.input-group-addon
           = fa_icon 'calendar lg'
     .col-sm-4
@@ -24,7 +24,7 @@ form.form-horizontal.form-ipc role='form'
   br
   .row
     .col-sm-offset-2
-      input type='radio' id='user_ntp' name="datetime_type" value="1" ng-model='datetime_type' ng-icheck=''
+      input type='radio' id='user_ntp' name="datetime_type" value='2' ng-model='datetime_type' ng-icheck=''
       label.icheck-label for='user_ntp' User NTP
   br
   .form-group    

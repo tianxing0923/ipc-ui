@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-CN" ng-app='ipcApp'>
+<head>
+  <title>易迅格IP摄像头</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <%= stylesheet_link_tag 'login', media: 'all' %>
+  <!--[if lt IE 9]>
+  <script src="/assets/respond.min.js"></script>
+  <script src="/assets/excanvas.min.js"></script>
+  <![endif]-->
+  <%= javascript_include_tag 'login' %>
+  <%= csrf_meta_tags %>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <%= yield %>
+  </div>
+</body>
+</html>

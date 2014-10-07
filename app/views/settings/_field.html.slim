@@ -2,7 +2,7 @@
 - group_ng = if defined?(group_ng) and group_ng.present? then group_ng else {disabled: false} end
 - type = if defined?(type) then type else 'text' end
 
-.form-group *group_ng
+.form-group ng-class="#{id}_msg != '' ? 'has-error' : ''" *group_ng
   label.col-sm-3.control-label for=id = label_text
   .col-sm-5
     - if defined?(input_ng)

@@ -1,0 +1,184 @@
+@import "variables";
+
+.sidebar-mask {
+  display: none;
+}
+
+// 左侧导航
+@media screen and (min-width: 768px) {
+  .sidebar-mask {
+    display: block;
+    position: fixed;
+    top: 52px;
+    left: 0;
+    bottom: 0;
+    background: $sidebar-bg;
+  }
+}
+.sidebar {
+  margin-left: -15px;
+  margin-right: -15px;
+  @include sidebar-control;
+}
+
+.setting-content {
+  *width: 77% !important;
+}
+
+.message {
+  margin-top: 20px;
+}
+
+.form-ipc-bg {
+    padding: 20px;
+    background: $form-bg;
+}
+
+// 设置内容区域
+.setting-wrap {
+  .form-ipc {
+    padding: 20px 0 5px 0;
+    background: $form-bg;
+  }
+  .form-ipc-footer {
+    margin-top: 15px;
+  }
+  .form-inline {
+    .control-label {
+      padding: 0 15px 0 40px;
+    }
+  }
+}
+
+.users {
+  .switch-label {
+    margin:  0 20px;
+  }
+  .bootstrap-switch {
+    *display: inline-block;
+    *zoom: 1;
+    *display: inline;
+    *width: 100px;
+
+    .bootstrap-switch-container {
+      *display: inline-block;
+      *zoom: 1;
+      *display: inline;
+      *width: 150px;
+
+      .bootstrap-switch-handle-on, .bootstrap-switch-handle-off, .bootstrap-switch-label {
+        *display: inline-block;
+        *zoom: 1;
+        *display: inline;
+        *width: 50px;
+      }
+    }
+  }
+  .new-user {
+    margin-left: 20px;
+    position: relative;
+    vertical-align: middle;
+
+    .fa-user {
+      font-size: 16px;
+    }
+    .fa-plus {
+      position: absolute;
+      left: 21px;
+      font-size: 12px;
+    }
+  }
+  .users-wrap {
+    padding: 0 20px;
+
+    table.users {
+      .operation {
+        a {
+          margin: 0 5px;
+        }
+      }
+    }
+  }
+}
+
+.maintenance {
+  .form-ipc {
+    button {
+      width: 100px;
+    }
+  }
+}
+
+.privacy-block {
+  .vlc-wrap {
+    margin-bottom: 20px;
+  }
+  .privacy-setting-wrap {
+    @media screen and (min-width: 1170px) {
+        margin-left: 750px;
+    }
+    .color-text {
+      width: 100px;
+    }
+  }
+  .form-group {
+    margin-right: 20px;
+    margin-bottom: 10px;
+  }
+  .color-input {
+    width: 100px;
+    border: 0;
+  }
+}
+
+.osd {
+  .nav-tabs {
+    border: 0;
+    margin-bottom: -1px;
+
+    li {
+      &.active > a {
+        background: $form-bg;
+        border: 0;
+      }
+      & > a {
+        border: 0;
+      }
+    }
+  }
+  .bootstrap-switch, .btn-color {
+    width: 100%;
+  }
+}
+
+.input {
+  .form-ipc {
+    padding-bottom: 20px;
+  }
+  .form-control {
+    margin-right: 20px;
+  }
+}
+
+.output {
+  .input-group {
+    width: 223px;
+  }
+}
+
+.motion-detect, .video-coverage {
+  .sensitivity-wrap {
+    .sel-region {
+      display: inline-block;
+      width: 100px;
+      margin-bottom: 10px;
+      margin-right: 10px;
+    }
+  }
+
+  @media screen and (min-width: 1170px) {
+    .sensitivity-wrap {
+      margin-left: 750px;
+    }
+  }
+}

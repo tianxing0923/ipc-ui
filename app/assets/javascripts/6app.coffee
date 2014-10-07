@@ -21,8 +21,9 @@ window.stopVlc = ->
     vlc.MRL = 'rtsp://192.168.1.100:8554/liveStream'
     vlc.playlist.stop()
 
-# ipcApp = angular.module 'ipcApp', ['frapontillo.bootstrap-switch']
-window.ipcApp = angular.module 'ipcApp', []
+window.ipcApp = angular.module('ipcApp', []).config(($sceProvider) ->
+  $sceProvider.enabled(false)
+)
 
 ipcApp.directive('ngIcheck', ($compile) ->
   return {
@@ -45,8 +46,6 @@ ipcApp.directive('ngIcheck', ($compile) ->
             $ngModel.$setViewValue($attrs.value);
           )
       )
-      if $attrs.value == $scope[$attrs.ngModel]
-        $($element).iCheck('check')
   }
 )
 
@@ -58,7 +57,10 @@ ipcApp.directive('ngBswitch', ($compile) ->
       if (!$ngModel)
         return
       $el = $($element)
-      $el.bootstrapSwitch().on('switchChange.bootstrapSwitch', (e, state) ->
+      $el.bootstrapSwitch({
+        onText: $el.attr('onText'),
+        offText: $el.attr('offText')
+      }).on('switchChange.bootstrapSwitch', (e, state) ->
         $scope.$apply( ->
           $ngModel.$setViewValue(state);
         )
@@ -92,10 +94,10 @@ ipcApp.directive('ngSlider', ($compile) ->
           $ngModel.$setViewValue(parseInt(val));
         )
       )
-      $scope.$watch($attrs.ngModel, (newValue) ->
-        if newValue
-          $el.val(newValue)
-      )
+      # $scope.$watch($attrs.ngModel, (newValue) ->
+      #   if newValue
+      #     $el.val(newValue)
+      # )
   }
 )
 
@@ -111,10 +113,13 @@ ipcApp.directive('ngColor', ($compile) ->
         # format: 'rgba'
       }).on('changeColor', (e) ->
         rgb = e.color.toRGB()
-        hex = e.color.toHex().toUpperCase()
-        $scope[$attrs.ngModel] = rgb
-        $el.find('.color-block').css('background', hex)
-        $el.parent().find('.color-text').val(hex)
+        # hex = e.color.toHex().toUpperCase()
+        $scope.$apply( ->
+          $ngModel.$setViewValue(rgb);
+        )
+        # $scope[$attrs.ngModel] = rgb
+        # $el.find('.color-block').css('background', hex)
+        # $el.parent().find('.color-text').val(hex)
       )
       $scope.$watch($attrs.ngModel, (newValue) ->
         if newValue

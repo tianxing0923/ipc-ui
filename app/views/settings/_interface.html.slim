@@ -5,10 +5,10 @@ form.form-horizontal.form-ipc role='form'
   .form-group
     label.col-sm-3.control-label for='network_method' Method
     .col-sm-5
-      select.form-control ng-model='autoconf'
-        option value='0' Static
-        option value='1' DHCP
-        option value='2' PPPOE
+      select.form-control ng-model='method'
+        option value='static' Static
+        option value='dhcp' DHCP
+        option value='pppoe' PPPOE
   hr
   = render 'field', id: 'network_username', label_text: 'Username', group_ng: {'ng-show' => 'canShow()'}
   = render 'field', id: 'network_password', type: 'password', label_text: 'Password', group_ng: {'ng-show' => 'canShow()'}

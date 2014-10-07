@@ -1,0 +1,166 @@
+@import "variables";
+
+.nm {
+  margin: none !important;
+}
+.ntm {
+  margin-top: 0 !important;
+}
+.nrm {
+  margin-right: 0 !important;
+}
+.nbm {
+  margin-bottom: 0 !important;
+}
+.nlm {
+  margin-bottom: 0 !important;
+}
+.np {
+  padding: 0 !important;
+}
+.ntp {
+  padding-top: 0 !important;
+}
+.nrp {
+  padding-right: 0 !important;
+}
+.nbp {
+  padding-bottom: 0 !important;
+}
+.nlp {
+  padding-bottom: 0 !important;
+}
+.btn-primary {
+  background: $navbar-ipc-bg;
+}
+.bootstrap-switch {
+  .bootstrap-switch-handle-on, .bootstrap-switch-handle-off {
+    &.bootstrap-switch-primary {
+      background: $navbar-ipc-bg;
+    }
+  }
+}
+.icheck-label {
+  padding-left: 15px;
+  padding-right: 30px;
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+.noUi-target {
+  margin-top: 7px;
+  background: $navbar-ipc-bg !important;
+
+  .noUi-handle {
+    width: 26px;
+    height: 26px;
+    top: -6px;
+    border-radius: 13px;
+
+    &:before, &:after {
+      display: none;
+    }
+  }
+}
+.color-input {
+  cursor: pointer !important;
+}
+.breadcrumb {
+  & > li {
+    *display: inline;
+    *zoom: 1;
+    *margin-left: 10px;
+  }
+}
+.canvas-wrap {
+  background: #fff;
+  width: 782px;
+  height: 242px;
+  position: relative;
+
+  .label-bg {
+    position: absolute;
+    width: 60px;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background: #eff8ff;
+    z-index: 1;
+  }
+  canvas {
+    position: absolute;
+    z-index: 2;
+  }
+  #input_canvas {
+    position: absolute;
+    z-index: 2;
+
+    div {
+      z-index: 3;
+    }
+  }
+}
+.vlc-wrap {
+  width: 750px;
+  height: 560px;
+  background: #ddd;
+  position: relative;
+
+  .shelter {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: $navbar-ipc-bg;
+  }
+}
+.color-block {
+  width: 16px;
+  height: 16px;
+}
+
+// 顶部导航
+.navbar-ipc {
+  background: $navbar-ipc-bg;
+  color: $navbar-ipc-color;
+  border-radius: 0;
+  margin: 0;
+  font-size: 16px;
+
+  .navbar-header {
+    height: 50px;
+
+    .navbar-text {
+      font-size: 22px;
+      height: 31px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+  }
+  .navbar-nav {
+    &>li>a {
+      color: $navbar-ipc-color;
+
+      &:hover{
+        background: $navbar-ipc-hover-bg;
+      }
+    }
+    &>li.active {
+      a {
+        background: $navbar-ipc-hover-bg;
+      }
+    }
+  }
+}
+
+.form-control {
+  *height: 20px !important;
+}
+select.form-control {
+  *height: 34px !important;
+}
+.icon {
+  @include inline-block;
+  width: 20px;
+  height: 20px;
+  background: url(/assets/icons.png);
+  vertical-align: middle;
+}

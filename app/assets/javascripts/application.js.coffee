@@ -1,6 +1,5 @@
 #= require jquery
 #= require jquery_ujs
-#= require turbolinks
 #= require angular
 #= require moment
 #= require bootstrap
@@ -12,3 +11,4 @@
 #= stub angular-bootstrap-switch.min.js
 #= stub html5shiv.min.js
 #= stub excanvas.min.js
+#= stub json3.min.js

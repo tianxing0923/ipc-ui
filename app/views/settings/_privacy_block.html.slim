@@ -3,7 +3,7 @@ h3 Privacy Block
 
 form.form-ipc-bg.clearfix
   .vlc-wrap.pull-left
-    .shelter ng-show='privacy_switch' ng-shelter='' ng-model='coverage_regional' minWidth='50' minHeight='50'
+    .shelter ng-show='privacy_switch' ng-shelter='' ng-model='coverage_regional' minWidth='50' minHeight='50' ng-style="{background: shelter_color_hex}"
     object classid='clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921' width='750' height='560' id='vlc' events='True'
       param name='MRL' value='rtsp://192.168.1.100:8554/liveStream'
       param name='AutoPlay' value='True'
