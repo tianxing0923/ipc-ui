@@ -6,6 +6,7 @@
 
 # Ignore bundler config.
 /.bundle
+/Gemfile.lock
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
@@ -15,3 +16,9 @@
 /log/*.log
 /tmp
 .idea
+
+/public/assets/application-*
+/public/assets/icheck
+/public/assets/bootstrap-colorpicker
+/public/assets/login-*
+/public/assets/manifest-*
