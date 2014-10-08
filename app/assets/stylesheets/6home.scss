@@ -64,7 +64,7 @@
             .direction-regional {
               width: 240px;
               height: 230px;
-              background: url(/assets/direction.png);
+              background: url(image_path('direction.png'));
               margin: 0px auto;
               -moz-user-select: none;  
               -webkit-user-select: none;  
@@ -84,7 +84,7 @@
                   position: absolute;
                   width: 20px;
                   height: 20px;
-                  background: url(/assets/direction-arrow.png);
+                  background: url(image_path('direction-arrow.png'));
                 }
                 &.top {
                   .hotspot {

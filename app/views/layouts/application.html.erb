@@ -13,6 +13,7 @@
   <%= stylesheet_link_tag 'font-awesome-ie7.min.css', media: 'all' %>
   <%= javascript_include_tag 'json3.min.js' %>
   <![endif]-->
+  <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
 </head>
 <body>
@@ -20,7 +21,7 @@
     <div class="container-fluid">
       <div class="navbar-header">
         <a class="navbar-brand" href="/">
-          <img alt="logo" src="/assets/logo.png">
+          <img alt="logo" src="<%= image_path('logo.png') %>">
         </a>
         <p class="navbar-text">易迅格IP摄像头</p>
       </div>
@@ -49,6 +50,5 @@
   <div class="container-fluid">
     <%= yield %>
   </div>
-  <%= javascript_include_tag 'application' %>
 </body>
 </html>

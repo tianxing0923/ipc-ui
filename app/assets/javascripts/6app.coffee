@@ -21,9 +21,10 @@ window.stopVlc = ->
     vlc.MRL = 'rtsp://192.168.1.100:8554/liveStream'
     vlc.playlist.stop()
 
-window.ipcApp = angular.module('ipcApp', []).config(($sceProvider) ->
+window.ipcApp = angular.module('ipcApp', [])
+ipcApp.config(['$sceProvider', ($sceProvider) ->
   $sceProvider.enabled(false)
-)
+])
 
 ipcApp.directive('ngIcheck', ($compile) ->
   return {

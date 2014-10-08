@@ -164,6 +164,6 @@ select.form-control {
   @include inline-block;
   width: 20px;
   height: 20px;
-  background: url(/assets/icons.png);
+  background: url(image_path('icons.png'));
   vertical-align: middle;
 }
