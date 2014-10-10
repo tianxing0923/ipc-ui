@@ -855,12 +855,13 @@ ipcApp.controller 'InputController', [
   ($scope, $http) ->
     $scope.input = 0
     $scope.input_on = true
+    $scope.time_data = [{start: '0:1', end: '0:10'}]
 
-    times = new DateSelect('input_canvas')
+    # time_data = new DateSelect('input_canvas')
 
     $scope.save = ->
-      selected = times.getSelectedCells()
-      console.log selected
+      # selected = time_data.getSelectedCells()
+      console.log $scope.time_data
 ]
 
 ipcApp.controller 'OutputController', [
@@ -927,10 +928,10 @@ ipcApp.controller 'MotionDetectController', [
       height: 200
     }
     $scope.detect_switch = true
-    times = new DateSelect('montion_detect_canvas')
+    $scope.time_data = [{start: '0:1', end: '0:10'}]
 
     $scope.save = ->
-      selected = times.getSelectedCells()
+      console.log $scope.time_data
       console.log $scope.detect_regional
 ]
 
@@ -942,11 +943,10 @@ ipcApp.controller 'VideoCoverageController', [
     $scope.coverage_regional = [100, 100, 200, 200]
     $scope.coverage_switch = true
     
-    times = new DateSelect('video_coverage_canvas')
+    $scope.time_data = [{start: '0:1', end: '0:10'}]
 
     $scope.save = ->
-      selected = times.getSelectedCells()
-      console.log selected
+      console.log $scope.time_data
 ]
 
 ipcApp.controller 'EventProcessController', [

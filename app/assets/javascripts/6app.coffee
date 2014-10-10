@@ -192,3 +192,20 @@ ipcApp.directive('ngDatetime', ($compile) ->
       $($element).datetimepicker()
   }
 )
+
+ipcApp.directive('ngTimegantt', ($compile) ->
+  return {
+    restrict: 'A',
+    require: '?ngModel',
+    link:  ($scope, $element, $attrs, $ngModel) ->
+      if (!$ngModel)
+        return
+      $($element).timegantt({
+        width: 782
+      }).on('changeSelected', (e, data) ->
+        $scope.$apply( ->
+          $ngModel.$setViewValue(data)
+        )
+      )
+  }
+)

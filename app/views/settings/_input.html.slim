@@ -11,9 +11,7 @@ form.form-horizontal.form-ipc.clearfix role='form'
   .col-sm-12
     h4 Schedule
   .col-sm-12
-    div.canvas-wrap
-      .label-bg
-      canvas id='input_canvas' width='782' height='242'
+    #input_timegantt.timegantt-wrapper ng-timegantt='' ng-model='time_data'
 
 form.form-horizontal.form-ipc-footer role='form'
   = render 'save_button'

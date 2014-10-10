@@ -71,34 +71,6 @@
     *margin-left: 10px;
   }
 }
-.canvas-wrap {
-  background: #fff;
-  width: 782px;
-  height: 242px;
-  position: relative;
-
-  .label-bg {
-    position: absolute;
-    width: 60px;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    background: #eff8ff;
-    z-index: 1;
-  }
-  canvas {
-    position: absolute;
-    z-index: 2;
-  }
-  #input_canvas {
-    position: absolute;
-    z-index: 2;
-
-    div {
-      z-index: 3;
-    }
-  }
-}
 .vlc-wrap {
   width: 750px;
   height: 560px;
@@ -166,4 +138,29 @@ select.form-control {
   height: 20px;
   background: url(image_path('icons.png'));
   vertical-align: middle;
+}
+.timegantt-wrapper {
+  @include no-user-select;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  position: relative;
+
+  .timegantt-head, .timegantt-row {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+    li {
+      cursor: default;
+      border-top: 1px solid #ddd;
+      border-left: 1px solid #ddd;
+      float: left;
+      text-align: center;
+
+      &.selected {
+        background: $navbar-ipc-bg;
+      }
+    }
+  }
 }

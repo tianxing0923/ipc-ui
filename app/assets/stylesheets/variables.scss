@@ -112,3 +112,10 @@ $form-bg: #f5f5f5;
     }
   }
 }
+@mixin no-user-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
