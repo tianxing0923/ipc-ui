@@ -71,13 +71,11 @@
             // 全部
             me.$el.on('click', '.week-all', function (e) {
                 var $this = $(this),
-                    selected = $this.data('selected');
-                if (selected == true) {
-                    me.$el.find('.cell').removeClass('selected');
-                    $this.data('selected', false);
+                    len = me.$el.find('.selected').length
+                if (len !== 0) {
+                    me.$el.find('.selected').removeClass('selected');
                 } else {
                     me.$el.find('.cell').addClass('selected');
-                    $this.data('selected', true);
                 }
             });
 
@@ -85,26 +83,23 @@
             me.$el.on('click', '.hour-label', function (e) {
                 var $this = $(this),
                     index = $this.index(),
-                    selected = $this.data('selected');
-                if (selected == true) {
-                    $this.parent().nextAll().find('li:eq(' + index + ')').removeClass('selected');
-                    $this.data('selected', false);
+                    $rows = $this.parent().nextAll(),
+                    $cols = $rows.find('li:eq(' + index + ')');
+                if ($cols.filter('.selected').length !== 0) {
+                    $cols.removeClass('selected');
                 } else {
-                    $this.parent().nextAll().find('li:eq(' + index + ')').addClass('selected');
-                    $this.data('selected', true);
+                    $cols.addClass('selected');
                 }
             });
 
             // 星期label单元格
             me.$el.on('click', '.week-label', function (e) {
                 var $this = $(this),
-                    selected = $this.data('selected');
-                if (selected == true) {
-                    $this.nextAll().removeClass('selected');
-                    $this.data('selected', false);
+                    $cells = $this.nextAll();
+                if ($cells.filter('.selected').length !== 0) {
+                    $cells.removeClass('selected');
                 } else {
-                    $this.nextAll().addClass('selected');
-                    $this.data('selected', true);
+                    $cells.addClass('selected');
                 }
             });
 
