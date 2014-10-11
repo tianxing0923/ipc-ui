@@ -1,0 +1,21 @@
+.row ng-controller='SystemInfoController'
+  .col-sm-12
+    h3 Sytem Information
+  .col-sm-4
+    .panel.panel-default
+      .panel-heading
+        strong CPU usage
+      .panel-body
+        canvas ng-chart='' ng-model='cpu'
+  .col-sm-4
+    .panel.panel-default
+      .panel-heading
+        strong Memory usage
+      .panel-body
+        canvas ng-chart='' ng-model='memory'
+  .col-sm-4
+    .panel.panel-default
+      .panel-heading
+        strong Network usage
+      .panel-body
+        canvas ng-chart='' ng-model='network'

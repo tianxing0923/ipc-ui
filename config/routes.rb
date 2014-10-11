@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
-  get 'login/index'
-
   root 'home#index'
+  get '/login' => 'login#index'
   get '/home' => 'home#index'
   get '/settings' => 'settings#index'
   get '/playback' => 'playback#index'

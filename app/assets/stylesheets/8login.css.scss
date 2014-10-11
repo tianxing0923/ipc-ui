@@ -1,0 +1,23 @@
+.login-body {
+	background: url(image_path('login-bg.jpg')) top center;
+}
+.login-wrap {
+	width: 300px;
+	margin: 100px auto;
+
+	.login-header {
+		margin-bottom: 30px;
+
+		.logo {
+			width: 80px;
+			height: 80px;
+			float: left;
+			margin-left: 15px;
+		}
+		h3 {
+			float: left;
+			margin-top: 28px;
+			margin-left: 10px;
+		}
+	}
+}

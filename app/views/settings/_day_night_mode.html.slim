@@ -1,1 +1,22 @@
-| sdfsdfdsfsdf
+h3 Day Night Mode
+= render 'setting_breadcrumb', menu: 'Video', sub_menu: 'Day Night Mode'
+
+form.form-horizontal.form-ipc.clearfix role='form'
+  .form-group
+    label.col-sm-3.control-label Brightness
+    .col-sm-5
+      #brightness_slider ng-slider='' ng-model='brightness' min='0' max='255'
+    .col-sm-4
+      p.form-control-static
+        span ng-bind='brightness'
+        | &nbsp;(0 - 255)
+  .form-group
+    label.col-sm-3.control-label Chrominance
+    .col-sm-5
+      #chrominance_slider ng-slider='' ng-model='chrominance' min='0' max='255'
+    .col-sm-4
+      p.form-control-static
+        span ng-bind='chrominance'
+        | &nbsp;(0 - 255)
+form.form-horizontal.form-ipc-footer role='form'
+  = render 'save_button'

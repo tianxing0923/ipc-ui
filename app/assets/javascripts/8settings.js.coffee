@@ -431,26 +431,31 @@ ipcApp.controller 'PrivacyBlockController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    $scope.region = 1
-    $scope.privacy_switch = true
-    $scope.shelter_color = {
-      a: 1,
-      b: 0,
-      g: 0,
-      r: 0,
-    }
-    $scope.shelter_color_hex = ''
-    $scope.coverage_regional = {
-      x: 200,
-      y: 150,
-      width: 300,
-      height: 100
-    }
+    setTimeout(->
+      $scope.region = 1
+      $scope.privacy_switch = true
+      $scope.shelter_color = {
+        a: 1,
+        b: 115,
+        g: 160,
+        r: 0,
+      }
+      $scope.coverage_regional = {
+        x: 200,
+        y: 150,
+        width: 300,
+        height: 100
+      }
+      add_watch()
+      return
+    , 500)
 
-    $scope.$watch('shelter_color', (newValue) ->
-      hex = '#' + ((1 << 24) | (parseInt(newValue.r) << 16) | (parseInt(newValue.g) << 8) | parseInt(newValue.b)).toString(16).substr(1)
-      $scope.shelter_color_hex = hex.toUpperCase()
-    )
+    add_watch = ->
+      $scope.$watch('shelter_color', (newValue) ->
+        if newValue
+          hex = '#' + ((1 << 24) | (parseInt(newValue.r) << 16) | (parseInt(newValue.g) << 8) | parseInt(newValue.b)).toString(16).substr(1)
+          $scope.shelter_color_hex = hex.toUpperCase()
+      )
 
     $scope.play_v = ->
       playVlc()
@@ -466,7 +471,12 @@ ipcApp.controller 'DayNightModeController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-
+    setTimeout(->
+      $scope.brightness = 50
+      $scope.chrominance = 50
+      $('#brightness_slider').val($scope.brightness)
+      $('#chrominance_slider').val($scope.chrominance)
+    , 500)
 ]
 
 ipcApp.controller 'SceneController', [
@@ -853,9 +863,12 @@ ipcApp.controller 'InputController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    $scope.input = 0
-    $scope.input_on = true
-    $scope.time_data = [{start: '0:1', end: '0:10'}]
+    setTimeout( ->
+      $scope.input = 0
+      $scope.input_on = true
+      $scope.time_data = [{start: '0:1', end: '0:10'}]
+      $('#input_timegantt').timegantt('setSelected', $scope.time_data)
+    , 1)
 
     # time_data = new DateSelect('input_canvas')
 

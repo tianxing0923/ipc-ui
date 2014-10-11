@@ -3,7 +3,7 @@ h3 Privacy Block
 
 form.form-ipc-bg.clearfix
   .vlc-wrap.pull-left
-    .shelter ng-show='privacy_switch' ng-shelter='' ng-model='coverage_regional' minWidth='50' minHeight='50' ng-style="{background: shelter_color_hex}"
+    #privacy_switch.shelter ng-show='privacy_switch' ng-shelter='' ng-model='coverage_regional' minWidth='50' minHeight='50' ng-style="{background: shelter_color_hex}"
     object classid='clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921' width='750' height='560' id='vlc' events='True'
       param name='MRL' value='rtsp://192.168.1.100:8554/liveStream'
       param name='AutoPlay' value='True'
@@ -16,11 +16,11 @@ form.form-ipc-bg.clearfix
           option value='0' region1
           option value='1' region2
       .form-group
-        input.switch#privacy_switch ng-bswitch='' type='checkbox' name='privacy_switch' ng-model='privacy_switch'
+        input#privacy_switch ng-bswitch='' type='checkbox' name='privacy_switch' ng-model='privacy_switch'
       .form-group
         .input-group
           input.form-control.input-sm.color-text type='text' readonly='readonly'
-          .input-group-addon ng-color='' ng-model='shelter_color'
+          #shelter_color.input-group-addon ng-color='' ng-model='shelter_color'
             .color-block
       .form-group
         button.btn.btn-default ng-click='play_v()' play

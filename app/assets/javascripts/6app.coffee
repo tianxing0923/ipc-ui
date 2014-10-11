@@ -33,7 +33,7 @@ ipcApp.directive('ngIcheck', ($compile) ->
     link: ($scope, $element, $attrs, $ngModel) ->
       if (!$ngModel)
         return
-      $($element).iCheck({
+      $element.iCheck({
         checkboxClass: 'icheckbox_square-blue',
         radioClass: 'iradio_square-blue',
         increaseArea: '20%'
@@ -57,19 +57,18 @@ ipcApp.directive('ngBswitch', ($compile) ->
     link: ($scope, $element, $attrs, $ngModel) ->
       if (!$ngModel)
         return
-      $el = $($element)
-      $el.bootstrapSwitch({
-        onText: $el.attr('onText'),
-        offText: $el.attr('offText')
+      $element.bootstrapSwitch({
+        onText: $element.attr('onText'),
+        offText: $element.attr('offText')
       }).on('switchChange.bootstrapSwitch', (e, state) ->
         $scope.$apply( ->
           $ngModel.$setViewValue(state);
         )
       )
       if $scope[$attrs.ngModel]
-        $el.bootstrapSwitch('state', true, true)
+        $element.bootstrapSwitch('state', true, true)
       $scope.$watch($attrs.ngModel, (newValue) ->
-        $el.bootstrapSwitch('state', newValue || false, true);
+        $element.bootstrapSwitch('state', newValue || false, true);
       )
   }
 )
@@ -81,8 +80,7 @@ ipcApp.directive('ngSlider', ($compile) ->
     link: ($scope, $element, $attrs, $ngModel) ->
       if (!$ngModel)
         return
-      $el = $($element)
-      $el.noUiSlider({
+      $element.noUiSlider({
         start: [ $scope[$attrs.ngModel] || 0 ],
         step: 1,
         connect: 'lower',
@@ -95,10 +93,6 @@ ipcApp.directive('ngSlider', ($compile) ->
           $ngModel.$setViewValue(parseInt(val));
         )
       )
-      # $scope.$watch($attrs.ngModel, (newValue) ->
-      #   if newValue
-      #     $el.val(newValue)
-      # )
   }
 )
 
@@ -109,26 +103,19 @@ ipcApp.directive('ngColor', ($compile) ->
     link: ($scope, $element, $attrs, $ngModel) ->
       if (!$ngModel)
         return
-      $el = $($element)
-      $el.colorpicker({
-        # format: 'rgba'
-      }).on('changeColor', (e) ->
+      $element.colorpicker().on('changeColor', (e) ->
         rgb = e.color.toRGB()
-        # hex = e.color.toHex().toUpperCase()
         $scope.$apply( ->
           $ngModel.$setViewValue(rgb);
         )
-        # $scope[$attrs.ngModel] = rgb
-        # $el.find('.color-block').css('background', hex)
-        # $el.parent().find('.color-text').val(hex)
       )
       $scope.$watch($attrs.ngModel, (newValue) ->
         if newValue
           hex = '#' + ((1 << 24) | (parseInt(newValue.r) << 16) | (parseInt(newValue.g) << 8) | parseInt(newValue.b)).toString(16).substr(1)
           hex.toUpperCase()
-          $el.colorpicker('setValue', newValue, true);
-          $el.find('.color-block').css('background', hex)
-          $el.parent().find('.color-text').val(hex)
+          $element.colorpicker('setValue', hex, true);
+          $element.find('.color-block').css('background', hex)
+          $element.parent().find('.color-text').val(hex)
       )
   }
 )
@@ -140,13 +127,20 @@ ipcApp.directive('ngShelter', ($compile) ->
     link: ($scope, $element, $attrs, $ngModel) ->
       if (!$ngModel)
         return
-      $parent = $($element).parent()
+      $parent = $element.parent()
       parent_size = {
         width: $parent.width(),
         height: $parent.height()
       }
       rect = $scope[$attrs.ngModel]
-      $($element).css({
+      if !rect
+        rect = {
+          x: 0,
+          y: 0,
+          width: 100,
+          height: 100
+        }
+      $element.css({
         left: rect.x,
         top: rect.y,
         width: rect.width,
@@ -171,14 +165,19 @@ ipcApp.directive('ngShelter', ($compile) ->
             rect.y = parent_size.height - rect.height
             $(this).css('top', rect.y)
           $scope.$apply( ->
-            $ngModel.$setViewValue({
-              x: rect.y,
-              y: rect.y,
-              width: rect.width,
-              height: rect.height
-            })
+            $ngModel.$setViewValue(rect)
           )
       })
+      $scope.$watch($attrs.ngModel, (newValue) ->
+        if newValue
+          rect = newValue
+          $element.css({
+            left: newValue.x,
+            top: newValue.y,
+            width: newValue.width,
+            height: newValue.height
+          })
+      )
   }
 )
 
@@ -189,7 +188,7 @@ ipcApp.directive('ngDatetime', ($compile) ->
     link: ($scope, $element, $attrs, $ngModel) ->
       if (!$ngModel)
         return
-      $($element).datetimepicker()
+      $element.datetimepicker()
   }
 )
 
@@ -200,12 +199,50 @@ ipcApp.directive('ngTimegantt', ($compile) ->
     link:  ($scope, $element, $attrs, $ngModel) ->
       if (!$ngModel)
         return
-      $($element).timegantt({
+      debugger
+      $element.timegantt({
         width: 782
       }).on('changeSelected', (e, data) ->
         $scope.$apply( ->
           $ngModel.$setViewValue(data)
         )
+      )
+  }
+)
+
+ipcApp.directive('ngChart', ($compile) ->
+  return {
+    restrict: 'A',
+    require: '?ngModel',
+    link:  ($scope, $element, $attrs, $ngModel) ->
+      if (!$ngModel)
+        return
+      $parent = $element.parent()
+      $element[0].width = $parent.width()
+      $element[0].height = $parent.height()
+      ctx = $element[0].getContext('2d')
+      data = $scope[$attrs.ngModel]
+      # if data
+
+      # else
+      #   data = []
+
+      lineChartData = {
+        labels: ['60s', '50s', '40s', '30s', '20s', '10s', '0s'],
+        datasets: [
+          {
+            label: $attrs.label || 'Chart',
+            fillColor: $attrs.fillColor || 'rgba(220,220,220,0.2)',
+            strokeColor: $attrs.strokeColor || 'rgba(220,220,220,1)',
+            data : [50, 60, 80, 90, 10, 50, 30]
+          }
+        ]
+      }
+
+      new Chart(ctx).Line(lineChartData);
+
+      $scope.$watch($attrs.ngModel, (newValue) ->
+        new Chart(ctx).Line(lineChartData);
       )
   }
 )
