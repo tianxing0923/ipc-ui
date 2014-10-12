@@ -1,21 +1,33 @@
 .login-wrap ng-controller="loginController"
-	.login-header.clearfix
-		img.logo alt="logo" src="/assets/logo2.png"
-		h3 易迅格IP摄像头
-    form role="form"
-        .form-group ng-class="{'has-error': username_msg!=''}"
-            label for="userName" 用户名
-            input.form-control type="text" name="userName" ng-model="username" ng-blur="valid_username()"
-            .help-block ng-bind="username_msg"
-        .form-group ng-class="{'has-error': password_msg!=''}"
-            label for="password" 密 码
-            input.form-control type="password" name="password" ng-model="password" ng-blur="valid_password()"
-            .help-block ng-bind="password_msg"
-        .form-group
-        	label for="password" 语 言
-            select.form-control name="language" ng-model="language"
-            	option value="zh_CN" 中文
-            	option value="en" 英文
-		.form-group ng-class="{'has-error': login_fail_msg!=''}"
-			.help-block ng-bind="login_fail_msg"
-        button.btn.btn-lg.btn-primary.btn-block type="button" ng-click="login()" 登 录
+  .login-header.clearfix
+    img.logo alt="logo" src=image_path('logo2.png')
+    h3 易迅格IP摄像头
+  form role="form"
+    .form-group ng-class="{'has-error': username_msg!=''}"
+        label for="userName" 用户名
+        input.form-control type="text" name="userName" ng-model="username" ng-blur="valid_username()"
+        .help-block ng-bind="username_msg"
+    .form-group ng-class="{'has-error': password_msg!=''}"
+        label for="password" 密 码
+        input.form-control type="password" name="password" ng-model="password" ng-blur="valid_password()"
+        .help-block ng-bind="password_msg"
+    .form-group
+      label for="password" 语 言
+      .dropdown
+        button.btn.btn-default.dropdown-toggle.language type="button" data-toggle="dropdown"
+          img.national-flag src=image_path('china.png') ng-if="language == '中文'"
+          img.national-flag src=image_path('english.png') ng-if="language == 'English'"
+          span ng-bind="language"
+          span.caret
+        ul.dropdown-menu role="menu" aria-labelledby="language"
+          li role="presentation" ng-click="change_language('中文')"
+            a href="javascript:;"
+              img.national-flag src=image_path('china.png')
+              | 中文
+          li role="presentation" ng-click="change_language('English')"
+            a href="javascript:;"
+              img.national-flag src=image_path('english.png')
+              | English
+    .form-group ng-class="{'has-error': login_fail_msg!=''}"
+      .help-block ng-bind="login_fail_msg"
+    button.btn.btn-lg.btn-primary.btn-block type="button" ng-click="login()" 登 录

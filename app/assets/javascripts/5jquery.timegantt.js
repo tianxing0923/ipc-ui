@@ -4,7 +4,16 @@
         width: 'auto',
         minWidth: 600,
         weekWidth: 50,
-        weekLabels: ['全部', '日', '一', '二', '三', '四', '五', '六'],
+        weekLabels: [
+            { id: '', text: '全部' },
+            { id: 'sun', text: '日' },
+            { id: 'mon', text: '一' },
+            { id: 'tue', text: '二' },
+            { id: 'wed', text: '三' },
+            { id: 'thu', text: '四' },
+            { id: 'fri', text: '五' },
+            { id: 'sat', text: '六' }
+        ],
         maskBackground: 'rgba(135, 206, 250, 0.5)',
         maskBorder: '1px solid #6495ed'
     };
@@ -35,12 +44,11 @@
                 _width = _width + 24 * 1;
             }
             this.$el.width(_width);
-            this.wrapperOffset = this.$el.offset();
         },
         _createElement: function () {
             var tpl = '';
             for (var i = 0, j = this.o.weekLabels.length; i < j; i++) {
-                tpl += '<ul class="' + (i == 0 ? 'timegantt-head': 'timegantt-row') + ' clearfix">'
+                tpl += '<ul class="' + (i == 0 ? 'timegantt-head ': 'timegantt-row ') + this.o.weekLabels[i].id + ' clearfix">'
                     + this._createWeekElement(this.o.weekLabels[i], i)
                     + this._createContentElement(i)
                     + '</ul>';
@@ -50,7 +58,7 @@
         _createWeekElement: function (weekLabel, rowNum) {
             var weekTpl = '<li class="' + (rowNum == 0 ? 'week-all' : 'week-label')
                 + '" style="width:' + this.o.weekWidth + 'px;height:'
-                + this.tdSize + 'px;line-height:' + this.tdSize + 'px;">' + weekLabel + '</li>';
+                + this.tdSize + 'px;line-height:' + this.tdSize + 'px;">' + weekLabel.text + '</li>';
             return weekTpl;
         },
         _createContentElement: function (rowNum) {
@@ -123,6 +131,7 @@
         },
         _mousedownHandler: function (e) {
             this.isMousedown = true;
+            this.wrapperOffset = this.$el.offset();
             var start = {
                 left: e.pageX - this.wrapperOffset.left,
                 top: e.pageY - this.wrapperOffset.top
@@ -162,7 +171,7 @@
                 this.isMousedown = false;
                 this._selectedCell();
                 this.$layerMask.remove();
-                this.$el.triggerHandler('changeSelected', [this.getSelected()]);
+                this.$el.triggerHandler('changeSelected', this.getSelected());
             }
         },
         _selectedCell: function () {
@@ -187,33 +196,64 @@
             });
         },
         getSelected: function () {
-            var data = [];
-            this.$el.find('.timegantt-row').each(function (index, item) {
-                var $item = $(item),
-                    $selected = $item.find('.selected'),
-                    $first = $selected.first(),
-                    $last = $selected.last();
-                if ($selected.length != 0) {
-                    data.push({
-                        start: index + ':' + ($first.index() + 1),
-                        end: index + ':' + ($last.index() + 1)
-                    });
-                }
+            var $monSelected = this.$el.find('.mon').find('.selected'),
+                $tueSelected = this.$el.find('.tue').find('.selected'),
+                $wedSelected = this.$el.find('.wed').find('.selected'),
+                $thuSelected = this.$el.find('.thu').find('.selected'),
+                $friSelected = this.$el.find('.fri').find('.selected'),
+                $satSelected = this.$el.find('.sat').find('.selected'),
+                $sunSelected = this.$el.find('.sun').find('.selected'),
+                monTemp = [],
+                tueTemp = [],
+                wedTemp = [],
+                thuTemp = [],
+                friTemp = [],
+                satTemp = [],
+                sunTemp = [];
+            $monSelected.each(function (index, item) {
+                monTemp.push($(item).index() - 1);
             });
+            $tueSelected.each(function (index, item) {
+                tueTemp.push($(item).index() - 1);
+            });
+            $wedSelected.each(function (index, item) {
+                wedTemp.push($(item).index() - 1);
+            });
+            $thuSelected.each(function (index, item) {
+                thuTemp.push($(item).index() - 1);
+            });
+            $friSelected.each(function (index, item) {
+                friTemp.push($(item).index() - 1);
+            });
+            $satSelected.each(function (index, item) {
+                satTemp.push($(item).index() - 1);
+            });
+            $sunSelected.each(function (index, item) {
+                sunTemp.push($(item).index() - 1);
+            });
+
+            var data = {
+                'mon': monTemp.join(','),
+                'tue': tueTemp.join(','),
+                'wed': wedTemp.join(','),
+                'thu': thuTemp.join(','),
+                'fri': friTemp.join(','),
+                'sat': satTemp.join(','),
+                'sun': sunTemp.join(',')
+            };
             return data;
         },
         setSelected: function (data) {
             var me = this;
-            $.each(data, function (index, item) {
-                var $row = me.$el.find('.timegantt-row').eq(index);
-                var start = parseInt(item.start.split(':')[1]),
-                    end = parseInt(item.end.split(':')[1]);
-                $row.find('.cell').filter(function (index) {
-                    if (index >= start && index <= end) {
-                        return true;
-                    }
-                }).addClass('selected');
-            });
+            for (var key in data) {
+                var $row = me.$el.find('.' + key);
+                if (data[key]) {
+                    var times = data[key].split(',');
+                    for (var i = times.length - 1; i >= 0; i--) {
+                        $row.find('.cell').eq(times[i]).addClass('selected');
+                    };
+                }
+            };
         }
     };
     var old = $.fn.timegantt;

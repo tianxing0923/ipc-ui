@@ -1,21 +1,46 @@
-.row ng-controller='SystemInfoController'
+.row.system-wrap ng-controller='SystemInfoController'
   .col-sm-12
     h3 Sytem Information
   .col-sm-4
     .panel.panel-default
       .panel-heading
-        strong CPU usage
+        strong CPU
       .panel-body
-        canvas ng-chart='' ng-model='cpu'
+        .chart-wrap
+          canvas ng-chart='' ng-model='cpu' fillcolor='rgba(184, 218, 249, 0.5)' strokecolor='#3495f0' scalelinecolor='#b9d8ee' scalegridlinecolor='#b9d8ee'
+        ul.list-unstyled.info-details
+          li
+            strong Clock Speed: 3.20 GHz
+          li
+            strong Usage: 15 %
   .col-sm-4
     .panel.panel-default
       .panel-heading
-        strong Memory usage
+        strong Memory
       .panel-body
-        canvas ng-chart='' ng-model='memory'
+        .chart-wrap
+          canvas ng-chart='' ng-model='memory' fillcolor='rgba(205, 233, 196, 0.5)' strokecolor='#80c269' scalelinecolor='#c4e5b9' scalegridlinecolor='#c4e5b9'
+        ul.list-unstyled.info-details
+          li
+            strong Total: 4096 MB
+          li
+            strong Used: 2048 MB
+          li
+            strong Free: 2048 MB
   .col-sm-4
     .panel.panel-default
       .panel-heading
-        strong Network usage
+        strong Network
       .panel-body
-        canvas ng-chart='' ng-model='network'
+        .chart-wrap
+          canvas ng-chart='' ng-model='network' fillcolor='rgba(184, 177, 227, 0.5)' strokecolor='#bbb5e4' scalelinecolor='#4433ab' scalegridlinecolor='#4433ab'
+        ul.list-unstyled.info-details
+          li
+            strong Link: 100 Mbps
+          li
+            strong Send: 10 Mbps
+          li
+            strong Recv: 50 Mbps
+
+
+  button.btn.btn-default ng-click="changeVal()" haha

@@ -138,8 +138,9 @@
 
     li {
       &.active > a {
-        background: $form-bg;
+        background: #008def;
         border: 0;
+        color: #fff;
       }
       & > a {
         border: 0;
@@ -174,6 +175,9 @@
       margin-bottom: 10px;
       margin-right: 10px;
     }
+  }
+  .shelter {
+    background: $navbar-ipc-bg;
   }
 
   @media screen and (min-width: 1170px) {

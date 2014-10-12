@@ -1,9 +1,12 @@
+window.VIDEO_WIDTH = 750
+window.VIDEO_HEIGHT = 560
+
 ipcApp.controller 'SettingController', [
   '$scope'
   '$timeout'
   ($scope, $timeout) ->
     $scope.type = 'base_info'
-    $scope.url = 'http://192.168.1.99/api/1.0'
+    $scope.url = 'http://192.168.1.217/api/1.0'
     $scope.message_type = 0
     $scope.message = ''
     timer = null
@@ -50,7 +53,6 @@ ipcApp.controller 'BaseInfoController', [
 
       add_watch()
 
-    $scope.serial = '12312321'
     $scope.device_name_msg = ''
     $scope.comment_msg = ''
     $scope.location_msg = ''
@@ -336,29 +338,18 @@ ipcApp.controller 'StreamController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    # $http.get "#{$scope.$parent.url}/video.json",
-    #   params:
-    #     'items[]': ['profile', 'flip', 'quanlity', 'frame_rate', 'bit_rate', 'bit_rate_value']
-    # .success (data) ->
-    #   $scope.stream_profile = data.items.profile
-    #   $scope.flip = data.items.flip
-    #   $scope.mirrow = true
-    #   $scope.quanlity = data.items.quanlity
-    #   $scope.frame_rate = data.items.frame_rate
-    #   $scope.bit_rate = data.items.bit_rate
-    #   $scope.bit_rate_value = data.items.bit_rate_value
+    $http.get "#{$scope.$parent.url}/video.json",
+      params:
+        'items[]': ['profile', 'flip', 'mirror', 'main_profile', 'sub_profile']
+    .success (data) ->
+      console.log data
+      $scope.profile = data.items.profile
+      $scope.flip = data.items.flip
+      $scope.mirrow = data.items.mirror
+      $scope.main_profile = data.items.main_profile
+      $scope.sub_profile = data.items.sub_profile
 
-    $scope.stream_profile = 1
-    $scope.flip = false
-    $scope.mirrow = true
-    $scope.quanlity = 1
-    $scope.frame_rate = 30
-    $scope.bit_rate = 1
-    $scope.bit_rate_value = 1024
-    $scope.slave_quanlity = 4
-    $scope.slave_frame_rate = 20
-    $scope.slave_bit_rate = 0
-    $scope.slave_bit_rate_value = 512
+      add_watch()
 
     $scope.valid_msg = ''
 
@@ -377,23 +368,24 @@ ipcApp.controller 'StreamController', [
         return true
 
     add_watch = ->
-      $scope.$watch('frame_rate', (newValue) ->
+      $scope.$watch('main_profile.frame_rate', (newValue) ->
         valid('Master frame rate', newValue, 1, 30)
       )
-      $scope.$watch('bit_rate_value', (newValue) ->
+      $scope.$watch('main_profile.bit_rate_value', (newValue) ->
         valid('Master bit rate', newValue, 128, 10240)
       )
-      $scope.$watch('slave_frame_rate', (newValue) ->
+      $scope.$watch('sub_profile.frame_rate', (newValue) ->
         valid('Slave frame rate', newValue, 1, 30)
       )
-      $scope.$watch('slave_bit_rate_value', (newValue) ->
+      $scope.$watch('sub_profile.bit_rate_value', (newValue) ->
         valid('Slave bit rate', newValue, 128, 10240)
       )
 
-    add_watch()
-
     isValid = ->
-      if valid('Master frame rate', $scope.frame_rate, 1, 30) && valid('Master bit rate', $scope.bit_rate_value, 128, 10240) && valid('Slave frame rate', $scope.slave_frame_rate, 1, 30) && valid('Slave bit rate', $scope.slave_bit_rate_value, 128, 10240)
+      if valid('Master frame rate', $scope.main_profile.frame_rate, 1, 30) &&
+      valid('Master bit rate', $scope.main_profile.bit_rate_value, 128, 10240) &&
+      valid('Slave frame rate', $scope.sub_profile.frame_rate, 1, 30) &&
+      valid('Slave bit rate', $scope.sub_profile.bit_rate_value, 128, 10240)
         return true
       else
         return false
@@ -401,15 +393,13 @@ ipcApp.controller 'StreamController', [
     $scope.save = ->
       if !isValid()
         return
-      console.log $scope.flip
       $http.put "#{$scope.$parent.url}/video.json",
         items:
-          profile: $scope.stream_profile
-          flip: if $scope.flip then 1 else 0
-          quanlity: parseInt($scope.quanlity)
-          frame_rate: parseInt($scope.frame_rate)
-          bit_rate: parseInt($scope.bit_rate)
-          bit_rate_value: parseInt($scope.bit_rate_value)
+          profile: $scope.profile
+          flip: $scope.flip
+          mirrow: $scope.mirror
+          main_profile: $scope.main_profile
+          sub_profile: $scope.sub_profile
       .success ->
         $scope.$parent.success('Save Success')
 ]
@@ -418,43 +408,74 @@ ipcApp.controller 'ImageController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    $scope.brightness = 50
-    $scope.chrominance = 30
-    $scope.contrast = 80
-    $scope.saturation = 0
-    $scope.watermark = true
-    $scope.dnr = false
-    $scope.scence = '50'
+    $http.get "#{$scope.$parent.url}/image.json",
+      params:
+        'items[]': ['watermark','3ddnr','brightness','chrominance','contrast','saturation','scenario']
+    .success (data) ->
+      $scope.watermark = data.items.watermark
+      $scope.dnr = data.items['3ddnr']
+      $scope.brightness = data.items.brightness
+      $scope.chrominance = data.items.chrominance
+      $scope.contrast = data.items.contrast
+      $scope.saturation = data.items.saturation
+      $scope.scenario = data.items.scenario
+      $('#brightness_slider').val($scope.brightness)
+      $('#chrominance_slider').val($scope.chrominance)
+      $('#contrast_slider').val($scope.contrast)
+      $('#saturation_slider').val($scope.saturation)
+      $('[name=scenario][value=' + $scope.scenario + ']').iCheck('check')
+
+    $scope.save = ->
+      $http.put "#{$scope.$parent.url}/image.json",
+        items:
+          watermark: $scope.watermark
+          '3ddnr': $scope.dnr
+          brightness: $scope.brightness
+          chrominance: $scope.chrominance
+          contrast: $scope.contrast
+          saturation: $scope.saturation
+          scenario: $scope.scenario
+      .success ->
+        $scope.$parent.success('Save Success')
 ]
 
 ipcApp.controller 'PrivacyBlockController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    setTimeout(->
-      $scope.region = 1
-      $scope.privacy_switch = true
-      $scope.shelter_color = {
-        a: 1,
-        b: 115,
-        g: 160,
-        r: 0,
+    $http.get "#{$scope.$parent.url}/privacy_block.json",
+      params:
+        'items[]': ['region1','region2']
+    .success (data) ->
+      console.log data
+      $scope.region1 = data.items.region1
+      $scope.region2 = data.items.region2
+      $scope.region1_rect = {
+        left: Math.round($scope.region1.rect.left / 1000 * VIDEO_WIDTH),
+        top: Math.round($scope.region1.rect.top / 1000 * VIDEO_HEIGHT),
+        width: Math.round($scope.region1.rect.width / 1000 * VIDEO_WIDTH),
+        height: Math.round($scope.region1.rect.height / 1000 * VIDEO_HEIGHT)
       }
-      $scope.coverage_regional = {
-        x: 200,
-        y: 150,
-        width: 300,
-        height: 100
+      $scope.region2_rect = {
+        left: Math.round($scope.region2.rect.left / 1000 * VIDEO_WIDTH),
+        top: Math.round($scope.region2.rect.top / 1000 * VIDEO_HEIGHT),
+        width: Math.round($scope.region2.rect.width / 1000 * VIDEO_WIDTH),
+        height: Math.round($scope.region2.rect.height / 1000 * VIDEO_HEIGHT)
       }
+      $scope.current_region = 'region1'
+
       add_watch()
-      return
-    , 500)
 
     add_watch = ->
-      $scope.$watch('shelter_color', (newValue) ->
+      $scope.$watch('region1.color', (newValue) ->
         if newValue
-          hex = '#' + ((1 << 24) | (parseInt(newValue.r) << 16) | (parseInt(newValue.g) << 8) | parseInt(newValue.b)).toString(16).substr(1)
-          $scope.shelter_color_hex = hex.toUpperCase()
+          hex = '#' + ((1 << 24) | (parseInt(newValue.red) << 16) | (parseInt(newValue.green) << 8) | parseInt(newValue.blue)).toString(16).substr(1)
+          $scope.region1_color_hex = hex.toUpperCase()
+      )
+      $scope.$watch('region2.color', (newValue) ->
+        if newValue
+          hex = '#' + ((1 << 24) | (parseInt(newValue.red) << 16) | (parseInt(newValue.green) << 8) | parseInt(newValue.blue)).toString(16).substr(1)
+          $scope.region2_color_hex = hex.toUpperCase()
       )
 
     $scope.play_v = ->
@@ -464,79 +485,96 @@ ipcApp.controller 'PrivacyBlockController', [
       stopVlc()
 
     $scope.save = ->
-      console.log($scope.shelter_color)
+      $scope.region1.rect = {
+        left: Math.round($scope.region1_rect.left / VIDEO_WIDTH * 1000),
+        top: Math.round($scope.region1_rect.top / VIDEO_HEIGHT * 1000),
+        width: Math.round($scope.region1_rect.width / VIDEO_WIDTH * 1000),
+        height: Math.round($scope.region1_rect.height / VIDEO_HEIGHT * 1000)
+      }
+      $scope.region2.rect = {
+        left: Math.round($scope.region2_rect.left / VIDEO_WIDTH * 1000),
+        top: Math.round($scope.region2_rect.top / VIDEO_HEIGHT * 1000),
+        width: Math.round($scope.region2_rect.width / VIDEO_WIDTH * 1000),
+        height: Math.round($scope.region2_rect.height / VIDEO_HEIGHT * 1000)
+      }
+      $http.put "#{$scope.$parent.url}/privacy_block.json",
+        items:
+          region1: $scope.region1
+          region2: $scope.region2
+      .success ->
+        $scope.$parent.success('Save Success')
 ]
 
 ipcApp.controller 'DayNightModeController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    setTimeout(->
-      $scope.brightness = 50
-      $scope.chrominance = 50
-      $('#brightness_slider').val($scope.brightness)
-      $('#chrominance_slider').val($scope.chrominance)
-    , 500)
-]
-
-ipcApp.controller 'SceneController', [
-  '$scope'
-  '$http'
-  ($scope, $http) ->
-    $http.get "#{$scope.$parent.url}/scene.json",
+    $http.get "#{$scope.$parent.url}/day_night_mode.json",
       params:
-        'items[]': ['scenario']
+        'items[]': ['night_mode_threshold', 'ir_intensity']
     .success (data) ->
-      $scope.scene = data.items.scenario
+      console.log data
+      $scope.night_mode_threshold = data.items.night_mode_threshold
+      $scope.ir_intensity = data.items.ir_intensity
+      $('#night_mode_threshold_slider').val($scope.night_mode_threshold)
+      $('#ir_intensity_slider').val($scope.ir_intensity)
 
     $scope.save = ->
-      $http.put "#{$scope.$parent.url}/scene.json",
+      $http.put "#{$scope.$parent.url}/day_night_mode.json",
         items:
-          scenario: $scope.scene
+          night_mode_threshold: $scope.night_mode_threshold
+          ir_intensity: $scope.ir_intensity
       .success ->
         $scope.$parent.success('Save Success')
 ]
+
 
 ipcApp.controller 'OsdController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    getOsdInfo = (params) ->
-      $http.get "#{$scope.$parent.url}/osd.json",
-        params:
-          'items[]': params
-      .success (data) ->
-        console.log data
-        for osd in data.items
-          name = osd['name'].split(':')[1]
-          $scope["#{name}_display"] = osd['isshow']
-          $scope["#{name}_font_size"] = osd['size']
-          $scope["#{name}_left"] = osd['left'] / 10
-          $scope["#{name}_top"] = osd['top'] / 10
-          $scope["#{name}_color"] = {
-            a: osd['color'].alpha,
-            b: osd['color'].blue,
-            g: osd['color'].green,
-            r: osd['color'].red,
-          } 
+    getOsdInfo = (name, params) ->
+      $.ajax({
+        url: "#{$scope.$parent.url}/osd.json",
+        data: {
+          items: params
+        },
+        success: (data) ->
+          console.log data
+          $scope.device_name = data.items[name].device_name
+          $scope.device_name.left = ($scope.device_name.left / 10).toFixed(1)
+          $scope.device_name.top = ($scope.device_name.top / 10).toFixed(1)
+          $scope.comment = data.items[name].comment
+          $scope.comment.left = ($scope.comment.left / 10).toFixed(1)
+          $scope.comment.top = ($scope.comment.top / 10).toFixed(1)
+          $scope.frame_rate = data.items[name].frame_rate
+          $scope.frame_rate.left = ($scope.frame_rate.left / 10).toFixed(1)
+          $scope.frame_rate.top = ($scope.frame_rate.top / 10).toFixed(1)
+          $scope.bit_rate = data.items[name].bit_rate
+          $scope.bit_rate.left = ($scope.bit_rate.left / 10).toFixed(1)
+          $scope.bit_rate.top = ($scope.bit_rate.top / 10).toFixed(1)
+          $scope.datetime = data.items[name].datetime
+          $scope.datetime.left = ($scope.datetime.left / 10).toFixed(1)
+          $scope.datetime.top = ($scope.datetime.top / 10).toFixed(1)
+          add_watch()
+          $scope.$apply()
+      })
 
-    master_params = ['master:datetime', 'master:device_name', 'master:comment', 'master:frame_rate',
-      'master:bit_rate', 'master:color']
+    master_params = {master: ['datetime', 'device_name', 'comment', 'frame_rate', 'bit_rate']}
 
-    slave_params = ['slave:datetime', 'slave:device_name', 'slave:comment', 'slave:frame_rate',
-      'slave:bit_rate', 'slave:color']
+    slave_params = {slave: ['datetime', 'device_name', 'comment', 'frame_rate', 'bit_rate']}
 
-    getOsdInfo(master_params)
+    getOsdInfo('master', master_params)
 
     $scope.osd_type = 0
     $scope.valid_msg = ''
 
     $scope.changeOsd = (type) ->
       $scope.osd_type = type
-      if type = 0
-        getOsdInfo(master_params)
+      if type == 0
+        getOsdInfo('master', master_params)
       else
-        getOsdInfo(slave_params)
+        getOsdInfo('slave', slave_params)
 
     obj = {
       'device_name': 'Device name',
@@ -546,17 +584,19 @@ ipcApp.controller 'OsdController', [
       'datetime': 'Datetime'
     }
 
-    # 添加校验监听
-    for name of obj
-      $scope.$watch("#{name}_font_size", (newValue) ->
-        valid_font_size(obj[this.exp.split('_font_size')[0]], ' font size', newValue)
-      )
-      $scope.$watch("#{name}_left", (newValue) ->
-        valid_left_or_top(obj[this.exp.split('_left')[0]], ' left', newValue)
-      )
-      $scope.$watch("#{name}_top", (newValue) ->
-        valid_left_or_top(obj[this.exp.split('_top')[0]], ' top', newValue)
-      )
+    add_watch = ->
+
+      # 添加校验监听
+      for name of obj
+        $scope.$watch("#{name}.size", (newValue) ->
+          valid_font_size(obj[this.exp.split('.size')[0]], ' font size', newValue)
+        )
+        $scope.$watch("#{name}.left", (newValue) ->
+          valid_left_or_top(obj[this.exp.split('.left')[0]], ' left', newValue)
+        )
+        $scope.$watch("#{name}.top", (newValue) ->
+          valid_left_or_top(obj[this.exp.split('.top')[0]], ' top', newValue)
+        )
 
     # 校验font size
     valid_font_size = (name, field, value) ->
@@ -567,7 +607,7 @@ ipcApp.controller 'OsdController', [
           $scope.valid_msg = name + field + ' must be numeric'
           return false
         else if value < 1 || value > 100
-          $scope.valid_msg = name + field + ' numerical range of ' + min + ' - ' + max
+          $scope.valid_msg = name + field + ' numerical range of 1 - 100'
           return false
         else
           $scope.valid_msg = ''
@@ -575,14 +615,14 @@ ipcApp.controller 'OsdController', [
 
     # 校验left或top
     valid_left_or_top = (name, field, value) ->
-      if value == null
-          $scope.valid_msg = name + field + ' left can not be empty'
+      if !value
+          $scope.valid_msg = name + field + ' can not be empty'
           return false
-        else if value == undefined
+        else if isNaN(value)
           $scope.valid_msg = name + field + ' must be numeric'
           return false
-        else if value < 1 || value > 100
-          $scope.valid_msg = name + field + ' numerical range of ' + min + ' - ' + max
+        else if parseFloat(value) < 1 || parseFloat(value) > 100
+          $scope.valid_msg = name + field + ' numerical range of 1 - 100'
           return false
         else
           $scope.valid_msg = ''
@@ -590,18 +630,40 @@ ipcApp.controller 'OsdController', [
 
     isValid = ->
       for name of obj
-        if !valid_font_size(obj[name], ' font size', $scope[name + '_font_size'])
+        if !valid_font_size(obj[name], ' font size', $scope[name].size)
           return false
-        else if !valid_left_or_top(obj[name], ' left', $scope[name + '_left'])
+        else if !valid_left_or_top(obj[name], ' left', $scope[name].left)
           return false
-        else if !valid_left_or_top(obj[name], ' top', $scope[name + '_top'])
+        else if !valid_left_or_top(obj[name], ' top', $scope[name].top)
           return false
       return true
 
     $scope.save = ->
-      console.log $scope.device_name_color
       if !isValid()
         return
+      postData = {
+        device_name: $.extend({}, $scope.device_name),
+        comment: $.extend({}, $scope.comment),
+        frame_rate: $.extend({}, $scope.frame_rate),
+        bit_rate: $.extend({}, $scope.bit_rate),
+        datetime: $.extend({}, $scope.datetime)
+      }
+      postData.device_name.left = parseFloat($scope.device_name.left) * 10
+      postData.device_name.top = parseFloat($scope.device_name.top) * 10
+      postData.comment.left = parseFloat($scope.comment.left) * 10
+      postData.comment.top = parseFloat($scope.comment.top) * 10
+      postData.frame_rate.left = parseFloat($scope.frame_rate.left) * 10
+      postData.frame_rate.top = parseFloat($scope.frame_rate.top) * 10
+      postData.bit_rate.left = parseFloat($scope.bit_rate.left) * 10
+      postData.bit_rate.top = parseFloat($scope.bit_rate.top) * 10
+      postData.datetime.left = parseFloat($scope.datetime.left) * 10
+      postData.datetime.top = parseFloat($scope.datetime.top) * 10
+
+      $http.put "#{$scope.$parent.url}/osd.json",
+        items:
+          master: postData
+      .success ->
+        $scope.$parent.success('Save Success')
 
 ]
 
@@ -609,44 +671,72 @@ ipcApp.controller 'SzycController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    $scope.train_no = '1231213'
-    $scope.carriage_no = '12'
-    $scope.index_no = '5'
+    $http.get "#{$scope.$parent.url}/szyc.json",
+        params:
+          'items[]': ['train_num', 'carriage_num', 'position_num']
+      .success (data) ->
+        console.log data
+        $scope.train_num = data.items.train_num
+        $scope.carriage_num = data.items.carriage_num
+        $scope.position_num = data.items.position_num
 
-    $scope.train_no_msg = ''
-    $scope.carriage_no_msg = ''
-    $scope.index_no_msg = ''
+        add_watch()
 
-    train_no_reg = /^[A-Za-z0-9]{0,7}$/
-    carriage_no_reg = /^[0-9]{1,2}$/
-    index_no_reg = /^[1-8]{1}$/
+    $scope.train_num_msg = ''
+    $scope.carriage_num_msg = ''
+    $scope.position_num_msg = ''
+
+    train_num_reg = /^[A-Za-z0-9]{0,7}$/
+    carriage_num_reg = /^[0-9]{1,2}$/
+    position_num_reg = /^[1-8]{1}$/
+
+    valid = {
+      train_num: (value) ->
+        if !train_num_reg.test(value)
+          $scope.train_num_msg = 'Please enter the correct train number.'
+          return false
+        else
+          $scope.train_num_msg = ''
+          return true
+      carriage_num: (value) ->
+        if !carriage_num_reg.test(value) || parseInt(value, 10) < 1 || parseInt(value, 10) > 32
+          $scope.carriage_num_msg = 'Please enter the correct carriage number.'
+          return false
+        else
+          $scope.carriage_num_msg = ''
+          return true
+      position_num: (value) ->
+        if !position_num_reg.test(value)
+          $scope.position_num_msg = 'Please enter the correct index no.'
+          return false
+        else
+          $scope.position_num_msg = ''
+          return true
+    }
 
     add_watch = ->
-      $scope.$watch('train_no', (newValue) ->
-        if !train_no_reg.test(newValue)
-          $scope.train_no_msg = 'Please enter the correct train no.'
-        else
-          $scope.train_no_msg = ''
+      $scope.$watch('train_num', (newValue) ->
+        valid.train_num(newValue)
       )
-      $scope.$watch('carriage_no', (newValue) ->
-        if !carriage_no_reg.test(newValue) || parseInt(newValue, 10) < 1 || parseInt(newValue, 10) > 32
-          $scope.carriage_no_msg = 'Please enter the correct carriage no.'
-        else
-          $scope.carriage_no_msg = ''
+      $scope.$watch('carriage_num', (newValue) ->
+        valid.carriage_num(newValue)
       )
-      $scope.$watch('index_no', (newValue) ->
-        if !index_no_reg.test(newValue)
-          $scope.index_no_msg = 'Please enter the correct index no.'
-        else
-          $scope.index_no_msg = ''
+      $scope.$watch('position_num', (newValue) ->
+        valid.position_num(newValue)
       )
-
-    add_watch()
 
     $scope.save = ->
-      if $scope.train_no_msg || $scope.carriage_no_msg || $scope.index_no_msg
+      if !valid.train_num($scope.train_num) || !valid.carriage_num($scope.carriage_num) ||
+      !valid.position_num($scope.position_num)
         return
       console.log('valid success')
+      $http.put "#{$scope.$parent.url}/szyc.json",
+        items:
+          train_num: $scope.train_num
+          carriage_num: $scope.carriage_num
+          position_num: $scope.position_num
+      .success ->
+        $scope.$parent.success('Save Success')
 ]
 
 
@@ -656,11 +746,10 @@ ipcApp.controller 'InterfaceController', [
   ($scope, $http) ->
     $http.get "#{$scope.$parent.url}/network.json",
       params:
-        'items[]': ['method', 'address', 'pppoe']
+        'items[]': ['method', 'address', 'pppoe', 'port']
     .success (data) ->
-      console.log data.items
-      # $scope.method = data.items.method
-      $scope.method = 'static'
+      console.log data
+      $scope.method = data.items.method
       $scope.network_username = data.items.pppoe.username
       $scope.network_password = data.items.pppoe.password
       $scope.network_address = data.items.address.ipaddr
@@ -668,6 +757,7 @@ ipcApp.controller 'InterfaceController', [
       $scope.network_gateway = data.items.address.gateway
       $scope.network_primary_dns = data.items.address.dns1
       $scope.network_second_dns = data.items.address.dns2
+      $scope.http_port = data.items.port.http
 
       add_watch()
 
@@ -777,12 +867,28 @@ ipcApp.controller 'InterfaceController', [
     $scope.save = ->
       if !isValid()
         return
-      console.log 'success'
-      # $http.put "#{$scope.$parent.url}/network.json",
-      #   items:
-      #     scenario: $scope.scene
-      # .success ->
-      #   $scope.$parent.success('Save Success')
+      postData = {
+        method: $scope.method
+      }
+      if postData.method == 'static'
+        postData.address = {
+          ipaddr: $scope.network_address,
+          netmask: $scope.network_netmask,
+          gateway: $scope.network_gateway,
+          dns1: $scope.network_primary_dns,
+          dns2: $scope.network_second_dns
+        }
+      else if postData.method == 'pppoe'
+        postData.pppoe = {
+          username: $scope.network_username,
+          password: $scope.network_password
+        }
+      $http.put "#{$scope.$parent.url}/network.json",
+        items: postData
+      .success ->
+        $scope.$parent.success('Save Success')
+        if postData.method == 'static'
+          location.href = 'http://' + postData.address.ipaddr + (if $scope.http_port == 80 then '' else ':' + $scope.http_port)
 
 ]
 
@@ -792,11 +898,11 @@ ipcApp.controller 'PortController', [
   ($scope, $http) ->
     $http.get "#{$scope.$parent.url}/network.json",
       params:
-        'items[]': ['server_port']
+        'items[]': ['port']
     .success (data) ->
-      $scope.http_port = data.items.server_port.http
-      $scope.ftp_port = data.items.server_port.ftp
-      $scope.rtsp_port = data.items.server_port.rtsp
+      $scope.http_port = data.items.port.http
+      $scope.ftp_port = data.items.port.ftp
+      $scope.rtsp_port = data.items.port.rtsp
       add_watch()
 
     $scope.http_port_msg = ''
@@ -850,7 +956,7 @@ ipcApp.controller 'PortController', [
         return
       $http.put "#{$scope.$parent.url}/network.json",
         items:
-          server_port:
+          port:
             http: parseInt($scope.http_port, 10)
             ftp: parseInt($scope.ftp_port, 10)
             rtsp: parseInt($scope.rtsp_port, 10)
@@ -863,33 +969,43 @@ ipcApp.controller 'InputController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    setTimeout( ->
-      $scope.input = 0
-      $scope.input_on = true
-      $scope.time_data = [{start: '0:1', end: '0:10'}]
-      $('#input_timegantt').timegantt('setSelected', $scope.time_data)
-    , 1)
-
-    # time_data = new DateSelect('input_canvas')
+    $http.get "#{$scope.$parent.url}/event_input.json",
+      params:
+        'items[]': ['input1']
+    .success (data) ->
+      console.log data
+      $scope.input1 = data.items.input1
+      $scope.current_input = 'input1'
+      $('#input1_schedules').timegantt('setSelected', $scope.input1.schedules)
 
     $scope.save = ->
-      # selected = time_data.getSelectedCells()
-      console.log $scope.time_data
+      $http.put "#{$scope.$parent.url}/event_input.json",
+        items:
+          input1: $scope.input1
+      .success ->
+        $scope.$parent.success('Save Success')
 ]
 
 ipcApp.controller 'OutputController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    $scope.output1_normal = true
-    $scope.output1_trigger = false
-    $scope.output1_period = 1000
-    $scope.output2_normal = true
-    $scope.output2_trigger = false
-    $scope.output2_period = 2000
+    $http.get "#{$scope.$parent.url}/event_output.json",
+      params:
+        'items[]': ['output1', 'output2']
+    .success (data) ->
+      console.log data
+      # $scope.output1 = data.items.output1
+      $scope.output1_normal = if data.items.output1.normal == 'open' then true else false
+      $scope.output1_trigger = if data.items.output1.normal == 'close' then false else true
+      $scope.output1_period = data.items.output1.period
+      # $scope.output2_normal = true
+      # $scope.output2_trigger = false
+      # $scope.output2_period = 2000
+      add_watch()
 
     $scope.output1_period_msg = ''
-    $scope.output2_period_msg = ''
+    # $scope.output2_period_msg = ''
 
     number_reg = /^[0-9]*$/
     valid = {
@@ -905,67 +1021,163 @@ ipcApp.controller 'OutputController', [
           return true
       output1_period: (value) ->
         this.common('output1_period_msg', value, 'output1 period')
-      output2_period: (value) ->
-        this.common('output2_period_msg', value, 'output2 period')
+      # output2_period: (value) ->
+      #   this.common('output2_period_msg', value, 'output2 period')
     }
 
     add_watch = ->
+      $scope.$watch('output1_normal', (newValue) ->
+        $scope.output1_trigger = !newValue
+      )
+      $scope.$watch('output1_trigger', (newValue) ->
+        $scope.output1_normal = !newValue
+      )
       $scope.$watch('output1_period', (newValue) ->
         valid.output1_period(newValue)
       )
-      $scope.$watch('output2_period', (newValue) ->
-        valid.output2_period(newValue)
-      )
-    add_watch()
+      # $scope.$watch('output2_period', (newValue) ->
+      #   valid.output2_period(newValue)
+      # )
 
     isValid = ->
-      if !valid.output1_period($scope.output1_period) || !valid.output2_period($scope.output2_period)
+      if !valid.output1_period($scope.output1_period)
+      # || !valid.output2_period($scope.output2_period)
         return false
       return true
 
     $scope.save = ->
       if !isValid()
         return
-      console.log 'success'
+      $http.put "#{$scope.$parent.url}/event_output.json",
+        items:
+          output1:
+            normal: if $scope.output1_normal == true then 'open' else 'close'
+            period: parseInt($scope.output1_period)
+      .success ->
+        $scope.$parent.success('Save Success')
 ]
 
 ipcApp.controller 'MotionDetectController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    $scope.sensitivity = 50
-    $scope.detect_regional = {
-      x: 100,
-      y: 100,
-      width: 200,
-      height: 200
-    }
-    $scope.detect_switch = true
-    $scope.time_data = [{start: '0:1', end: '0:10'}]
+    $http.get "#{$scope.$parent.url}/event_motion.json",
+      params:
+        'items[]': ['region1', 'region2']
+    .success (data) ->
+      console.log data
+      $scope.region1 = data.items.region1
+      $scope.region1_rect = {
+        left: Math.round($scope.region1.rect.left / 1000 * VIDEO_WIDTH),
+        top: Math.round($scope.region1.rect.top / 1000 * VIDEO_HEIGHT),
+        width: Math.round($scope.region1.rect.width / 1000 * VIDEO_WIDTH),
+        height: Math.round($scope.region1.rect.height / 1000 * VIDEO_HEIGHT)
+      }
+      $scope.region2 = data.items.region2
+      $scope.region2_rect = {
+        left: Math.round($scope.region2.rect.left / 1000 * VIDEO_WIDTH),
+        top: Math.round($scope.region2.rect.top / 1000 * VIDEO_HEIGHT),
+        width: Math.round($scope.region2.rect.width / 1000 * VIDEO_WIDTH),
+        height: Math.round($scope.region2.rect.height / 1000 * VIDEO_HEIGHT)
+      }
+      $scope.current_region = 'region1'
+      $('#region1_sensitivity').val($scope.region1.sensitivity)
+      $('#region2_sensitivity').val($scope.region2.sensitivity)
+      $('#region1_schedules').timegantt('setSelected', $scope.region1.schedules)
+      $('#region2_schedules').timegantt('setSelected', $scope.region2.schedules)
 
     $scope.save = ->
-      console.log $scope.time_data
-      console.log $scope.detect_regional
+      $scope.region1.rect = {
+        left: Math.round($scope.region1_rect.left / VIDEO_WIDTH * 1000),
+        top: Math.round($scope.region1_rect.top / VIDEO_HEIGHT * 1000),
+        width: Math.round($scope.region1_rect.width / VIDEO_WIDTH * 1000),
+        height: Math.round($scope.region1_rect.height / VIDEO_HEIGHT * 1000)
+      }
+      $scope.region2.rect = {
+        left: Math.round($scope.region2_rect.left / VIDEO_WIDTH * 1000),
+        top: Math.round($scope.region2_rect.top / VIDEO_HEIGHT * 1000),
+        width: Math.round($scope.region2_rect.width / VIDEO_WIDTH * 1000),
+        height: Math.round($scope.region2_rect.height / VIDEO_HEIGHT * 1000)
+      }
+      $http.put "#{$scope.$parent.url}/event_motion.json",
+        items:
+          region1: $scope.region1
+          region2: $scope.region2
+      .success ->
+        $scope.$parent.success('Save Success')
 ]
 
 ipcApp.controller 'VideoCoverageController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    $scope.sensitivity = 70
-    $scope.coverage_regional = [100, 100, 200, 200]
-    $scope.coverage_switch = true
-    
-    $scope.time_data = [{start: '0:1', end: '0:10'}]
+    $http.get "#{$scope.$parent.url}/event_cover.json",
+      params:
+        'items[]': ['region1', 'region2']
+    .success (data) ->
+      console.log data
+      $scope.region1 = data.items.region1
+      $scope.region1_rect = {
+        left: Math.round($scope.region1.rect.left / 1000 * VIDEO_WIDTH),
+        top: Math.round($scope.region1.rect.top / 1000 * VIDEO_HEIGHT),
+        width: Math.round($scope.region1.rect.width / 1000 * VIDEO_WIDTH),
+        height: Math.round($scope.region1.rect.height / 1000 * VIDEO_HEIGHT)
+      }
+      $scope.region2 = data.items.region2
+      $scope.region2_rect = {
+        left: Math.round($scope.region2.rect.left / 1000 * VIDEO_WIDTH),
+        top: Math.round($scope.region2.rect.top / 1000 * VIDEO_HEIGHT),
+        width: Math.round($scope.region2.rect.width / 1000 * VIDEO_WIDTH),
+        height: Math.round($scope.region2.rect.height / 1000 * VIDEO_HEIGHT)
+      }
+      $scope.current_region = 'region1'
+      $('#region1_sensitivity').val($scope.region1.sensitivity)
+      $('#region2_sensitivity').val($scope.region2.sensitivity)
+      $('#region1_schedules').timegantt('setSelected', $scope.region1.schedules)
+      $('#region2_schedules').timegantt('setSelected', $scope.region2.schedules)
 
     $scope.save = ->
-      console.log $scope.time_data
+      $scope.region1.rect = {
+        left: Math.round($scope.region1_rect.left / VIDEO_WIDTH * 1000),
+        top: Math.round($scope.region1_rect.top / VIDEO_HEIGHT * 1000),
+        width: Math.round($scope.region1_rect.width / VIDEO_WIDTH * 1000),
+        height: Math.round($scope.region1_rect.height / VIDEO_HEIGHT * 1000)
+      }
+      $scope.region2.rect = {
+        left: Math.round($scope.region2_rect.left / VIDEO_WIDTH * 1000),
+        top: Math.round($scope.region2_rect.top / VIDEO_HEIGHT * 1000),
+        width: Math.round($scope.region2_rect.width / VIDEO_WIDTH * 1000),
+        height: Math.round($scope.region2_rect.height / VIDEO_HEIGHT * 1000)
+      }
+      $http.put "#{$scope.$parent.url}/event_cover.json",
+        items:
+          region1: $scope.region1
+          region2: $scope.region2
+      .success ->
+        $scope.$parent.success('Save Success')
 ]
 
 ipcApp.controller 'EventProcessController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    
+    $http.get "#{$scope.$parent.url}/event_proc.json",
+      params:
+        'items[]': ['input1', 'motion', 'cover']
+    .success (data) ->
+      console.log data
+      $scope.input1 = data.items.input1
+      $scope.motion = data.items.motion
+      $scope.cover = data.items.cover
+
+    $scope.save = ->
+      console.log $scope.input1, $scope.motion, $scope.cover
+      $http.put "#{$scope.$parent.url}/event_proc.json",
+        items:
+          input1: $scope.input1
+          motion: $scope.motion
+          cover: $scope.cover
+      .success ->
+        $scope.$parent.success('Save Success')
 ]
 

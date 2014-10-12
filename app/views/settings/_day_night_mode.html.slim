@@ -3,20 +3,20 @@ h3 Day Night Mode
 
 form.form-horizontal.form-ipc.clearfix role='form'
   .form-group
-    label.col-sm-3.control-label Brightness
+    label.col-sm-3.control-label Night Mode Threshold
     .col-sm-5
-      #brightness_slider ng-slider='' ng-model='brightness' min='0' max='255'
+      #night_mode_threshold_slider ng-slider='' ng-model='night_mode_threshold' min='1' max='100'
     .col-sm-4
       p.form-control-static
-        span ng-bind='brightness'
-        | &nbsp;(0 - 255)
+        span ng-bind='night_mode_threshold'
+        | &nbsp;%
   .form-group
-    label.col-sm-3.control-label Chrominance
+    label.col-sm-3.control-label Ir Intensity
     .col-sm-5
-      #chrominance_slider ng-slider='' ng-model='chrominance' min='0' max='255'
+      #ir_intensity_slider ng-slider='' ng-model='ir_intensity' min='1' max='100'
     .col-sm-4
       p.form-control-static
-        span ng-bind='chrominance'
-        | &nbsp;(0 - 255)
+        span ng-bind='ir_intensity'
+        | &nbsp;%
 form.form-horizontal.form-ipc-footer role='form'
   = render 'save_button'

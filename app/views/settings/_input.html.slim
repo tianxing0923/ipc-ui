@@ -3,15 +3,13 @@ h3 Input
 
 form.form-horizontal.form-ipc.clearfix role='form'
   .form-inline.col-sm-12
-    select.form-control.input-sm#input_name ng-model='input'
-      option value='0' input1
-      option value='1' input2
-      option value='2' input3
-    input#input_on ng-bswitch='' type='checkbox' name='input_on' ng-model='input_on'
+    select.form-control.input-sm#input_name ng-model='current_input'
+      option value='input1' input1
+    input#input1_enable ng-bswitch='' type='checkbox' name='input1_enable' ng-model='input1.enable'
   .col-sm-12
     h4 Schedule
   .col-sm-12
-    #input_timegantt.timegantt-wrapper ng-timegantt='' ng-model='time_data'
+    #input1_schedules.timegantt-wrapper ng-timegantt='' ng-model='input1.schedules'
 
 form.form-horizontal.form-ipc-footer role='form'
   = render 'save_button'

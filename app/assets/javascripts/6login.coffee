@@ -4,7 +4,7 @@ ipcApp.controller 'loginController', [
   ($scope, $timeout) ->
     $scope.username = ''
     $scope.password = ''
-    $scope.language = 'zh_CN'
+    $scope.language = '中文'
     
     $scope.username_msg = ''
     $scope.password_msg = ''
@@ -34,6 +34,9 @@ ipcApp.controller 'loginController', [
     $scope.valid_password = ->
       valid.password($scope.password)
       $scope.login_fail_msg = ''
+
+    $scope.change_language = (value) ->
+      $scope.language = value
 
     $scope.login = ->
       if !valid.username($scope.username) || !valid.password($scope.password)

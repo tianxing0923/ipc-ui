@@ -11,7 +11,7 @@ form.form-horizontal.form-ipc.clearfix role='form'
   .form-group
     label.col-sm-3.control-label Brightness
     .col-sm-5
-      .brightness-slider ng-slider='' ng-model='brightness' min='0' max='255'
+      #brightness_slider ng-slider='' ng-model='brightness' min='0' max='255'
     .col-sm-4
       p.form-control-static
         span ng-bind='brightness'
@@ -19,7 +19,7 @@ form.form-horizontal.form-ipc.clearfix role='form'
   .form-group
     label.col-sm-3.control-label Chrominance
     .col-sm-5
-      .chrominance-slider ng-slider='' ng-model='chrominance' min='0' max='255'
+      #chrominance_slider ng-slider='' ng-model='chrominance' min='0' max='255'
     .col-sm-4
       p.form-control-static
         span ng-bind='chrominance'
@@ -27,7 +27,7 @@ form.form-horizontal.form-ipc.clearfix role='form'
   .form-group
     label.col-sm-3.control-label Contrast
     .col-sm-5
-      .contrast-slider ng-slider='' ng-model='contrast' min='0' max='255'
+      #contrast_slider ng-slider='' ng-model='contrast' min='0' max='255'
     .col-sm-4
       p.form-control-static
         span ng-bind='contrast'
@@ -35,22 +35,22 @@ form.form-horizontal.form-ipc.clearfix role='form'
   .form-group
     label.col-sm-3.control-label Saturation
     .col-sm-5
-      .saturation-slider ng-slider='' ng-model='saturation' min='0' max='255'
+      #saturation_slider ng-slider='' ng-model='saturation' min='0' max='255'
     .col-sm-4
       p.form-control-static
         span ng-bind='saturation'
         | &nbsp;(0 - 255)
   hr
   .form-group
-    label.col-sm-3.control-label Scence
+    label.col-sm-3.control-label Scenario
     .col-sm-9
       p.form-control-static
-        input type='radio' id='scence1' name='scence' value='50' ng-model='scence' ng-icheck=''
-        label.icheck-label for='scence1' 50Hz
-        input type='radio' id='scence2' name='scence' value='60' ng-model='scence' ng-icheck=''
-        label.icheck-label for='scence2' 60Hz
-        input type='radio' id='scence3' name='scence' value='composite' ng-model='scence' ng-icheck=''
-        label.icheck-label for='scence3' Composite
+        input type='radio' id='scenario1' name='scenario' value='50Hz' ng-model='scenario' ng-icheck=''
+        label.icheck-label for='scenario1' 50Hz
+        input type='radio' id='scenario2' name='scenario' value='60Hz' ng-model='scenario' ng-icheck=''
+        label.icheck-label for='scenario2' 60Hz
+        input type='radio' id='scenario3' name='scenario' value='composite' ng-model='scenario' ng-icheck=''
+        label.icheck-label for='scenario3' Composite
 
 form.form-horizontal.form-ipc-footer role='form'
   = render 'save_button'

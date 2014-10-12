@@ -2,7 +2,7 @@
 	background: url(image_path('login-bg.jpg')) top center;
 }
 .login-wrap {
-	width: 300px;
+	width: 360px;
 	margin: 100px auto;
 
 	.login-header {
@@ -12,12 +12,40 @@
 			width: 80px;
 			height: 80px;
 			float: left;
-			margin-left: 15px;
+			margin-left: 45px;
 		}
 		h3 {
 			float: left;
 			margin-top: 28px;
 			margin-left: 10px;
+			color: #666666;
 		}
+	}
+	form {
+		background: #fff;
+		padding: 30px;
+		border-radius: 10px;
+		box-shadow: 0 0 30px #BDBDBD;
+	}
+	.language {
+		display: block;
+		width: 100%;
+		text-align: left;
+
+		.caret {
+			float: right;
+			margin-top: 9px;
+		}
+	}
+	.dropdown-menu {
+		width: 100%;
+
+		a {
+			padding: 3px 12px;
+		}
+	}
+	.national-flag {
+		height: 18px;
+		margin-right: 10px;
 	}
 }

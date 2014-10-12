@@ -3,7 +3,8 @@ h3 Privacy Block
 
 form.form-ipc-bg.clearfix
   .vlc-wrap.pull-left
-    #privacy_switch.shelter ng-show='privacy_switch' ng-shelter='' ng-model='coverage_regional' minWidth='50' minHeight='50' ng-style="{background: shelter_color_hex}"
+    .shelter ng-show='current_region=="region1"&&region1.enable' ng-shelter='' ng-model='region1_rect' minwidth='50' minheight='50' ng-style="{background: region1_color_hex}"
+    .shelter ng-show='current_region=="region2"&&region2.enable' ng-shelter='' ng-model='region2_rect' minwidth='50' minheight='50' ng-style="{background: region2_color_hex}"
     object classid='clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921' width='750' height='560' id='vlc' events='True'
       param name='MRL' value='rtsp://192.168.1.100:8554/liveStream'
       param name='AutoPlay' value='True'
@@ -12,15 +13,21 @@ form.form-ipc-bg.clearfix
   .privacy-setting-wrap.clearfix
     .form-inline.col-sm-12
       .form-group
-        select.form-control.input-sm ng-model='region'
-          option value='0' region1
-          option value='1' region2
+        select.form-control.input-sm ng-model='current_region'
+          option value='region1' region1
+          option value='region2' region2
+      .form-group ng-show='current_region=="region1"'
+        input#region1_switch ng-bswitch='' type='checkbox' name='region1_switch' ng-model='region1.enable'
+      .form-group ng-show='current_region=="region2"'
+        input#region2_switch ng-bswitch='' type='checkbox' name='region2_switch' ng-model='region2.enable'
       .form-group
-        input#privacy_switch ng-bswitch='' type='checkbox' name='privacy_switch' ng-model='privacy_switch'
-      .form-group
-        .input-group
+        .input-group ng-show='current_region=="region1"'
           input.form-control.input-sm.color-text type='text' readonly='readonly'
-          #shelter_color.input-group-addon ng-color='' ng-model='shelter_color'
+          .input-group-addon ng-color='' ng-model='region1.color'
+            .color-block
+        .input-group ng-show='current_region=="region2"'
+          input.form-control.input-sm.color-text type='text' readonly='readonly'
+          .input-group-addon ng-color='' ng-model='region2.color'
             .color-block
       .form-group
         button.btn.btn-default ng-click='play_v()' play

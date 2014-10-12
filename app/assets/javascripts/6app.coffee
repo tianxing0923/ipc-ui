@@ -47,6 +47,11 @@ ipcApp.directive('ngIcheck', ($compile) ->
             $ngModel.$setViewValue($attrs.value);
           )
       )
+
+      $scope.$watch($attrs.ngModel, (newValue) ->
+        if newValue == true && $attrs.type == 'checkbox'
+          $element.iCheck('check').iCheck('update')
+      )
   }
 )
 
@@ -106,12 +111,17 @@ ipcApp.directive('ngColor', ($compile) ->
       $element.colorpicker().on('changeColor', (e) ->
         rgb = e.color.toRGB()
         $scope.$apply( ->
-          $ngModel.$setViewValue(rgb);
+          $ngModel.$setViewValue({
+            red: rgb.r,
+            green: rgb.g,
+            blue: rgb.b,
+            alpha: rgb.a
+          });
         )
       )
       $scope.$watch($attrs.ngModel, (newValue) ->
         if newValue
-          hex = '#' + ((1 << 24) | (parseInt(newValue.r) << 16) | (parseInt(newValue.g) << 8) | parseInt(newValue.b)).toString(16).substr(1)
+          hex = '#' + ((1 << 24) | (parseInt(newValue.red) << 16) | (parseInt(newValue.green) << 8) | parseInt(newValue.blue)).toString(16).substr(1)
           hex.toUpperCase()
           $element.colorpicker('setValue', hex, true);
           $element.find('.color-block').css('background', hex)
@@ -135,20 +145,20 @@ ipcApp.directive('ngShelter', ($compile) ->
       rect = $scope[$attrs.ngModel]
       if !rect
         rect = {
-          x: 0,
-          y: 0,
+          left: 0,
+          top: 0,
           width: 100,
           height: 100
         }
       $element.css({
-        left: rect.x,
-        top: rect.y,
+        left: rect.left,
+        top: rect.top,
         width: rect.width,
         height: rect.height
       }).resizable({
         containment: $parent,
-        minWidth: parseInt($attrs.minWidth, 10) || 50,
-        minHeight: parseInt($attrs.minHeight, 10) || 50,
+        minWidth: parseInt($attrs.minwidth, 10) || 50,
+        minHeight: parseInt($attrs.minheight, 10) || 50,
         stop: (e, ui) ->
           rect.width = ui.size.width
           rect.height = ui.size.height
@@ -159,11 +169,15 @@ ipcApp.directive('ngShelter', ($compile) ->
         containment: $parent,
         stop: (e, ui) ->
           if ui.position.left + rect.width > parent_size.width
-            rect.x = parent_size.width - rect.width
-            $(this).css('left', rect.x)
+            rect.left = parent_size.width - rect.width
+            $(this).css('left', rect.left)
+          else
+            rect.left = ui.position.left
           if ui.position.top + rect.height > parent_size.height
-            rect.y = parent_size.height - rect.height
-            $(this).css('top', rect.y)
+            rect.top = parent_size.height - rect.height
+            $(this).css('top', rect.top)
+          else
+            rect.top = ui.position.top
           $scope.$apply( ->
             $ngModel.$setViewValue(rect)
           )
@@ -172,8 +186,8 @@ ipcApp.directive('ngShelter', ($compile) ->
         if newValue
           rect = newValue
           $element.css({
-            left: newValue.x,
-            top: newValue.y,
+            left: newValue.left,
+            top: newValue.top,
             width: newValue.width,
             height: newValue.height
           })
@@ -199,7 +213,6 @@ ipcApp.directive('ngTimegantt', ($compile) ->
     link:  ($scope, $element, $attrs, $ngModel) ->
       if (!$ngModel)
         return
-      debugger
       $element.timegantt({
         width: 782
       }).on('changeSelected', (e, data) ->
@@ -221,28 +234,50 @@ ipcApp.directive('ngChart', ($compile) ->
       $element[0].width = $parent.width()
       $element[0].height = $parent.height()
       ctx = $element[0].getContext('2d')
-      data = $scope[$attrs.ngModel]
-      # if data
-
-      # else
-      #   data = []
-
-      lineChartData = {
-        labels: ['60s', '50s', '40s', '30s', '20s', '10s', '0s'],
-        datasets: [
-          {
-            label: $attrs.label || 'Chart',
-            fillColor: $attrs.fillColor || 'rgba(220,220,220,0.2)',
-            strokeColor: $attrs.strokeColor || 'rgba(220,220,220,1)',
-            data : [50, 60, 80, 90, 10, 50, 30]
-          }
-        ]
+      labels = []
+      data = []
+      for i in [60...-1] by -2
+        labels.push(i + 's')
+        data.push(0)
+      if data
+        data.push($scope[$attrs.ngModel])
+        data.shift()
+      
+      chart_options = {
+        pointDot: false,
+        scaleLineColor: $attrs.scalelinecolor,
+        scaleGridLineColor: $attrs.scalegridlinecolor,
+        showTooltips: false,
+        scaleOverride: true,
+        scaleSteps : 10,
+        scaleStepWidth: 10,
+        scaleStartValue: 0,
+        animation: false
       }
 
-      new Chart(ctx).Line(lineChartData);
+      getLineChartData = (data) ->
+        lineChartData = {
+          labels: labels,
+          datasets: [
+            {
+              label: $attrs.label || 'Chart',
+              fillColor: $attrs.fillcolor || 'rgba(220,220,220,0.2)',
+              strokeColor: $attrs.strokecolor || 'rgba(220,220,220,1)',
+              data: data
+            }
+          ]
+        }
+
+      draw_chart = ->
+        new Chart(ctx).Line(getLineChartData(data), chart_options);
+
+      draw_chart(data)
 
       $scope.$watch($attrs.ngModel, (newValue) ->
-        new Chart(ctx).Line(lineChartData);
+        if newValue
+          data.push(newValue)
+          data.shift()
+          new Chart(ctx).Line(getLineChartData(data), chart_options);
       )
   }
 )
