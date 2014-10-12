@@ -5,7 +5,7 @@ ipcApp.controller 'SettingController', [
   '$scope'
   '$timeout'
   ($scope, $timeout) ->
-    $scope.type = 'base_info'
+    $scope.type = 'privacy_block'
     $scope.url = 'http://192.168.1.217/api/1.0'
     $scope.message_type = 0
     $scope.message = ''

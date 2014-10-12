@@ -96,10 +96,13 @@ ipcApp.controller 'HomeController', [
       $scope.mute = !$scope.mute
 
     $scope.play_or_pause = ->
+      debugger
       if $scope.play_status == 'play'
         $scope.play_status = 'stop'
+        stopVlc()
       else
         $scope.play_status = 'play'
+        playVlc()
     
     $scope.change_ptz_position = ->
       $('#collapse_block, #home_sidebar, #screen_wrap').removeAttr('style')
