@@ -6,8 +6,8 @@ ipcApp.controller 'SettingController', [
   '$timeout'
   ($scope, $timeout) ->
     $scope.type = 'base_info'
-    # $scope.url = 'http://192.168.1.217/api/1.0'
-    $scope.url = 'http://ipcbf.info/api/1.0'
+    $scope.url = 'http://192.168.1.217/api/1.0'
+    # $scope.url = 'http://ipcbf.info/api/1.0'
     $scope.message_type = 0
     $scope.message = ''
     timer = null
