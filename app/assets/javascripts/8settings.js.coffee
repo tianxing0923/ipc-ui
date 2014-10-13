@@ -5,8 +5,9 @@ ipcApp.controller 'SettingController', [
   '$scope'
   '$timeout'
   ($scope, $timeout) ->
-    $scope.type = 'privacy_block'
-    $scope.url = 'http://192.168.1.217/api/1.0'
+    $scope.type = 'base_info'
+    # $scope.url = 'http://192.168.1.217/api/1.0'
+    $scope.url = 'http://ipcbf.info/api/1.0'
     $scope.message_type = 0
     $scope.message = ''
     timer = null
@@ -658,10 +659,17 @@ ipcApp.controller 'OsdController', [
       postData.bit_rate.top = parseFloat($scope.bit_rate.top) * 10
       postData.datetime.left = parseFloat($scope.datetime.left) * 10
       postData.datetime.top = parseFloat($scope.datetime.top) * 10
-
-      $http.put "#{$scope.$parent.url}/osd.json",
-        items:
+      debugger
+      if $scope.osd_type == 0
+        data = {
           master: postData
+        }
+      else
+        data = {
+          slave: postData
+        }
+      $http.put "#{$scope.$parent.url}/osd.json",
+        items: data
       .success ->
         $scope.$parent.success('Save Success')
 
