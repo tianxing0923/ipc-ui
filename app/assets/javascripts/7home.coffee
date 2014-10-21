@@ -1,12 +1,13 @@
 ipcApp.controller 'HomeController', [
   '$scope'
   '$timeout'
-  ($scope, $timeout) ->
+  '$http'
+  ($scope, $timeout, $http) ->
     $scope.speed = 50
     $scope.restore_val = 0
     $scope.light = true
     $scope.wiper = false
-    $scope.current_stream = 'master'
+    $scope.current_stream = 'main_profile'
     $scope.microphone = 50
     $scope.off_microphone = false
     $scope.volume = 40
@@ -88,6 +89,7 @@ ipcApp.controller 'HomeController', [
 
     $scope.change_stream = (stream) ->
       $scope.current_stream = stream
+      getVideo(stream)
 
     $scope.toggle_microphone = ->
       $scope.off_microphone = !$scope.off_microphone
@@ -96,7 +98,6 @@ ipcApp.controller 'HomeController', [
       $scope.mute = !$scope.mute
 
     $scope.play_or_pause = ->
-      debugger
       if $scope.play_status == 'play'
         $scope.play_status = 'stop'
         stopVlc()
@@ -115,4 +116,60 @@ ipcApp.controller 'HomeController', [
     $scope.show_device_operation_infos = ->
       $('#device_operation_infos').modal()
       return
+
+    resolution_mapping = {
+      '1080P':
+        width: 1920
+        height: 1080
+      'UXGA':
+        width: 1600
+        height: 1200
+      '960H':
+        width: 1280
+        height: 960
+      '720P':
+        width: 1280
+        height: 720
+      'D1':
+        width: 720
+        height: 576
+      'CIF':
+        width: 352
+        height: 288
+    }
+
+    getVideo = (stream)->
+      $http.get window.apiUrl + "/video.json",
+        params:
+          'items[]': [stream]
+      .success (data) ->
+        size = resolution_mapping[data.items[stream].resolution]
+        $screen_wrap = $('#screen_wrap')
+        actual_size = {
+          width: $screen_wrap.width(),
+          height: $screen_wrap.height()
+        }
+        _width = size.width
+        _height = size.height
+        if size.width > actual_size.width && size.height > actual_size.height
+          width_ratio = actual_size.width / size.width
+          height_ratio = actual_size.height / size.height
+          ratio = width_ratio
+          if width_ratio > height_ratio
+            ratio = height_ratio
+          _width = size.width * ratio
+          _height = size.height * ratio
+        $('#vlc').width(_width).height(_height)
+        if _height < actual_size.height
+          margin_top = (actual_size.height - _height) / 2
+          $('#vlc').css('margin-top', margin_top + 'px')
+        else
+          $('#vlc').css('margin-top', '0px')
+        playVlc()
+
+    getVideo($scope.current_stream)
+
+    $(window).on('resize', (e) ->
+      getVideo($scope.current_stream)
+    )
 ]

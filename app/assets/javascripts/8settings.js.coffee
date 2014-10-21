@@ -6,7 +6,7 @@ ipcApp.controller 'SettingController', [
   '$timeout'
   ($scope, $timeout) ->
     $scope.type = 'base_info'
-    $scope.url = 'http://192.168.1.217/api/1.0'
+    $scope.url = window.apiUrl
     # $scope.url = 'http://ipcbf.info/api/1.0'
     $scope.message_type = 0
     $scope.message = ''
@@ -444,6 +444,8 @@ ipcApp.controller 'PrivacyBlockController', [
   '$scope'
   '$http'
   ($scope, $http) ->
+    playVlc()
+
     $http.get "#{$scope.$parent.url}/privacy_block.json",
       params:
         'items[]': ['region1','region2']
@@ -1069,6 +1071,8 @@ ipcApp.controller 'MotionDetectController', [
   '$scope'
   '$http'
   ($scope, $http) ->
+    playVlc()
+
     $http.get "#{$scope.$parent.url}/event_motion.json",
       params:
         'items[]': ['region1', 'region2']
@@ -1119,6 +1123,8 @@ ipcApp.controller 'VideoCoverageController', [
   '$scope'
   '$http'
   ($scope, $http) ->
+    playVlc()
+
     $http.get "#{$scope.$parent.url}/event_cover.json",
       params:
         'items[]': ['region1', 'region2']

@@ -11,15 +11,21 @@ window.getVlc = ->
 window.playVlc = ->
   vlc = getVlc()
   if vlc
-    vlc.MRL = 'rtsp://192.168.1.100:8554/liveStream'
-    vlc.playlist.stop()
-    vlc.playlist.play()
+    vlc.MRL = 'rtsp://192.168.1.217/main_stream'
+    setTimeout(->
+      vlc.Stop()
+      vlc.Play()
+    , 500)
 
 window.stopVlc = ->
   vlc = getVlc()
   if vlc
-    vlc.MRL = 'rtsp://192.168.1.100:8554/liveStream'
-    vlc.playlist.stop()
+    vlc.MRL = 'rtsp://192.168.1.217/main_stream'
+    setTimeout(->
+      vlc.Stop()
+    , 500)
+
+window.apiUrl = 'http://192.168.1.217/api/1.0'
 
 window.ipcApp = angular.module('ipcApp', [])
 ipcApp.config(['$sceProvider', ($sceProvider) ->
@@ -155,18 +161,9 @@ ipcApp.directive('ngShelter', ($compile) ->
         top: rect.top,
         width: rect.width,
         height: rect.height
-      }).resizable({
-        containment: $parent,
-        minWidth: parseInt($attrs.minwidth, 10) || 50,
-        minHeight: parseInt($attrs.minheight, 10) || 50,
-        stop: (e, ui) ->
-          rect.width = ui.size.width
-          rect.height = ui.size.height
-          $scope.$apply( ->
-            $ngModel.$setViewValue(rect)
-          )
       }).draggable({
         containment: $parent,
+        iframeFix: true,
         stop: (e, ui) ->
           if ui.position.left + rect.width > parent_size.width
             rect.left = parent_size.width - rect.width
@@ -178,6 +175,16 @@ ipcApp.directive('ngShelter', ($compile) ->
             $(this).css('top', rect.top)
           else
             rect.top = ui.position.top
+          $scope.$apply( ->
+            $ngModel.$setViewValue(rect)
+          )
+      }).resizable({
+        containment: $parent,
+        minWidth: parseInt($attrs.minwidth, 10) || 50,
+        minHeight: parseInt($attrs.minheight, 10) || 50,
+        stop: (e, ui) ->
+          rect.width = ui.size.width
+          rect.height = ui.size.height
           $scope.$apply( ->
             $ngModel.$setViewValue(rect)
           )
