@@ -82,3 +82,17 @@
             a href="javascript:;" ng-click="changeType('video_coverage')" Video Coverage
           li ng-class="{active: type=='event_process'}"
             a href="javascript:;" ng-click="changeType('event_process')" Event Process
+
+  .panel.panel-default
+    .panel-heading.collapsed data-toggle="collapse" data-parent="#setting_group" data-target="#recorder"
+      h4.panel-title
+        | Recorder
+        i.fa.fa-caret-right.pull-right
+        i.fa.fa-caret-down.pull-right
+    .panel-collapse.collapse#recorder
+      .panel-body
+        ul.nav.nav-pills.nav-stacked role="tablist"
+          li ng-class="{active: type=='recorder_setting'}"
+            a href="javascript:;" ng-click="changeType('recorder_setting')" Recorder Setting
+          li ng-class="{active: type=='recorder_status'}"
+            a href="javascript:;" ng-click="changeType('recorder_status')" Recorder Status

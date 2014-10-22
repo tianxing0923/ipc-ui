@@ -5,9 +5,9 @@ ipcApp.controller 'SettingController', [
   '$scope'
   '$timeout'
   ($scope, $timeout) ->
-    $scope.type = 'base_info'
-    $scope.url = window.apiUrl
-    # $scope.url = 'http://ipcbf.info/api/1.0'
+    $scope.type = 'recorder_status'
+    # $scope.url = window.apiUrl
+    $scope.url = 'http://ipcbf.info/api/1.0'
     $scope.message_type = 0
     $scope.message = ''
     timer = null
@@ -1195,3 +1195,20 @@ ipcApp.controller 'EventProcessController', [
         $scope.$parent.success('Save Success')
 ]
 
+
+
+ipcApp.controller 'RecorderSettingController', [
+  '$scope'
+  '$http'
+  ($scope, $http) ->
+    $scope.schedules = {}
+    $scope.limit_normal = 'size'
+    $scope.limit_event = 15
+    $scope.no_enough_space = 'stop'
+]
+
+ipcApp.controller 'RecorderStatusController', [
+  '$scope'
+  '$http'
+  ($scope, $http) ->
+]

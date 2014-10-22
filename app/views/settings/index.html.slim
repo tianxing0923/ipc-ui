@@ -45,4 +45,7 @@
       = render 'video_coverage'
     .setting-wrap.event-process ng-switch-when='event_process' ng-controller='EventProcessController'
       = render 'event_process'
-
+    .setting-wrap.recorder-setting ng-switch-when='recorder_setting' ng-controller='RecorderSettingController'
+      = render 'recorder_setting'
+    .setting-wrap.recorder-status ng-switch-when='recorder_status' ng-controller='RecorderStatusController'
+      = render 'recorder_status'
