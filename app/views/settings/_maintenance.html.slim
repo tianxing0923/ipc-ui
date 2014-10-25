@@ -23,12 +23,49 @@ form.form-horizontal.form-ipc role='form'
     .col-sm-5
       input.form-control#upgrade type='file'
     .col-sm-2
-      button.btn.btn-success ng-click='upload_file()' Upload
+      button.btn.btn-success ng-click='upload_file()'
+        i.fa.fa-upload
+        | &nbsp;Upload
   .form-group ng-class='{hide: !upgrading}'
     .col-sm-5.col-sm-offset-3
       .progress
         .progress-bar.progress-bar-striped.active role='progressbar' aria-valuenow='{{progress_val}}' aria-valuemin='0' aria-valuemax='100' ng-style='{width: progress_val + "%"}' ng-bind-template='{{progress_val}} %'
       .alert.alert-info 升级过程将会持续 1-10 分钟，请不要断开电源和网络连接。
+  .form-group
+    .col-sm-12.text-center.process-wrap
+      ul.list-unstyled.list-inline
+        li
+          i.fa.fa-check-circle.step ng-class='{unstart: step < 1, underway: step == 1, completed: step > 1}'
+          div.text-center 上传
+        li.animation
+          i.fa.fa-circle
+          i.fa.fa-circle
+          i.fa.fa-circle
+        li
+          i.fa.fa-circle-o.step ng-class='{unstart: step < 2, underway: step == 2, completed: step > 2}'
+          div.text-center 校验
+        li.animation
+          i.fa.fa-circle
+          i.fa.fa-circle
+          i.fa.fa-circle
+        li
+          i.fa.fa-circle-o.step ng-class='{unstart: step < 3, underway: step == 3, completed: step > 3}'
+          div.text-center 擦除
+        li.animation
+          i.fa.fa-circle
+          i.fa.fa-circle
+          i.fa.fa-circle
+        li
+          i.fa.fa-circle-o.step ng-class='{unstart: step < 4, underway: step == 4, completed: step > 4}'
+          div.text-center 写入
+        li.animation
+          i.fa.fa-circle
+          i.fa.fa-circle
+          i.fa.fa-circle
+        li
+          i.fa.fa-circle-o.step ng-class='{unstart: step < 5, underway: step == 5, completed: step > 5}'
+          div.text-center 重启
+
 
 .modal.fade#confirm_modal
   .modal-dialog.modal-sm

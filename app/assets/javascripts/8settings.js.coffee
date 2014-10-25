@@ -5,7 +5,7 @@ ipcApp.controller 'SettingController', [
   '$scope'
   '$timeout'
   ($scope, $timeout) ->
-    $scope.type = 'recorder_status'
+    $scope.type = 'base_info'
     # $scope.url = window.apiUrl
     $scope.url = 'http://ipcbf.info/api/1.0'
     $scope.message_type = 0
@@ -292,7 +292,7 @@ ipcApp.controller 'MaintenanceController', [
     $scope.operate_type = ''
     $scope.confirm_content = ''
     $scope.upgrading = false
-    $scope.progress_val = 0
+    $scope.step = 2
 
     show_confirm = ->
       $('#confirm_modal').modal()

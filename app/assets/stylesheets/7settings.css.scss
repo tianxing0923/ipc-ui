@@ -107,6 +107,34 @@
       width: 100px;
     }
   }
+  .process-wrap {
+    .fa {
+      color: #BDBDBD;
+    }
+    li {
+      vertical-align: top;
+
+      &.animation {
+        margin-top: 20px;
+
+        .fa {
+          margin: 0 5px;
+        }
+      }
+    }
+    .step {
+      font-size: 64px;
+    }
+    .unstart {
+      color: #BDBDBD;
+    }
+    .underway {
+      color: #449d44;
+    }
+    .completed {
+      color: $navbar-ipc-bg;
+    }
+  }
 }
 
 .privacy-block {

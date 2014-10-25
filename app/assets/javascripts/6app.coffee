@@ -25,6 +25,52 @@ window.stopVlc = ->
       vlc.Stop()
     , 500)
 
+# 生成uuid
+CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+Math.uuid = (len, radix) ->
+  chars = CHARS
+  uuid = []
+  i
+  radix = radix || chars.length
+  if len
+    for i in [0..len-1]
+      uuid[i] = chars[0 | Math.random() * radix];
+  else
+    uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-'
+    uuid[14] = '4'
+    for i in [0..35]
+      if !uuid[i]
+        r = 0 | Math.random()*16
+        uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r]
+  uuid.join('');
+
+# base64编码
+base64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+window.base64encode = (str) ->
+  len = str.length;
+  i = 0
+  out = ""
+  while (i < len)
+    c1 = str.charCodeAt(i++) & 0xff
+    if i == len
+      out += base64EncodeChars.charAt(c1 >> 2)
+      out += base64EncodeChars.charAt((c1 & 0x3) << 4)
+      out += "=="
+      break
+    c2 = str.charCodeAt(i++)
+    if i == len
+      out += base64EncodeChars.charAt(c1 >> 2)
+      out += base64EncodeChars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4))
+      out += base64EncodeChars.charAt((c2 & 0xF) << 2)
+      out += "="
+      break
+    c3 = str.charCodeAt(i++)
+    out += base64EncodeChars.charAt(c1 >> 2)
+    out += base64EncodeChars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4))
+    out += base64EncodeChars.charAt(((c2 & 0xF) << 2) | ((c3 & 0xC0) >> 6))
+    out += base64EncodeChars.charAt(c3 & 0x3F)
+  return out
+
 window.apiUrl = 'http://192.168.1.217/api/1.0'
 
 window.ipcApp = angular.module('ipcApp', [])
