@@ -1,7 +1,8 @@
 ipcApp.controller 'loginController', [
   '$scope'
   '$timeout'
-  ($scope, $timeout) ->
+  '$http'
+  ($scope, $timeout, $http) ->
     $scope.username = ''
     $scope.password = ''
     $scope.language = '中文'
@@ -9,6 +10,16 @@ ipcApp.controller 'loginController', [
     $scope.username_msg = ''
     $scope.password_msg = ''
     $scope.login_fail_msg = ''
+    $scope.uuid = Math.uuid()
+    $scope.n = ''
+    $scope.e = ''
+
+    $http.get "#{window.apiUrl}/login.json",
+      params:
+        uuid: $scope.uuid
+    .success (data) ->
+      $scope.n = data.n
+      $scope.e = data.e
 
     valid = {
       username: (value) ->
@@ -41,5 +52,22 @@ ipcApp.controller 'loginController', [
     $scope.login = ->
       if !valid.username($scope.username) || !valid.password($scope.password)
         return
-      console.log 'success'
+      rsa = new RSAKey()
+      rsa.setPublic($scope.n, $scope.e)
+      pwd = hex2b64(rsa.encrypt($scope.password))
+      $http.post "#{window.apiUrl}/login.json",
+        params:
+          username: $scope.username
+          password: pwd
+          uuid: $scope.uuid
+      .success (data) ->
+        if data.success
+          setCookie('username', $scope.username)
+          setCookie('password_plain', $scope.password)
+          setCookie('password', pwd)
+          setCookie('uuid', $scope.uuid)
+          setTimeout(->
+            location.href = '/'
+          , 200)
+          
 ]

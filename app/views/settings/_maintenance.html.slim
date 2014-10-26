@@ -1,7 +1,10 @@
-h3 Maintenance
+h3
+  span class='headicon headicon-maintenance'
+  | Maintenance
 = render 'setting_breadcrumb', menu: 'System', sub_menu: 'Maintenance'
 
-form.form-horizontal.form-ipc role='form'
+form.form-horizontal
+  .form-ipc role='form'
   .form-group
     .col-sm-3.text-right
       button.btn.btn-warning  type='button' ng-click='soft_reset()' Soft reset
@@ -19,52 +22,58 @@ form.form-horizontal.form-ipc role='form'
       p.form-control-static
   hr
   .form-group
-    label.col-sm-3.control-label for='upgrade' Upgrade
+    label.col-sm-3.control-label for='file_path' Upgrade
     .col-sm-5
-      input.form-control#upgrade type='file'
+      input.form-control#file_path type='file' name='file_path'
     .col-sm-2
       button.btn.btn-success ng-click='upload_file()'
         i.fa.fa-upload
         | &nbsp;Upload
   .form-group ng-class='{hide: !upgrading}'
-    .col-sm-5.col-sm-offset-3
-      .progress
-        .progress-bar.progress-bar-striped.active role='progressbar' aria-valuenow='{{progress_val}}' aria-valuemin='0' aria-valuemax='100' ng-style='{width: progress_val + "%"}' ng-bind-template='{{progress_val}} %'
-      .alert.alert-info 升级过程将会持续 1-10 分钟，请不要断开电源和网络连接。
-  .form-group
     .col-sm-12.text-center.process-wrap
       ul.list-unstyled.list-inline
         li
-          i.fa.fa-check-circle.step ng-class='{unstart: step < 1, underway: step == 1, completed: step > 1}'
-          div.text-center 上传
-        li.animation
+          i.fa.step ng-class='{unstart: step < 1, underway: step == 1, completed: step > 1, "fa-check-circle": step > 1, "fa-circle-o": step <= 1}'
+          div.text-center 上 传
+        li.animation ng-class='{active: step == 1}'
           i.fa.fa-circle
           i.fa.fa-circle
           i.fa.fa-circle
         li
-          i.fa.fa-circle-o.step ng-class='{unstart: step < 2, underway: step == 2, completed: step > 2}'
-          div.text-center 校验
-        li.animation
+          i.fa.step ng-class='{unstart: step < 2, underway: step == 2, completed: step > 2, "fa-check-circle": step > 2, "fa-circle-o": step <= 2}'
+          div.text-center 校 验
+        li.animation ng-class='{active: step == 2}'
           i.fa.fa-circle
           i.fa.fa-circle
           i.fa.fa-circle
         li
-          i.fa.fa-circle-o.step ng-class='{unstart: step < 3, underway: step == 3, completed: step > 3}'
-          div.text-center 擦除
-        li.animation
+          i.fa.step ng-class='{unstart: step < 3, underway: step == 3, completed: step > 3, "fa-check-circle": step > 3, "fa-circle-o": step <= 3}'
+          div.text-center 擦 除
+        li.animation ng-class='{active: step == 3}'
           i.fa.fa-circle
           i.fa.fa-circle
           i.fa.fa-circle
         li
-          i.fa.fa-circle-o.step ng-class='{unstart: step < 4, underway: step == 4, completed: step > 4}'
-          div.text-center 写入
-        li.animation
+          i.fa.step ng-class='{unstart: step < 4, underway: step == 4, completed: step > 4, "fa-check-circle": step > 4, "fa-circle-o": step <= 4}'
+          div.text-center 写 入
+        li.animation ng-class='{active: step == 4}'
           i.fa.fa-circle
           i.fa.fa-circle
           i.fa.fa-circle
         li
-          i.fa.fa-circle-o.step ng-class='{unstart: step < 5, underway: step == 5, completed: step > 5}'
-          div.text-center 重启
+          i.fa.step ng-class='{unstart: step < 5, underway: step == 5, completed: step > 5, "fa-check-circle": step > 5, "fa-circle-o": step <= 5}'
+          div.text-center 重 启
+      .alert.alert-info 升级过程将会持续 1-10 分钟，请不要断开电源和网络连接。
+
+form.form-horizontal method="post" action="/"
+  .form-group
+    label.col-sm-3.control-label for='file' Upgrade
+    .col-sm-5
+      input.form-control#file type='file' name='file'
+    .col-sm-2
+      button.btn.btn-success type="submit"
+        i.fa.fa-upload
+        | &nbsp;Upload
 
 
 .modal.fade#confirm_modal

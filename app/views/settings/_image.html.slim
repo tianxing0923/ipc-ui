@@ -1,4 +1,6 @@
-h3 Image
+h3
+  span class='headicon headicon-image'
+  | Image
 = render 'setting_breadcrumb', menu: 'Video', sub_menu: 'Image'
 
 form.form-horizontal.form-ipc.clearfix role='form'
@@ -53,6 +55,3 @@ form.form-horizontal.form-ipc.clearfix role='form'
         label.icheck-label for='scenario2' 60Hz
         input type='radio' id='scenario3' name='scenario' value='composite' ng-model='scenario' ng-icheck=''
         label.icheck-label for='scenario3' Composite
-
-form.form-horizontal.form-ipc-footer role='form'
-  = render 'save_button'

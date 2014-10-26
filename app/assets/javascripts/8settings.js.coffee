@@ -6,8 +6,8 @@ ipcApp.controller 'SettingController', [
   '$timeout'
   ($scope, $timeout) ->
     $scope.type = 'base_info'
-    # $scope.url = window.apiUrl
-    $scope.url = 'http://ipcbf.info/api/1.0'
+    $scope.url = window.apiUrl
+    # $scope.url = 'http://ipcbf.info/api/1.0'
     $scope.message_type = 0
     $scope.message = ''
     timer = null
@@ -23,13 +23,16 @@ ipcApp.controller 'SettingController', [
         $scope.message_type = 0
       , 3000
 
-    $scope.error = (message) ->
-      $scope.message_type = 2
-      $scope.message = message
-      $timeout.cancel timer
-      timer = $timeout ->
-        $scope.message_type = 0
-      , 3000
+    $scope.error = (response, status, headers, config) ->
+      if status == 401
+        location.href == '/login'
+      else
+        $scope.message_type = 2
+        $scope.message = '保存失败'
+        $timeout.cancel timer
+        timer = $timeout ->
+          $scope.message_type = 0
+        , 3000
 ]
 
 
@@ -83,13 +86,15 @@ ipcApp.controller 'BaseInfoController', [
     $scope.save = ->
       if $scope.device_name_msg || $scope.comment_msg || $scope.location_msg
         return
-      $http.put "#{$scope.$parent.url}/base_info.json",        
-        items:
-          device_name: $scope.device_name
-          comment: $scope.comment
-          location: $scope.location
+      $http.put "#{$scope.$parent.url}/base_info.json"
+        # items:
+        #   device_name: $scope.device_name
+        #   comment: $scope.comment
+        #   location: $scope.location
       .success ->
         $scope.$parent.success('Save Success')
+      .error (response, status, headers, config) ->
+        $scope.$parent.error(response, status, headers, config)
 ]
 
 ipcApp.controller 'UsersController', [
@@ -97,12 +102,19 @@ ipcApp.controller 'UsersController', [
   '$http'
   ($scope, $http) ->
     $scope.operate_type = ''
-    $scope.authentication = true
+    $scope.rtsp_auth = false
     $scope.add_user_name = ''
     $scope.add_password = ''
     $scope.add_role = 'user'
     $scope.add_user_msg = ''
     $scope.current_user = ''
+
+    get_video_access_authentication = ->
+      $http.get "#{$scope.$parent.url}/misc.json",
+        params:
+          'items[]': ['rtsp_auth']
+      .success (data) ->
+        $scope.rtsp_auth = data.items.rtsp_auth
 
     get_user_list = ->
       $http.get "#{$scope.$parent.url}/users.json",
@@ -111,6 +123,7 @@ ipcApp.controller 'UsersController', [
       .success (data) ->
         $scope.items = data.items
 
+    get_video_access_authentication()
     get_user_list()
 
     show_msg = (type, msg) ->
@@ -188,9 +201,12 @@ ipcApp.controller 'UsersController', [
         else
           $('#user_modal').modal('hide')
           show_msg('alert-danger', 'error')
-      .error (msg) ->
-        $('#user_modal').modal('hide')
-        show_msg('alert-danger', 'error')
+      .error (response, status, headers, config) ->
+        if status == 401
+          location.href = '/login'
+        else
+          $('#user_modal').modal('hide')
+          show_msg('alert-danger', 'error')
 
     $scope.delete_user = ->
       $.ajax({
@@ -205,21 +221,21 @@ ipcApp.controller 'UsersController', [
           $('#confirm_modal').modal('hide')
           show_msg('alert-success', 'delete success')
           get_user_list()
-        error: (data) ->
-          $('#confirm_modal').modal('hide')
-          show_msg('alert-danger', 'delete error')
+        error: (jqXHR, textStatus, errorThrown) ->
+          if jqXHR.status == 401
+            location.href = '/login'
+          else
+            $('#confirm_modal').modal('hide')
+            show_msg('alert-danger', 'delete error')
       })
-
-      # $http.delete "#{$scope.$parent.url}/users.json?username=" + $scope.current_user
-      # .success (msg) ->
-      #   $('#confirm_modal').modal('hide')
-      #   show_msg('alert-success', 'delete success')
-      #   get_user_list()
-      # .error (msg) ->
-      #   $('#confirm_modal').modal('hide')
-      #   show_msg('alert-danger', 'delete error')
-
     $scope.save = ->
+      $http.put "#{$scope.$parent.url}/misc.json",
+        items:
+          rtsp_auth: $scope.rtsp_auth
+      .success ->
+        $scope.$parent.success('保存成功')
+      .error (response, status, headers, config) ->
+        $scope.$parent.error(response, status, headers, config)
 ]
 
 ipcApp.controller 'DateTimeController', [
@@ -283,6 +299,8 @@ ipcApp.controller 'DateTimeController', [
         items: postData
       .success ->
         $scope.$parent.success('Save Success')
+      .error (response, status, headers, config) ->
+        $scope.$parent.error(response, status, headers, config)
 ]
 
 ipcApp.controller 'MaintenanceController', [
@@ -292,7 +310,7 @@ ipcApp.controller 'MaintenanceController', [
     $scope.operate_type = ''
     $scope.confirm_content = ''
     $scope.upgrading = false
-    $scope.step = 2
+    $scope.step = 1
 
     show_confirm = ->
       $('#confirm_modal').modal()
@@ -320,18 +338,39 @@ ipcApp.controller 'MaintenanceController', [
       .success (msg) ->
         hide_confirm()
         $scope.$parent.success('Success')
-      .error (msg) ->
+      .error (response, status, headers, config) ->
         hide_confirm()
-        $scope.$parent.error('Error')
+        $scope.$parent.error(response, status, headers, config)
 
     $scope.upload_file = ->
+      debugger
+      if $('#file_path').val() == ''
+        return
       $scope.upgrading = true
-      temp = setInterval(->
-        $scope.progress_val = $scope.progress_val + 10
-        $scope.$apply()
-        if $scope.progress_val == 100
-          clearInterval(temp)
-      , 1000)
+      $.ajaxFileUpload({
+        url: "http://192.168.1.217",
+        secureuri: false,
+        fileElementId: 'file_path',
+        dataType: 'JSON',
+        success: (data, status) ->
+          debugger
+          # $.ajaxFileUpload({
+          #   url: '/',
+          #   secureuri: false,
+          #   fileElementId: 'file_path',
+          #   dataType: 'JSON',
+          #   success: (data, status) ->
+          # })
+        error: (data, status, e) ->
+          alert(e);
+      })
+      # return false;
+      # temp = setInterval(->
+      #   $scope.progress_val = $scope.progress_val + 10
+      #   $scope.$apply()
+      #   if $scope.progress_val == 100
+      #     clearInterval(temp)
+      # , 1000)
 ]
 
 
@@ -403,6 +442,8 @@ ipcApp.controller 'StreamController', [
           sub_profile: $scope.sub_profile
       .success ->
         $scope.$parent.success('Save Success')
+      .error (response, status, headers, config) ->
+        $scope.$parent.error(response, status, headers, config)
 ]
 
 ipcApp.controller 'ImageController', [
@@ -426,18 +467,67 @@ ipcApp.controller 'ImageController', [
       $('#saturation_slider').val($scope.saturation)
       $('[name=scenario][value=' + $scope.scenario + ']').iCheck('check')
 
-    $scope.save = ->
-      $http.put "#{$scope.$parent.url}/image.json",
-        items:
-          watermark: $scope.watermark
-          '3ddnr': $scope.dnr
-          brightness: $scope.brightness
-          chrominance: $scope.chrominance
-          contrast: $scope.contrast
-          saturation: $scope.saturation
-          scenario: $scope.scenario
-      .success ->
-        $scope.$parent.success('Save Success')
+      add_watch()
+
+    add_watch = ->
+      $scope.$watch('watermark', (newValue, oldValue) ->
+        if newValue != oldValue
+          $http.put "#{$scope.$parent.url}/image.json",
+            items:
+              watermark: $scope.watermark
+          .error (response, status, headers, config) ->
+            $scope.$parent.error(response, status, headers, config)
+      )
+
+      $scope.$watch('dnr',  (newValue, oldValue) ->
+        if newValue != oldValue
+          $http.put "#{$scope.$parent.url}/image.json",
+            items:
+              '3ddnr': $scope.dnr
+          .error (response, status, headers, config) ->
+            $scope.$parent.error(response, status, headers, config)
+      )
+
+      $('#brightness_slider').on('change', ->
+        $http.put "#{$scope.$parent.url}/image.json",
+          items:
+            brightness: $scope.brightness
+        .error (response, status, headers, config) ->
+          $scope.$parent.error(response, status, headers, config)
+      )
+
+      $('#chrominance_slider').on('change', ->
+        $http.put "#{$scope.$parent.url}/image.json",
+          items:
+            chrominance: $scope.chrominance
+        .error (response, status, headers, config) ->
+          $scope.$parent.error(response, status, headers, config)
+      )
+
+      $('#contrast_slider').on('change', ->
+        $http.put "#{$scope.$parent.url}/image.json",
+          items:
+            contrast: $scope.contrast
+        .error (response, status, headers, config) ->
+          $scope.$parent.error(response, status, headers, config)
+      )
+
+      $('#saturation_slider').on('change', ->
+        $http.put "#{$scope.$parent.url}/image.json",
+          items:
+            saturation: $scope.saturation
+        .error (response, status, headers, config) ->
+          $scope.$parent.error(response, status, headers, config)
+      )
+
+      $scope.$watch('scenario',  (newValue, oldValue) ->
+        if newValue != oldValue
+          $http.put "#{$scope.$parent.url}/image.json",
+            items:
+              scenario: $scope.scenario
+          .error (response, status, headers, config) ->
+            $scope.$parent.error(response, status, headers, config)
+      )
 ]
 
 ipcApp.controller 'PrivacyBlockController', [
@@ -481,12 +571,6 @@ ipcApp.controller 'PrivacyBlockController', [
           $scope.region2_color_hex = hex.toUpperCase()
       )
 
-    $scope.play_v = ->
-      playVlc()
-
-    $scope.stop_v = ->
-      stopVlc()
-
     $scope.save = ->
       $scope.region1.rect = {
         left: Math.round($scope.region1_rect.left / VIDEO_WIDTH * 1000),
@@ -506,6 +590,8 @@ ipcApp.controller 'PrivacyBlockController', [
           region2: $scope.region2
       .success ->
         $scope.$parent.success('Save Success')
+      .error (response, status, headers, config) ->
+        $scope.$parent.error(response, status, headers, config)
 ]
 
 ipcApp.controller 'DayNightModeController', [
@@ -529,6 +615,8 @@ ipcApp.controller 'DayNightModeController', [
           ir_intensity: $scope.ir_intensity
       .success ->
         $scope.$parent.success('Save Success')
+      .error (response, status, headers, config) ->
+        $scope.$parent.error(response, status, headers, config)
 ]
 
 
@@ -661,7 +749,6 @@ ipcApp.controller 'OsdController', [
       postData.bit_rate.top = parseFloat($scope.bit_rate.top) * 10
       postData.datetime.left = parseFloat($scope.datetime.left) * 10
       postData.datetime.top = parseFloat($scope.datetime.top) * 10
-      debugger
       if $scope.osd_type == 0
         data = {
           master: postData
@@ -674,6 +761,8 @@ ipcApp.controller 'OsdController', [
         items: data
       .success ->
         $scope.$parent.success('Save Success')
+      .error (response, status, headers, config) ->
+        $scope.$parent.error(response, status, headers, config)
 
 ]
 
@@ -747,6 +836,8 @@ ipcApp.controller 'SzycController', [
           position_num: $scope.position_num
       .success ->
         $scope.$parent.success('Save Success')
+      .error (response, status, headers, config) ->
+        $scope.$parent.error(response, status, headers, config)
 ]
 
 
@@ -899,6 +990,8 @@ ipcApp.controller 'InterfaceController', [
         $scope.$parent.success('Save Success')
         if postData.method == 'static'
           location.href = 'http://' + postData.address.ipaddr + (if $scope.http_port == 80 then '' else ':' + $scope.http_port)
+      .error (response, status, headers, config) ->
+        $scope.$parent.error(response, status, headers, config)
 
 ]
 
@@ -972,6 +1065,8 @@ ipcApp.controller 'PortController', [
             rtsp: parseInt($scope.rtsp_port, 10)
       .success ->
         $scope.$parent.success('Save Success')
+      .error (response, status, headers, config) ->
+        $scope.$parent.error(response, status, headers, config)
 ]
 
 
@@ -1065,6 +1160,8 @@ ipcApp.controller 'OutputController', [
             period: parseInt($scope.output1_period)
       .success ->
         $scope.$parent.success('Save Success')
+      .error (response, status, headers, config) ->
+        $scope.$parent.error(response, status, headers, config)
 ]
 
 ipcApp.controller 'MotionDetectController', [
@@ -1117,6 +1214,8 @@ ipcApp.controller 'MotionDetectController', [
           region2: $scope.region2
       .success ->
         $scope.$parent.success('Save Success')
+      .error (response, status, headers, config) ->
+        $scope.$parent.error(response, status, headers, config)
 ]
 
 ipcApp.controller 'VideoCoverageController', [
@@ -1169,6 +1268,8 @@ ipcApp.controller 'VideoCoverageController', [
           region2: $scope.region2
       .success ->
         $scope.$parent.success('Save Success')
+      .error (response, status, headers, config) ->
+        $scope.$parent.error(response, status, headers, config)
 ]
 
 ipcApp.controller 'EventProcessController', [
@@ -1193,6 +1294,8 @@ ipcApp.controller 'EventProcessController', [
           cover: $scope.cover
       .success ->
         $scope.$parent.success('Save Success')
+      .error (response, status, headers, config) ->
+        $scope.$parent.error(response, status, headers, config)
 ]
 
 

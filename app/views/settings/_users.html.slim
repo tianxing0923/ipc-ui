@@ -1,11 +1,13 @@
-h3 User
+h3
+  span class='headicon headicon-user'
+  | User
 = render 'setting_breadcrumb', menu: 'System', sub_menu: 'User'
 
 form.form-horizontal.form-ipc role='form'
   .form-group
     .col-sm-12
       label.switch-label video access authentication
-      input#authentication_switch ng-bswitch='' type='checkbox' name='authentication' ng-model='authentication'
+      input#authentication_switch ng-bswitch='' type='checkbox' name='rtsp_auth' ng-model='rtsp_auth'
       button.btn.btn-sm.btn-success.new-user data-target='.add-user-modal' ng-click='show_add_modal()'
         = fa_icon 'user'
         = fa_icon 'plus'

@@ -1,4 +1,6 @@
-h3 Privacy Block
+h3
+  span class='headicon headicon-privacy-block'
+  | Privacy Block
 = render 'setting_breadcrumb', menu: 'Video', sub_menu: 'Privacy Block'
 
 form.form-ipc-bg.clearfix
@@ -25,9 +27,6 @@ form.form-ipc-bg.clearfix
           input.form-control.input-sm.color-text type='text' readonly='readonly'
           .input-group-addon ng-color='' ng-model='region2.color'
             .color-block
-      .form-group
-        button.btn.btn-default ng-click='play_v()' play
-        button.btn.btn-default ng-click='stop_v()' stop
 
 form.form-horizontal.form-ipc-footer role='form'
   = render 'save_button'

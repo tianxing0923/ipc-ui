@@ -1,3 +1,5 @@
+window.apiUrl = 'http://192.168.1.217/api/1.0'
+
 window.getVlc = ->
   vlc = null
   if window.document['vlc']
@@ -8,41 +10,77 @@ window.getVlc = ->
     vlc = document.getElementById('vlc')
   return vlc
 
-window.playVlc = ->
-  vlc = getVlc()
-  if vlc
-    vlc.MRL = 'rtsp://192.168.1.217/main_stream'
-    setTimeout(->
-      vlc.Stop()
-      vlc.Play()
-    , 500)
+window.playVlc = (profile) ->
+  # vlc = getVlc()
+  # if vlc
+  #   ip = location.hostname
+  #   rtsp_auth = false
+  #   port = 554
+  #   profile = profile || 'main_profile'
+  #   $.ajax({
+  #     async: false,
+  #     url: "#{window.apiUrl}/misc.json",
+  #     data: JSON.stringify({
+  #       'items[]': ['rtsp_auth']
+  #     }),
+  #     success: (data) ->
+  #       rtsp_auth = data.items.rtsp_auth
+  #   })
+  #   $.ajax({
+  #     async: false,
+  #     url: "#{window.apiUrl}/network.json",
+  #     data: JSON.stringify({
+  #       'items[]': ['port']
+  #     }),
+  #     success: (data) ->
+  #       port = data.items.port.rtsp
+  #   })
+  #   $.ajax({
+  #     async: false,
+  #     url: "#{window.apiUrl}/video.json",
+  #     data: JSON.stringify({
+  #       'items[]': [profile]
+  #     }),
+  #     success: (data) ->
+  #       profile = data.items.stream_path
+  #   })
+  #   mrl = 'rtsp://'
+  #   if rtsp_auth == true
+  #     mrl += getCookie('username') + ':' + getCookie('password_plain') + '@'
+  #   mrl += ip
+  #   if port != 554
+  #     mrl += ':' + port
+  #   mrl += '/' + profile
+  #   vlc.MRL = mrl
+  #   setTimeout(->
+  #     vlc.Stop()
+  #     vlc.Play()
+  #   , 500)
 
 window.stopVlc = ->
   vlc = getVlc()
   if vlc
-    vlc.MRL = 'rtsp://192.168.1.217/main_stream'
     setTimeout(->
       vlc.Stop()
     , 500)
 
 # 生成uuid
-CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
-Math.uuid = (len, radix) ->
-  chars = CHARS
-  uuid = []
-  i
-  radix = radix || chars.length
-  if len
-    for i in [0..len-1]
-      uuid[i] = chars[0 | Math.random() * radix];
-  else
-    uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-'
-    uuid[14] = '4'
-    for i in [0..35]
-      if !uuid[i]
-        r = 0 | Math.random()*16
-        uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r]
-  uuid.join('');
+Math.uuid = ->
+  chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('')
+  uuid = new Array(36)
+  rnd = 0
+  for i in [0..35]
+    if i == 8 || i == 13 || i == 18 || i == 23
+      uuid[i] = '-'
+    else if i == 14
+      uuid[i] = '4'
+    else
+      if rnd <= 0x02
+        rnd = 0x2000000 + (Math.random() * 0x1000000) | 0
+      r = rnd & 0xf
+      rnd = rnd >> 4
+      uuid[i] = chars[if (i == 19) then (r & 0x3) | 0x8 else r]
+  uuid.join('')
 
 # base64编码
 base64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -71,12 +109,66 @@ window.base64encode = (str) ->
     out += base64EncodeChars.charAt(c3 & 0x3F)
   return out
 
-window.apiUrl = 'http://192.168.1.217/api/1.0'
+# 写入cookie
+window.setCookie = (name, value) ->
+  exp = new Date()
+  exp.setTime(exp.getTime() + 1 * 24 * 60 * 60 * 1000)
+  document.cookie = name + "="+ escape(value) + ";expires=" + exp.toGMTString()
+
+# 读取cookie
+window.getCookie = (name) ->
+  reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)")
+  if arr = document.cookie.match(reg)
+    return unescape(arr[2])
+  else
+    return null
+
+# 删除cookie
+window.delCookie = (name) ->
+    exp = new Date()
+    exp.setTime(exp.getTime() - 1)
+    cval = getCookie(name)
+    if cval != null
+      document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString()
+
+# username = getCookie('username')
+# password = getCookie('password')
+# uuid = getCookie('uuid')
+# if username && password && uuid
+#   $.ajax(
+#     url: "#{window.apiUrl}/login.json"
+#     type: 'POST'
+#     data:
+#       username: username
+#       password: password
+#       uuid: uuid
+#     success: (data) ->
+#       if data.success == false
+#         location.href = '/login'
+#   )
+# else
+#   url = location.href
+#   if url.indexOf('login') == -1
+#     location.href = '/login'
 
 window.ipcApp = angular.module('ipcApp', [])
 ipcApp.config(['$sceProvider', ($sceProvider) ->
   $sceProvider.enabled(false)
 ])
+
+ipcApp.controller 'navbarController', [
+  '$scope'
+  '$timeout'
+  ($scope, $timeout) ->
+    $scope.logout = ->
+      delCookie('username')
+      delCookie('password_plain')
+      delCookie('password')
+      delCookie('uuid')
+      setTimeout(->
+        location.href = '/login'
+      , 200)
+]
 
 ipcApp.directive('ngIcheck', ($compile) ->
   return {

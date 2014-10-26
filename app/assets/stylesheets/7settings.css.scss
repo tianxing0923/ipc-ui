@@ -108,6 +108,8 @@
     }
   }
   .process-wrap {
+    margin: 50px 0;
+
     .fa {
       color: #BDBDBD;
     }
@@ -216,4 +218,70 @@
       margin-left: 750px;
     }
   }
+}
+
+.headicon {
+  background: url(image_path('bg-sprites.png'));
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  margin-bottom: -6px;
+  margin-right: 5px;
+}
+.headicon-baseinfo {
+  background-position: 0 0;
+}
+.headicon-user {
+  background-position: -30px 0;
+}
+.headicon-datetime {
+  background-position: -60px 0;
+}
+.headicon-maintenance {
+  background-position: -90px 0;
+}
+.headicon-stream {
+  background-position: -120px 0;
+}
+.headicon-image {
+  background-position: -150px 0;
+}
+.headicon-privacy-block {
+  background-position: -180px 0;
+}
+.headicon-day-night-mode {
+  background-position: -90px 0;
+}
+.headicon-osd {
+  background-position: -210px 0;
+}
+.headicon-szyc {
+  background-position: -240px 0;
+}
+.headicon-interface {
+  background-position: -270px 0;
+}
+.headicon-port {
+  background-position: 0 -30px;
+}
+.headicon-input {
+  background-position: -30px -30px;
+}
+.headicon-output {
+  background-position: -60px -30px;
+}
+.headicon-motion-detect {
+  background-position: -90px -30px;
+}
+.headicon-video-coverage {
+  background-position: -120px -30px;
+}
+.headicon-event-process {
+  background-position: -180px -30px;
+}
+.headicon-recorder-setting {
+  background-position: -210px -30px;
+}
+.headicon-recorder-status {
+  background-position: -240px -30px;
 }

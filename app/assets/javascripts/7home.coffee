@@ -5,7 +5,7 @@ ipcApp.controller 'HomeController', [
   ($scope, $timeout, $http) ->
     $scope.speed = 50
     $scope.restore_val = 0
-    $scope.light = true
+    $scope.light = false
     $scope.wiper = false
     $scope.current_stream = 'main_profile'
     $scope.microphone = 50
@@ -17,6 +17,22 @@ ipcApp.controller 'HomeController', [
     $scope.ptz_status = 'show'
 
     restore_interval = null
+
+    $http.get "#{window.apiUrl}/day_night_mode.json",
+      params:
+        'items[]': ['force_night_mode']
+    .success (data) ->
+      $scope.light = data.items.force_night_mode
+    .error (response, status, headers, config) ->
+      if status == 401
+        location.href == '/login'
+
+    $scope.$watch('light', (newValue, oldValue) ->
+      if newValue != oldValue
+        $http.put "#{window.apiUrl}/day_night_mode.json",
+          items:
+            force_night_mode: $scope.light
+    )
 
     # 复位光圈、焦距、变焦
     $('.special').on({
@@ -114,8 +130,13 @@ ipcApp.controller 'HomeController', [
         $scope.ptz_position = 'left'
 
     $scope.show_device_operation_infos = ->
-      $('#device_operation_infos').modal()
-      return
+      $http.get "#{window.apiUrl}/events"
+      .success (data) ->
+        $('#device_operation_infos').modal()
+        return
+      .error (response, status, headers, config) ->
+        if status == 401
+          location.href == '/login'
 
     resolution_mapping = {
       '1080P':
@@ -139,7 +160,7 @@ ipcApp.controller 'HomeController', [
     }
 
     getVideo = (stream)->
-      $http.get window.apiUrl + "/video.json",
+      $http.get "#{window.apiUrl}/video.json",
         params:
           'items[]': [stream]
       .success (data) ->
@@ -165,7 +186,10 @@ ipcApp.controller 'HomeController', [
           $('#vlc').css('margin-top', margin_top + 'px')
         else
           $('#vlc').css('margin-top', '0px')
-        playVlc()
+        playVlc(stream)
+      .error (response, status, headers, config) ->
+        if status == 401
+          location.href == '/login'
 
     getVideo($scope.current_stream)
 
