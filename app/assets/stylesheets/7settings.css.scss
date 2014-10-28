@@ -55,21 +55,15 @@
     margin:  0 20px;
   }
   .bootstrap-switch {
-    *display: inline-block;
-    *zoom: 1;
-    *display: inline;
+    @include inline-block;
     *width: 100px;
 
     .bootstrap-switch-container {
-      *display: inline-block;
-      *zoom: 1;
-      *display: inline;
+      @include inline-block;
       *width: 150px;
 
       .bootstrap-switch-handle-on, .bootstrap-switch-handle-off, .bootstrap-switch-label {
-        *display: inline-block;
-        *zoom: 1;
-        *display: inline;
+        @include inline-block;
         *width: 50px;
       }
     }
@@ -107,8 +101,22 @@
       width: 100px;
     }
   }
+  .process-mask {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 9999;
+    background: #fff;
+    background: rgba(0, 0, 0, 0.5);
+  }
   .process-wrap {
-    margin: 50px 0;
+    width: 700px;
+    margin: 0 auto;
+    margin-top: 150px;
+    background: #fff;
+    padding: 30px;
 
     .fa {
       color: #BDBDBD;
@@ -203,7 +211,7 @@
 .motion-detect, .video-coverage {
   .sensitivity-wrap {
     .sel-region {
-      display: inline-block;
+      @include inline-block;
       width: 100px;
       margin-bottom: 10px;
       margin-right: 10px;
@@ -220,11 +228,38 @@
   }
 }
 
+.sidebaricon {
+  background: url(image_path('sidebar-icon.png'));
+  width: 20px;
+  height: 20px;
+  @include inline-block;
+  margin-right: 5px;
+  vertical-align: bottom;
+}
+.sidebaricon-system {
+  background-position: 0 0;
+}
+.sidebaricon-video {
+  background-position: -20px 0;
+}
+.sidebaricon-osd {
+  background-position: -40px 0;
+}
+.sidebaricon-network {
+  background-position: -60px 0;
+}
+.sidebaricon-event {
+  background-position: -80px 0;
+}
+.sidebaricon-recorder {
+  background-position: -100px 0;
+}
+
 .headicon {
   background: url(image_path('bg-sprites.png'));
   width: 30px;
   height: 30px;
-  display: inline-block;
+  @include inline-block;
   margin-bottom: -6px;
   margin-right: 5px;
 }

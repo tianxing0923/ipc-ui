@@ -253,9 +253,7 @@
                 padding: 5px 0 5px 20px;
 
                 .slide-wrap {
-                  display: inline-block;
-                  *zoom: 1;
-                  *display: inline;
+                  @include inline-block;
                   width: 197px;
                   margin: 0 10px;
                   text-align: center;
@@ -279,9 +277,7 @@
                     background-position:-100px 0;
                   }
                   .special {
-                    display: inline-block;
-                    *zoom: 1;
-                    *display: inline;
+                    @include inline-block;
                     width: 60px;
                     margin: 0 10px;
                     background: #000 !important;
@@ -430,7 +426,7 @@
       overflow: hidden;
 
       .microphone-wrap, .volume-wrap {
-        display: inline-block;
+        @include inline-block;
         vertical-align: top;
         width: 240px;
         height: 64px;
@@ -449,7 +445,7 @@
         }
         .microphone-slider, .volume-slider {
           width: 195px;
-          display: inline-block;
+          @include inline-block;
           margin-bottom: 6px;
 
           @include slide-control;
@@ -467,7 +463,7 @@
         }
       }
       .btn-play {
-        display: inline-block;
+        @include inline-block;
         width: 150px;
         height: 64px;
         background: #0e8be1;
@@ -502,7 +498,7 @@
         }
       }
       .ptz-position {
-        display: inline-block;
+        @include inline-block;
         position: relative;
         cursor: pointer;
 

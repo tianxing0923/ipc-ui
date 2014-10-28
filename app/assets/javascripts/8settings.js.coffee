@@ -343,7 +343,9 @@ ipcApp.controller 'MaintenanceController', [
         $scope.$parent.error(response, status, headers, config)
 
     $scope.upload_file = ->
-      debugger
+      $scope.upgrading = true
+      window.onbeforeunload = ->
+        returnValue = '系统正在进行升级，请等待升级完成后再进行操作！'
       if $('#file_path').val() == ''
         return
       $scope.upgrading = true
@@ -353,7 +355,7 @@ ipcApp.controller 'MaintenanceController', [
         fileElementId: 'file_path',
         dataType: 'JSON',
         success: (data, status) ->
-          debugger
+          # debugger
           # $.ajaxFileUpload({
           #   url: '/',
           #   secureuri: false,
@@ -364,13 +366,13 @@ ipcApp.controller 'MaintenanceController', [
         error: (data, status, e) ->
           alert(e);
       })
-      # return false;
-      # temp = setInterval(->
-      #   $scope.progress_val = $scope.progress_val + 10
-      #   $scope.$apply()
-      #   if $scope.progress_val == 100
-      #     clearInterval(temp)
-      # , 1000)
+      return false;
+      temp = setInterval(->
+        $scope.progress_val = $scope.progress_val + 10
+        $scope.$apply()
+        if $scope.progress_val == 100
+          clearInterval(temp)
+      , 1000)
 ]
 
 
