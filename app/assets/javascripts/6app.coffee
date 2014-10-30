@@ -1,4 +1,4 @@
-window.apiUrl = 'http://192.168.1.217/api/1.0'
+window.apiUrl = 'http://192.168.1.99/api/1.0'
 
 window.getVlc = ->
   vlc = null
@@ -11,51 +11,51 @@ window.getVlc = ->
   return vlc
 
 window.playVlc = (profile) ->
-  # vlc = getVlc()
-  # if vlc
-  #   ip = location.hostname
-  #   rtsp_auth = false
-  #   port = 554
-  #   profile = profile || 'main_profile'
-  #   $.ajax({
-  #     async: false,
-  #     url: "#{window.apiUrl}/misc.json",
-  #     data: JSON.stringify({
-  #       'items[]': ['rtsp_auth']
-  #     }),
-  #     success: (data) ->
-  #       rtsp_auth = data.items.rtsp_auth
-  #   })
-  #   $.ajax({
-  #     async: false,
-  #     url: "#{window.apiUrl}/network.json",
-  #     data: JSON.stringify({
-  #       'items[]': ['port']
-  #     }),
-  #     success: (data) ->
-  #       port = data.items.port.rtsp
-  #   })
-  #   $.ajax({
-  #     async: false,
-  #     url: "#{window.apiUrl}/video.json",
-  #     data: JSON.stringify({
-  #       'items[]': [profile]
-  #     }),
-  #     success: (data) ->
-  #       profile = data.items.stream_path
-  #   })
-  #   mrl = 'rtsp://'
-  #   if rtsp_auth == true
-  #     mrl += getCookie('username') + ':' + getCookie('password_plain') + '@'
-  #   mrl += ip
-  #   if port != 554
-  #     mrl += ':' + port
-  #   mrl += '/' + profile
-  #   vlc.MRL = mrl
-  #   setTimeout(->
-  #     vlc.Stop()
-  #     vlc.Play()
-  #   , 500)
+  vlc = getVlc()
+  if vlc
+    ip = location.hostname
+    rtsp_auth = false
+    port = 554
+    profile = profile || 'main_profile'
+    $.ajax({
+      async: false,
+      url: "#{window.apiUrl}/misc.json",
+      data: JSON.stringify({
+        'items[]': ['rtsp_auth']
+      }),
+      success: (data) ->
+        rtsp_auth = data.items.rtsp_auth
+    })
+    $.ajax({
+      async: false,
+      url: "#{window.apiUrl}/network.json",
+      data: JSON.stringify({
+        'items[]': ['port']
+      }),
+      success: (data) ->
+        port = data.items.port.rtsp
+    })
+    $.ajax({
+      async: false,
+      url: "#{window.apiUrl}/video.json",
+      data: JSON.stringify({
+        'items[]': [profile]
+      }),
+      success: (data) ->
+        profile = data.items.stream_path
+    })
+    mrl = 'rtsp://'
+    if rtsp_auth == true
+      mrl += getCookie('username') + ':' + getCookie('password_plain') + '@'
+    mrl += ip
+    if port != 554
+      mrl += ':' + port
+    mrl += '/' + profile
+    vlc.MRL = mrl
+    setTimeout(->
+      vlc.Stop()
+      vlc.Play()
+    , 500)
 
 window.stopVlc = ->
   vlc = getVlc()
@@ -63,51 +63,6 @@ window.stopVlc = ->
     setTimeout(->
       vlc.Stop()
     , 500)
-
-# 生成uuid
-Math.uuid = ->
-  chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('')
-  uuid = new Array(36)
-  rnd = 0
-  for i in [0..35]
-    if i == 8 || i == 13 || i == 18 || i == 23
-      uuid[i] = '-'
-    else if i == 14
-      uuid[i] = '4'
-    else
-      if rnd <= 0x02
-        rnd = 0x2000000 + (Math.random() * 0x1000000) | 0
-      r = rnd & 0xf
-      rnd = rnd >> 4
-      uuid[i] = chars[if (i == 19) then (r & 0x3) | 0x8 else r]
-  uuid.join('')
-
-# base64编码
-base64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-window.base64encode = (str) ->
-  len = str.length;
-  i = 0
-  out = ""
-  while (i < len)
-    c1 = str.charCodeAt(i++) & 0xff
-    if i == len
-      out += base64EncodeChars.charAt(c1 >> 2)
-      out += base64EncodeChars.charAt((c1 & 0x3) << 4)
-      out += "=="
-      break
-    c2 = str.charCodeAt(i++)
-    if i == len
-      out += base64EncodeChars.charAt(c1 >> 2)
-      out += base64EncodeChars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4))
-      out += base64EncodeChars.charAt((c2 & 0xF) << 2)
-      out += "="
-      break
-    c3 = str.charCodeAt(i++)
-    out += base64EncodeChars.charAt(c1 >> 2)
-    out += base64EncodeChars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4))
-    out += base64EncodeChars.charAt(((c2 & 0xF) << 2) | ((c3 & 0xC0) >> 6))
-    out += base64EncodeChars.charAt(c3 & 0x3F)
-  return out
 
 # 写入cookie
 window.setCookie = (name, value) ->
@@ -131,25 +86,25 @@ window.delCookie = (name) ->
     if cval != null
       document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString()
 
-# username = getCookie('username')
-# password = getCookie('password')
-# uuid = getCookie('uuid')
-# if username && password && uuid
-#   $.ajax(
-#     url: "#{window.apiUrl}/login.json"
-#     type: 'POST'
-#     data:
-#       username: username
-#       password: password
-#       uuid: uuid
-#     success: (data) ->
-#       if data.success == false
-#         location.href = '/login'
-#   )
-# else
-#   url = location.href
-#   if url.indexOf('login') == -1
-#     location.href = '/login'
+if location.href.indexOf('login') == -1
+  token = getCookie('token')
+  if token
+    $.ajax(
+      url: "#{window.apiUrl}/login.json"
+      type: 'POST'
+      data: JSON.stringify({token: token})
+      success: (data) ->
+        if data.success == false
+          delCookie('username')
+          delCookie('userrole')
+          delCookie('token')
+          setTimeout(->
+            location.href = '/login'
+          , 200)
+    )
+  else
+    location.href = '/login'
+
 
 window.ipcApp = angular.module('ipcApp', [])
 ipcApp.config(['$sceProvider', ($sceProvider) ->
@@ -160,11 +115,20 @@ ipcApp.controller 'navbarController', [
   '$scope'
   '$timeout'
   ($scope, $timeout) ->
+    roleObj = {
+      administrator: '管理员',
+      operate: '操作员',
+      user: '用户'
+    }
+    role = getCookie('userrole')
+
+    $scope.username = getCookie('username') || ''
+    $scope.userrole = roleObj[role] || ''
+
     $scope.logout = ->
       delCookie('username')
-      delCookie('password_plain')
-      delCookie('password')
-      delCookie('uuid')
+      delCookie('userrole')
+      delCookie('token')
       setTimeout(->
         location.href = '/login'
       , 200)

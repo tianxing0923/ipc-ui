@@ -4,7 +4,8 @@ window.VIDEO_HEIGHT = 560
 ipcApp.controller 'SettingController', [
   '$scope'
   '$timeout'
-  ($scope, $timeout) ->
+  '$http'
+  ($scope, $timeout, $http) ->
     $scope.type = 'base_info'
     $scope.url = window.apiUrl
     # $scope.url = 'http://ipcbf.info/api/1.0'
@@ -12,8 +13,27 @@ ipcApp.controller 'SettingController', [
     $scope.message = ''
     timer = null
 
+    # 设置默认cookie传输
+    $http.defaults.headers.common['Set-Cookie'] = 'token=' + getCookie('token');
+
     $scope.changeType = (type) ->
       $scope.type = type
+
+    $scope.get_error = (response, status, headers, config) ->
+      if status == 401
+        delCookie('username')
+        delCookie('userrole')
+        delCookie('token')
+        setTimeout(->
+          location.href == '/login'
+        , 200)
+      else
+        $scope.message_type = 2
+        $scope.message = '获取信息失败'
+        $timeout.cancel timer
+        timer = $timeout ->
+          $scope.message_type = 0
+        , 3000
 
     $scope.success = (message) ->
       $scope.message_type = 1
@@ -25,7 +45,12 @@ ipcApp.controller 'SettingController', [
 
     $scope.error = (response, status, headers, config) ->
       if status == 401
-        location.href == '/login'
+        delCookie('username')
+        delCookie('userrole')
+        delCookie('token')
+        setTimeout(->
+          location.href == '/login'
+        , 200)
       else
         $scope.message_type = 2
         $scope.message = '保存失败'
@@ -40,7 +65,6 @@ ipcApp.controller 'BaseInfoController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-
     $http.get "#{$scope.$parent.url}/base_info.json",
       params:
         'items[]': ['device_name', 'hwaddr', 'comment', 'location', 'manufacturer', 'model', 'serial', 'firmware', 'hardware']
@@ -54,9 +78,10 @@ ipcApp.controller 'BaseInfoController', [
       $scope.device_name = data.items.device_name
       $scope.comment = data.items.comment
       $scope.location = data.items.location
+    .error (response, status, headers, config) ->
+      $scope.$parent.get_error(response, status, headers, config)
 
       add_watch()
-
     $scope.device_name_msg = ''
     $scope.comment_msg = ''
     $scope.location_msg = ''
@@ -86,11 +111,11 @@ ipcApp.controller 'BaseInfoController', [
     $scope.save = ->
       if $scope.device_name_msg || $scope.comment_msg || $scope.location_msg
         return
-      $http.put "#{$scope.$parent.url}/base_info.json"
-        # items:
-        #   device_name: $scope.device_name
-        #   comment: $scope.comment
-        #   location: $scope.location
+      $http.put "#{$scope.$parent.url}/base_info.json",
+        items:
+          device_name: $scope.device_name
+          comment: $scope.comment
+          location: $scope.location
       .success ->
         $scope.$parent.success('Save Success')
       .error (response, status, headers, config) ->
@@ -115,6 +140,8 @@ ipcApp.controller 'UsersController', [
           'items[]': ['rtsp_auth']
       .success (data) ->
         $scope.rtsp_auth = data.items.rtsp_auth
+      .error (response, status, headers, config) ->
+        $scope.$parent.error(response, status, headers, config)
 
     get_user_list = ->
       $http.get "#{$scope.$parent.url}/users.json",
@@ -122,6 +149,8 @@ ipcApp.controller 'UsersController', [
           'items[]': ['role']
       .success (data) ->
         $scope.items = data.items
+      .error (response, status, headers, config) ->
+        $scope.$parent.error(response, status, headers, config)
 
     get_video_access_authentication()
     get_user_list()
@@ -253,6 +282,8 @@ ipcApp.controller 'DateTimeController', [
       $('[name=datetime_type][value=' + $scope.datetime_type + ']').iCheck('check')
 
       add_watch()
+    .error (response, status, headers, config) ->
+      $scope.$parent.error(response, status, headers, config)
 
     $scope.datetime_msg = ''
     $scope.ntp_server_msg = ''
@@ -384,7 +415,6 @@ ipcApp.controller 'StreamController', [
       params:
         'items[]': ['profile', 'flip', 'mirror', 'main_profile', 'sub_profile']
     .success (data) ->
-      console.log data
       $scope.profile = data.items.profile
       $scope.flip = data.items.flip
       $scope.mirrow = data.items.mirror
@@ -392,6 +422,8 @@ ipcApp.controller 'StreamController', [
       $scope.sub_profile = data.items.sub_profile
 
       add_watch()
+    .error (response, status, headers, config) ->
+      $scope.$parent.error(response, status, headers, config)
 
     $scope.valid_msg = ''
 
@@ -470,6 +502,8 @@ ipcApp.controller 'ImageController', [
       $('[name=scenario][value=' + $scope.scenario + ']').iCheck('check')
 
       add_watch()
+    .error (response, status, headers, config) ->
+      $scope.$parent.error(response, status, headers, config)
 
     add_watch = ->
       $scope.$watch('watermark', (newValue, oldValue) ->
@@ -542,7 +576,6 @@ ipcApp.controller 'PrivacyBlockController', [
       params:
         'items[]': ['region1','region2']
     .success (data) ->
-      console.log data
       $scope.region1 = data.items.region1
       $scope.region2 = data.items.region2
       $scope.region1_rect = {
@@ -560,6 +593,8 @@ ipcApp.controller 'PrivacyBlockController', [
       $scope.current_region = 'region1'
 
       add_watch()
+    .error (response, status, headers, config) ->
+      $scope.$parent.error(response, status, headers, config)
 
     add_watch = ->
       $scope.$watch('region1.color', (newValue) ->
@@ -604,11 +639,12 @@ ipcApp.controller 'DayNightModeController', [
       params:
         'items[]': ['night_mode_threshold', 'ir_intensity']
     .success (data) ->
-      console.log data
       $scope.night_mode_threshold = data.items.night_mode_threshold
       $scope.ir_intensity = data.items.ir_intensity
       $('#night_mode_threshold_slider').val($scope.night_mode_threshold)
       $('#ir_intensity_slider').val($scope.ir_intensity)
+    .error (response, status, headers, config) ->
+      $scope.$parent.error(response, status, headers, config)
 
     $scope.save = ->
       $http.put "#{$scope.$parent.url}/day_night_mode.json",
@@ -633,7 +669,6 @@ ipcApp.controller 'OsdController', [
           items: params
         },
         success: (data) ->
-          console.log data
           $scope.device_name = data.items[name].device_name
           $scope.device_name.left = ($scope.device_name.left / 10).toFixed(1)
           $scope.device_name.top = ($scope.device_name.top / 10).toFixed(1)
@@ -773,15 +808,16 @@ ipcApp.controller 'SzycController', [
   '$http'
   ($scope, $http) ->
     $http.get "#{$scope.$parent.url}/szyc.json",
-        params:
-          'items[]': ['train_num', 'carriage_num', 'position_num']
-      .success (data) ->
-        console.log data
-        $scope.train_num = data.items.train_num
-        $scope.carriage_num = data.items.carriage_num
-        $scope.position_num = data.items.position_num
+      params:
+        'items[]': ['train_num', 'carriage_num', 'position_num']
+    .success (data) ->
+      $scope.train_num = data.items.train_num
+      $scope.carriage_num = data.items.carriage_num
+      $scope.position_num = data.items.position_num
 
-        add_watch()
+      add_watch()
+    .error (response, status, headers, config) ->
+      $scope.$parent.error(response, status, headers, config)
 
     $scope.train_num_msg = ''
     $scope.carriage_num_msg = ''
@@ -830,7 +866,6 @@ ipcApp.controller 'SzycController', [
       if !valid.train_num($scope.train_num) || !valid.carriage_num($scope.carriage_num) ||
       !valid.position_num($scope.position_num)
         return
-      console.log('valid success')
       $http.put "#{$scope.$parent.url}/szyc.json",
         items:
           train_num: $scope.train_num
@@ -851,7 +886,6 @@ ipcApp.controller 'InterfaceController', [
       params:
         'items[]': ['method', 'address', 'pppoe', 'port']
     .success (data) ->
-      console.log data
       $scope.method = data.items.method
       $scope.network_username = data.items.pppoe.username
       $scope.network_password = data.items.pppoe.password
@@ -863,6 +897,8 @@ ipcApp.controller 'InterfaceController', [
       $scope.http_port = data.items.port.http
 
       add_watch()
+    .error (response, status, headers, config) ->
+      $scope.$parent.error(response, status, headers, config)
 
     $scope.network_username_msg = ''
     $scope.network_password_msg = ''
@@ -1009,6 +1045,8 @@ ipcApp.controller 'PortController', [
       $scope.ftp_port = data.items.port.ftp
       $scope.rtsp_port = data.items.port.rtsp
       add_watch()
+    .error (response, status, headers, config) ->
+      $scope.$parent.error(response, status, headers, config)
 
     $scope.http_port_msg = ''
     $scope.ftp_port_msg = ''
@@ -1080,10 +1118,11 @@ ipcApp.controller 'InputController', [
       params:
         'items[]': ['input1']
     .success (data) ->
-      console.log data
       $scope.input1 = data.items.input1
       $scope.current_input = 'input1'
       $('#input1_schedules').timegantt('setSelected', $scope.input1.schedules)
+    .error (response, status, headers, config) ->
+      $scope.$parent.error(response, status, headers, config)
 
     $scope.save = ->
       $http.put "#{$scope.$parent.url}/event_input.json",
@@ -1101,7 +1140,6 @@ ipcApp.controller 'OutputController', [
       params:
         'items[]': ['output1', 'output2']
     .success (data) ->
-      console.log data
       # $scope.output1 = data.items.output1
       $scope.output1_normal = if data.items.output1.normal == 'open' then true else false
       $scope.output1_trigger = if data.items.output1.normal == 'close' then false else true
@@ -1110,6 +1148,8 @@ ipcApp.controller 'OutputController', [
       # $scope.output2_trigger = false
       # $scope.output2_period = 2000
       add_watch()
+    .error (response, status, headers, config) ->
+      $scope.$parent.error(response, status, headers, config)
 
     $scope.output1_period_msg = ''
     # $scope.output2_period_msg = ''
@@ -1176,7 +1216,6 @@ ipcApp.controller 'MotionDetectController', [
       params:
         'items[]': ['region1', 'region2']
     .success (data) ->
-      console.log data
       $scope.region1 = data.items.region1
       $scope.region1_rect = {
         left: Math.round($scope.region1.rect.left / 1000 * VIDEO_WIDTH),
@@ -1196,6 +1235,8 @@ ipcApp.controller 'MotionDetectController', [
       $('#region2_sensitivity').val($scope.region2.sensitivity)
       $('#region1_schedules').timegantt('setSelected', $scope.region1.schedules)
       $('#region2_schedules').timegantt('setSelected', $scope.region2.schedules)
+    .error (response, status, headers, config) ->
+      $scope.$parent.error(response, status, headers, config)
 
     $scope.save = ->
       $scope.region1.rect = {
@@ -1230,7 +1271,6 @@ ipcApp.controller 'VideoCoverageController', [
       params:
         'items[]': ['region1', 'region2']
     .success (data) ->
-      console.log data
       $scope.region1 = data.items.region1
       $scope.region1_rect = {
         left: Math.round($scope.region1.rect.left / 1000 * VIDEO_WIDTH),
@@ -1250,6 +1290,8 @@ ipcApp.controller 'VideoCoverageController', [
       $('#region2_sensitivity').val($scope.region2.sensitivity)
       $('#region1_schedules').timegantt('setSelected', $scope.region1.schedules)
       $('#region2_schedules').timegantt('setSelected', $scope.region2.schedules)
+    .error (response, status, headers, config) ->
+      $scope.$parent.error(response, status, headers, config)
 
     $scope.save = ->
       $scope.region1.rect = {
@@ -1282,13 +1324,13 @@ ipcApp.controller 'EventProcessController', [
       params:
         'items[]': ['input1', 'motion', 'cover']
     .success (data) ->
-      console.log data
       $scope.input1 = data.items.input1
       $scope.motion = data.items.motion
       $scope.cover = data.items.cover
+    .error (response, status, headers, config) ->
+      $scope.$parent.error(response, status, headers, config)
 
     $scope.save = ->
-      console.log $scope.input1, $scope.motion, $scope.cover
       $http.put "#{$scope.$parent.url}/event_proc.json",
         items:
           input1: $scope.input1

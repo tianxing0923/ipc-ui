@@ -20,26 +20,31 @@
   <div class="navbar navbar-ipc" role="navigation" ng-controller="navbarController">
     <div class="container-fluid">
       <div class="navbar-header">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand" href="/home">
           <img alt="logo" src="<%= image_path('logo.png') %>">
         </a>
         <p class="navbar-text">易迅格IP摄像头</p>
       </div>
-      <ul class="nav navbar-nav navbar-right">
+      <ul class="nav navbar-nav">
         <li class="active">
-          <a href="/"><i class="fa fa-video-camera"></i> 实时预览</a>
+          <a href="/home"><i class="fa fa-video-camera"></i> 实时预览</a>
         </li>
         <li>
           <a href="/settings"><i class="fa fa-cog"></i> 参数设置</a>
         </li>
-        <li>
+        <!-- <li>
           <a href="/playback"><i class="fa fa-play-circle"></i> 视频回放</a>
-        </li>
+        </li> -->
         <li>
           <a href="/system/information"><i class="fa fa-info-circle"></i> 系统信息</a>
         </li>
-        <li>
+        <!-- <li>
           <a href="/system/log"><i class="fa fa-book"></i> 系统日志</a>
+        </li> -->
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="navbar-text">
+          <span ng-bind="username"></span>，<span ng-bind="userrole"></span>
         </li>
         <li>
           <a href="javascript:;" ng-click="logout()"><i class="fa fa-sign-out"></i> 退出</a>

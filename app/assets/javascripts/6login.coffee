@@ -5,21 +5,11 @@ ipcApp.controller 'loginController', [
   ($scope, $timeout, $http) ->
     $scope.username = ''
     $scope.password = ''
-    $scope.language = '中文'
+    $scope.language = '简体中文'
     
     $scope.username_msg = ''
     $scope.password_msg = ''
     $scope.login_fail_msg = ''
-    $scope.uuid = Math.uuid()
-    $scope.n = ''
-    $scope.e = ''
-
-    $http.get "#{window.apiUrl}/login.json",
-      params:
-        uuid: $scope.uuid
-    .success (data) ->
-      $scope.n = data.n
-      $scope.e = data.e
 
     valid = {
       username: (value) ->
@@ -49,25 +39,25 @@ ipcApp.controller 'loginController', [
     $scope.change_language = (value) ->
       $scope.language = value
 
+    $scope.user_keydown = (e) ->
+      if e.which == 13
+        $scope.login()
+
     $scope.login = ->
       if !valid.username($scope.username) || !valid.password($scope.password)
         return
-      rsa = new RSAKey()
-      rsa.setPublic($scope.n, $scope.e)
-      pwd = hex2b64(rsa.encrypt($scope.password))
+      pwd = CryptoJS.SHA1($scope.password).toString()
       $http.post "#{window.apiUrl}/login.json",
-        params:
-          username: $scope.username
-          password: pwd
-          uuid: $scope.uuid
+        username: $scope.username
+        password: pwd
       .success (data) ->
-        if data.success
+        if data.success == true
           setCookie('username', $scope.username)
-          setCookie('password_plain', $scope.password)
-          setCookie('password', pwd)
-          setCookie('uuid', $scope.uuid)
+          setCookie('userrole', data.role)
+          setCookie('token', data.token)
           setTimeout(->
-            location.href = '/'
+            location.href = '/home'
           , 200)
-          
+        else
+          $scope.login_fail_msg = '用户名或密码错误'
 ]

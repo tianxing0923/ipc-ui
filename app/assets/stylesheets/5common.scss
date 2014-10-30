@@ -100,6 +100,7 @@
 
   .navbar-header {
     height: 50px;
+    min-width: 285px;
 
     .navbar-brand {
       padding: 0 0 0 15px;
@@ -123,6 +124,9 @@
       a {
         background: $navbar-ipc-hover-bg;
       }
+    }
+    .navbar-text {
+      line-height: 20px;
     }
   }
 }
