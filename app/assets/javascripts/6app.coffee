@@ -345,61 +345,61 @@ ipcApp.directive('ngTimegantt', ($compile) ->
   }
 )
 
-ipcApp.directive('ngChart', ($compile) ->
-  return {
-    restrict: 'A',
-    require: '?ngModel',
-    link:  ($scope, $element, $attrs, $ngModel) ->
-      if (!$ngModel)
-        return
-      $parent = $element.parent()
-      $element[0].width = $parent.width()
-      $element[0].height = $parent.height()
-      ctx = $element[0].getContext('2d')
-      labels = []
-      data = []
-      for i in [60...-1] by -2
-        labels.push(i + 's')
-        data.push(0)
-      if data
-        data.push($scope[$attrs.ngModel])
-        data.shift()
+# ipcApp.directive('ngChart', ($compile) ->
+#   return {
+#     restrict: 'A',
+#     require: '?ngModel',
+#     link:  ($scope, $element, $attrs, $ngModel) ->
+#       if (!$ngModel)
+#         return
+#       $parent = $element.parent()
+#       $element[0].width = $parent.width()
+#       $element[0].height = $parent.height()
+#       ctx = $element[0].getContext('2d')
+#       labels = []
+#       data = []
+#       for i in [60...-1] by -5
+#         labels.push(i + 's')
+#         data.push(0)
+#       if data
+#         data.push($scope[$attrs.ngModel])
+#         data.shift()
       
-      chart_options = {
-        pointDot: false,
-        scaleLineColor: $attrs.scalelinecolor,
-        scaleGridLineColor: $attrs.scalegridlinecolor,
-        showTooltips: false,
-        scaleOverride: true,
-        scaleSteps : 10,
-        scaleStepWidth: 10,
-        scaleStartValue: 0,
-        animation: false
-      }
+#       chart_options = {
+#         pointDot: false,
+#         scaleLineColor: $attrs.scalelinecolor,
+#         scaleGridLineColor: $attrs.scalegridlinecolor,
+#         showTooltips: false,
+#         scaleOverride: true,
+#         scaleSteps : 10,
+#         scaleStepWidth: 10,
+#         scaleStartValue: 0,
+#         animation: false
+#       }
 
-      getLineChartData = (data) ->
-        lineChartData = {
-          labels: labels,
-          datasets: [
-            {
-              label: $attrs.label || 'Chart',
-              fillColor: $attrs.fillcolor || 'rgba(220,220,220,0.2)',
-              strokeColor: $attrs.strokecolor || 'rgba(220,220,220,1)',
-              data: data
-            }
-          ]
-        }
+#       getLineChartData = (data) ->
+#         lineChartData = {
+#           labels: labels,
+#           datasets: [
+#             {
+#               label: $attrs.label || 'Chart',
+#               fillColor: $attrs.fillcolor || 'rgba(220,220,220,0.2)',
+#               strokeColor: $attrs.strokecolor || 'rgba(220,220,220,1)',
+#               data: data
+#             }
+#           ]
+#         }
 
-      draw_chart = ->
-        new Chart(ctx).Line(getLineChartData(data), chart_options);
+#       draw_chart = ->
+#         new Chart(ctx).Line(getLineChartData(data), chart_options);
 
-      draw_chart(data)
+#       draw_chart(data)
 
-      $scope.$watch($attrs.ngModel, (newValue) ->
-        if newValue
-          data.push(newValue)
-          data.shift()
-          new Chart(ctx).Line(getLineChartData(data), chart_options);
-      )
-  }
-)
+#       $scope.$watch($attrs.ngModel, (newValue) ->
+#         if newValue
+#           data.push(newValue)
+#           data.shift()
+#           new Chart(ctx).Line(getLineChartData(data), chart_options);
+#       )
+#   }
+# )

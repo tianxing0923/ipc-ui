@@ -1,43 +1,61 @@
 .row.system-wrap ng-controller='SystemInfoController'
   .col-sm-12
-    h3 
+    h3
+      | 运行时间：
+      span ng-bind="uptime"
   .col-sm-4
     .panel.panel-default
       .panel-heading
         strong 处理器
       .panel-body
         .chart-wrap
-          canvas ng-chart='' ng-model='cpu' fillcolor='rgba(184, 218, 249, 0.5)' strokecolor='#3495f0' scalelinecolor='#b9d8ee' scalegridlinecolor='#b9d8ee'
+          canvas#cpu_cvs
         ul.list-unstyled.info-details
           li
-            strong 时钟频率: 3.20 GHz
+            strong
+              | 时钟频率: 
+              span ng-bind="cpu.info"
           li
-            strong 使用率: 15 %
+            strong
+              | 使用率: 
+              span ng-bind="cpu.usage"
   .col-sm-4
     .panel.panel-default
       .panel-heading
         strong 内存
       .panel-body
         .chart-wrap
-          canvas ng-chart='' ng-model='memory' fillcolor='rgba(205, 233, 196, 0.5)' strokecolor='#80c269' scalelinecolor='#c4e5b9' scalegridlinecolor='#c4e5b9'
+          canvas#memory_cvs
         ul.list-unstyled.info-details
           li
-            strong 总数: 4096 MB
+            strong
+              | 总数: 
+              span ng-bind="memory.total"
           li
-            strong 已用: 2048 MB
+            strong
+              | 已用: 
+              span ng-bind="memory.used"
           li
-            strong 空闲: 2048 MB
+            strong
+              | 空闲: 
+              span ng-bind="memory.free"
   .col-sm-4
     .panel.panel-default
       .panel-heading
         strong 网络
       .panel-body
         .chart-wrap
-          canvas ng-chart='' ng-model='network' fillcolor='rgba(184, 177, 227, 0.5)' strokecolor='#bbb5e4' scalelinecolor='#4433ab' scalegridlinecolor='#4433ab'
+          canvas#net_cvs
         ul.list-unstyled.info-details
           li
-            strong 带宽: 100 Mbps
+            strong
+              | 带宽: 
+              span ng-bind="net.bandwidth"
           li
-            strong 发送: 10 Mbps
+            strong
+              | 发送: 
+              span ng-bind="net.tx"
           li
-            strong 接收: 50 Mbps
+            strong
+              | 接收: 
+              span ng-bind="net.rx"

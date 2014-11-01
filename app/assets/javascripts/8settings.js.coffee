@@ -35,7 +35,7 @@ ipcApp.controller 'SettingController', [
       $scope.show_msg('alert-success', '保存成功')
 
     $scope.error = (response, status, headers, config) ->
-      if status == 401 
+      if status == 401
         delCookie('username')
         delCookie('userrole')
         delCookie('token')
@@ -333,27 +333,34 @@ ipcApp.controller 'MaintenanceController', [
   ($scope, $http, $timeout) ->
     $scope.operate_type = ''
     $scope.confirm_content = ''
+    $scope.is_reboot = false
+    $scope.reboot_step = 1
+    $scope.reboot_active_index = 1
     $scope.upgrading = false
     $scope.step = 1
     $scope.upload_msg = ''
     $scope.activeIndex = 1
+
+    reboot_timeout = null
     upgrade_timeout = null
     anim_timeout = null
 
     show_confirm = ->
       $('#maint_confirm_modal').modal()
+      return
 
     hide_confirm = ->
       $('#maint_confirm_modal').modal('hide')
+      return
 
     $scope.soft_reset = ->
       $scope.operate_type = 'soft_reset'
-      $scope.confirm_content = '确定进行软复位？'
+      $scope.confirm_content = '确定进行软复位吗？'
       show_confirm()
 
     $scope.hard_reset = ->
       $scope.operate_type = 'hard_reset'
-      $scope.confirm_content = '确定进行硬复位？'
+      $scope.confirm_content = '确定进行硬复位吗？'
       show_confirm()
 
     $scope.reboot = ->
@@ -362,19 +369,35 @@ ipcApp.controller 'MaintenanceController', [
       show_confirm()
 
     $scope.reset_or_reboot = ->
-      $http.put "#{$scope.$parent.url}/#{$scope.operate_type}.json"
+      $http.post "#{$scope.$parent.url}/system.json",
+        action: $scope.operate_type
       .success (msg) ->
         hide_confirm()
-        $scope.$parent.success('操作成功')
+        reboot_animation()
+        $scope.is_reboot = true
+        $timeout ->
+          $scope.reboot_step = 2
+          location.href = '/login'
+        , 30000
       .error (response, status, headers, config) ->
         hide_confirm()
         $scope.$parent.error(response, status, headers, config)
+
+    reboot_animation = ->
+      $timeout.cancel reboot_timeout
+      reboot_timeout = $timeout ->
+        if $scope.step == 0
+          return
+        $scope.reboot_active_index = $scope.reboot_active_index + 1
+        if $scope.reboot_active_index > 3
+          $scope.reboot_active_index = 1
+        reboot_animation()
+      , 1000
 
     upgrade_animation = ->
       $timeout.cancel anim_timeout
       anim_timeout = $timeout ->
         if $scope.step == 0
-          clearInterval(interval)
           return
         $scope.activeIndex = $scope.activeIndex + 1
         if $scope.activeIndex > 3
