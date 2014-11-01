@@ -21,6 +21,7 @@ window.playVlc = (stream_url) ->
     port = 554
     stream_path = 'main_stream'
     $.ajax({
+      async: false,
       cache: false,
       url: "#{window.apiUrl}/misc.json",
       data: {
