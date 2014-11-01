@@ -172,6 +172,7 @@ ipcApp.controller 'HomeController', [
           'items[]': [$scope.current_stream]
       .success (data) ->
         $scope.current_size = resolution_mapping[data.items[$scope.current_stream].resolution]
+        resizeVideo()
         playVlc($scope.current_stream)
       .error (response, status, headers, config) ->
         if status == 401

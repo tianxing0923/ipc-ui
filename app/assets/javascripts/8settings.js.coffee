@@ -18,6 +18,8 @@ ipcApp.controller 'SettingController', [
     $http.defaults.headers.common['Set-Cookie'] = 'token=' + getCookie('token');
 
     $scope.changeType = (type) ->
+      stopVlc()
+      $('#vlc').remove()
       $scope.type = type
 
     $scope.get_error = (response, status, headers, config) ->
@@ -546,6 +548,8 @@ ipcApp.controller 'ImageController', [
       add_watch()
     .error (response, status, headers, config) ->
       $scope.$parent.error(response, status, headers, config)
+
+    playVlc()
 
     add_watch = ->
       $scope.$watch('watermark', (newValue, oldValue) ->

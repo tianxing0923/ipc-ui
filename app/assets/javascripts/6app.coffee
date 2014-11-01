@@ -21,7 +21,6 @@ window.playVlc = (stream_url) ->
     port = 554
     stream_path = 'main_stream'
     $.ajax({
-      async: false,
       cache: false,
       url: "#{window.apiUrl}/misc.json",
       data: {
@@ -35,26 +34,25 @@ window.playVlc = (stream_url) ->
         rtsp_auth = data.items.rtsp_auth
         port = data.items.port
         stream_path = data.items.stream_path
+
+        mrl = 'rtsp://'
+        if rtsp_auth == true
+          mrl += getCookie('username') + ':' + getCookie('password') + '@'
+        mrl += ip
+        if port != 554
+          mrl += ':' + port
+        mrl += '/' + stream_path
+        vlc.MRL = mrl
+        vlc.Stop()
+        setTimeout(->
+          vlc.Play()
+        , 500)
     })
-    mrl = 'rtsp://'
-    if rtsp_auth == true
-      mrl += getCookie('username') + ':' + getCookie('password') + '@'
-    mrl += ip
-    if port != 554
-      mrl += ':' + port
-    mrl += '/' + stream_path
-    vlc.MRL = mrl
-    vlc.Stop()
-    setTimeout(->
-      vlc.Play()
-    , 500)
 
 window.stopVlc = ->
   vlc = getVlc()
   if vlc
-    setTimeout(->
-      vlc.Stop()
-    , 500)
+    vlc.Stop()
 
 # 写入cookie
 window.setCookie = (name, value) ->
