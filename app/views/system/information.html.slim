@@ -1,46 +1,43 @@
 .row.system-wrap ng-controller='SystemInfoController'
   .col-sm-12
-    h3 Sytem Information
+    h3 
   .col-sm-4
     .panel.panel-default
       .panel-heading
-        strong CPU
+        strong 处理器
       .panel-body
         .chart-wrap
           canvas ng-chart='' ng-model='cpu' fillcolor='rgba(184, 218, 249, 0.5)' strokecolor='#3495f0' scalelinecolor='#b9d8ee' scalegridlinecolor='#b9d8ee'
         ul.list-unstyled.info-details
           li
-            strong Clock Speed: 3.20 GHz
+            strong 时钟频率: 3.20 GHz
           li
-            strong Usage: 15 %
+            strong 使用率: 15 %
   .col-sm-4
     .panel.panel-default
       .panel-heading
-        strong Memory
+        strong 内存
       .panel-body
         .chart-wrap
           canvas ng-chart='' ng-model='memory' fillcolor='rgba(205, 233, 196, 0.5)' strokecolor='#80c269' scalelinecolor='#c4e5b9' scalegridlinecolor='#c4e5b9'
         ul.list-unstyled.info-details
           li
-            strong Total: 4096 MB
+            strong 总数: 4096 MB
           li
-            strong Used: 2048 MB
+            strong 已用: 2048 MB
           li
-            strong Free: 2048 MB
+            strong 空闲: 2048 MB
   .col-sm-4
     .panel.panel-default
       .panel-heading
-        strong Network
+        strong 网络
       .panel-body
         .chart-wrap
           canvas ng-chart='' ng-model='network' fillcolor='rgba(184, 177, 227, 0.5)' strokecolor='#bbb5e4' scalelinecolor='#4433ab' scalegridlinecolor='#4433ab'
         ul.list-unstyled.info-details
           li
-            strong Link: 100 Mbps
+            strong 带宽: 100 Mbps
           li
-            strong Send: 10 Mbps
+            strong 发送: 10 Mbps
           li
-            strong Recv: 50 Mbps
-
-
-  button.btn.btn-default ng-click="changeVal()" haha
+            strong 接收: 50 Mbps

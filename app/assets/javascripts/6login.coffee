@@ -17,14 +17,14 @@ ipcApp.controller 'loginController', [
           $scope.username_msg = ''
           return true
         else
-          $scope.username_msg = 'Please enter username'
+          $scope.username_msg = '请输入用户名'
           return false
       password: (value) ->
         if value
           $scope.password_msg = ''
           return true
         else
-          $scope.password_msg = 'Please enter password'
+          $scope.password_msg = '请输入密码'
           return false
     }
 

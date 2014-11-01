@@ -3,14 +3,6 @@
   .col-sm-2
     = render 'left_collapse'
   .col-sm-10.setting-content ng-switch='type'
-    .message.alert.alert-success.alert-dismissible role='alert' ng-if='message_type == 1'
-      button.close type='button'  data-dismiss='alert'
-        span aria-hidden='true' &times
-      | {{message}}
-    .message.alert.alert-danger.alert-dismissible role='alert' ng-if='message_type == 2'
-      button.close type='button'  data-dismiss='alert'
-        span aria-hidden='true' &times
-      | {{message}}
     .setting-wrap.base-info ng-switch-when='base_info' ng-controller='BaseInfoController'
       = render 'base_info'
     .setting-wrap.users ng-switch-when='users' ng-controller='UsersController'
@@ -45,7 +37,14 @@
       = render 'video_coverage'
     .setting-wrap.event-process ng-switch-when='event_process' ng-controller='EventProcessController'
       = render 'event_process'
-    .setting-wrap.recorder-setting ng-switch-when='recorder_setting' ng-controller='RecorderSettingController'
-      = render 'recorder_setting'
-    .setting-wrap.recorder-status ng-switch-when='recorder_status' ng-controller='RecorderStatusController'
-      = render 'recorder_status'
+    / .setting-wrap.recorder-setting ng-switch-when='recorder_setting' ng-controller='RecorderSettingController'
+    /   = render 'recorder_setting'
+    / .setting-wrap.recorder-status ng-switch-when='recorder_status' ng-controller='RecorderStatusController'
+    /   = render 'recorder_status'
+
+  .modal.fade#msg_modal
+    .modal-dialog.modal-sm
+      .modal-content
+        .modal-body.np
+          .alert.nbm role='alert' ng-class='ajax_msg.type'
+            | {{ajax_msg.content}}

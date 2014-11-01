@@ -1,7 +1,7 @@
 h3
   span class='headicon headicon-motion-detect'
-  | Motion Detect
-= render 'setting_breadcrumb', menu: 'Event', sub_menu: 'Motion Detect'
+  | 移动侦测
+= render 'setting_breadcrumb', menu: '事件管理', sub_menu: '移动侦测'
 
 .form-ipc-bg.clearfix
   .clearfix
@@ -13,7 +13,7 @@ h3
       .form-horizontal.col-sm-12
         .form-group ng-show='current_region=="region1"'
           .col-lg-4
-            p.form-control-static Sensitivity
+            p.form-control-static 灵敏度
           .col-lg-8
             p.form-control-static
               span ng-bind='region1.sensitivity'
@@ -22,7 +22,7 @@ h3
             #region1_sensitivity ng-slider='' ng-model='region1.sensitivity' min='1' max='100'
         .form-group ng-show='current_region=="region2"'
           .col-lg-4
-            p.form-control-static Sensitivity
+            p.form-control-static 灵敏度
           .col-lg-8
             p.form-control-static
               span ng-bind='region2.sensitivity'
@@ -41,7 +41,7 @@ h3
   hr
   .row
     .col-sm-12
-      h4 Schedule
+      h4 布防时间
     .col-sm-12 ng-show='current_region=="region1"'
       #region1_schedules.timegantt-wrapper ng-timegantt='' ng-model='region1.schedules'
     .col-sm-12 ng-show='current_region=="region2"'

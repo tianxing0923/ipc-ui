@@ -1,4 +1,5 @@
-window.apiUrl = 'http://192.168.1.99/api/1.0'
+window.uploadUrl = 'http://192.168.1.217'
+window.apiUrl = 'http://192.168.1.217/api/1.0'
 
 window.getVlc = ->
   vlc = null
@@ -20,27 +21,36 @@ window.playVlc = (profile) ->
     $.ajax({
       async: false,
       url: "#{window.apiUrl}/misc.json",
-      data: JSON.stringify({
+      data: {
         'items[]': ['rtsp_auth']
-      }),
+      },
+      headers: {
+        'Set-Cookie': 'token=' + getCookie('token')
+      },
       success: (data) ->
         rtsp_auth = data.items.rtsp_auth
     })
     $.ajax({
       async: false,
       url: "#{window.apiUrl}/network.json",
-      data: JSON.stringify({
+      data: {
         'items[]': ['port']
-      }),
+      },
+      headers: {
+        'Set-Cookie': 'token=' + getCookie('token')
+      },
       success: (data) ->
         port = data.items.port.rtsp
     })
     $.ajax({
       async: false,
       url: "#{window.apiUrl}/video.json",
-      data: JSON.stringify({
+      data: {
         'items[]': [profile]
-      }),
+      },
+      headers: {
+        'Set-Cookie': 'token=' + getCookie('token')
+      },
       success: (data) ->
         profile = data.items.stream_path
     })
@@ -68,7 +78,7 @@ window.stopVlc = ->
 window.setCookie = (name, value) ->
   exp = new Date()
   exp.setTime(exp.getTime() + 1 * 24 * 60 * 60 * 1000)
-  document.cookie = name + "="+ escape(value) + ";expires=" + exp.toGMTString()
+  document.cookie = name + "="+ escape(value) + ";expires=" + exp.toGMTString() + ";path=/"
 
 # 读取cookie
 window.getCookie = (name) ->
@@ -113,8 +123,10 @@ ipcApp.config(['$sceProvider', ($sceProvider) ->
 
 ipcApp.controller 'navbarController', [
   '$scope'
-  '$timeout'
-  ($scope, $timeout) ->
+  '$http'
+  ($scope, $http) ->
+    # 设置默认cookie传输
+    $http.defaults.headers.common['Set-Cookie'] = 'token=' + getCookie('token');
     roleObj = {
       administrator: '管理员',
       operate: '操作员',
@@ -126,6 +138,8 @@ ipcApp.controller 'navbarController', [
     $scope.userrole = roleObj[role] || ''
 
     $scope.logout = ->
+      $http.get "#{window.apiUrl}/logout.json"
+
       delCookie('username')
       delCookie('userrole')
       delCookie('token')
@@ -171,8 +185,8 @@ ipcApp.directive('ngBswitch', ($compile) ->
       if (!$ngModel)
         return
       $element.bootstrapSwitch({
-        onText: $element.attr('onText'),
-        offText: $element.attr('offText')
+        onText: $element.attr('ontext') || '开',
+        offText: $element.attr('offtext') || '关'
       }).on('switchChange.bootstrapSwitch', (e, state) ->
         $scope.$apply( ->
           $ngModel.$setViewValue(state);

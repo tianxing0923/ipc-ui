@@ -71,11 +71,11 @@
         button.btn.btn-stream ng-class="{active: current_stream == 'main_profile'}" type='button' ng-click='change_stream("main_profile")' 主码流
         button.btn.btn-stream ng-class="{active: current_stream == 'sub_profile'}" type='button' ng-click='change_stream("sub_profile")' 次码流
     .screen-control.pull-right
-      i.fa.fa-list href='javascript:;' title='报警信息' ng-click='show_device_operation_infos()'
-      i.fa.fa-video-camera href='javascript:;' title='开启/关闭录屏'
-      i.fa.fa-search-plus href='javascript:;' title='放大'
-      i.fa.fa-arrows-alt href='javascript:;' title='全屏'
-      i.fa.fa-camera href='javascript:;' title='抓拍'
+      / i.fa.fa-list href='javascript:;' title='报警信息' ng-click='show_device_operation_infos()'
+      / i.fa.fa-video-camera href='javascript:;' title='开启/关闭录屏'
+      / i.fa.fa-search-plus href='javascript:;' title='放大'
+      / i.fa.fa-arrows-alt href='javascript:;' title='全屏'
+      / i.fa.fa-camera href='javascript:;' title='抓拍'
       .ptz-position ng-click='change_ptz_position()' title='切换云台位置'
         .bg-origin
           .handle ng-class='ptz_position'
@@ -113,4 +113,4 @@
                 td Xing
                 td TianXing
         .modal-footer
-          button.btn.btn-default type='button' data-dismiss='modal' Close
+          button.btn.btn-default type='button' data-dismiss='modal' 关 闭

@@ -1,21 +1,21 @@
 h3
   span class='headicon headicon-datetime'
-  | Datetime
-= render 'setting_breadcrumb', menu: 'System', sub_menu: 'Datetime'
+  | 日期时间
+= render 'setting_breadcrumb', menu: '系统管理', sub_menu: '日期时间'
 
 form.form-horizontal.form-ipc role='form'
   .form-group
-    label.col-sm-3.control-label for='timezone' TimeZone
+    label.col-sm-3.control-label for='timezone' 时区
     .col-sm-5
       = select_tag 'timezone', options_for_select(ActiveSupport::TimeZone.all.map{|tz| [tz.to_s, tz.to_s]}), class: 'form-control', 'ng-model' => 'timezone'
   br
   .row
     .col-sm-offset-2
       input type='radio' id='manual' name="datetime_type" value='1' ng-model='datetime_type' ng-icheck=''
-      label.icheck-label for='manual' Manual
+      label.icheck-label for='manual' 手动设置
   br    
   .form-group
-    label.col-sm-3.control-label for='datetime' Date
+    label.col-sm-3.control-label for='datetime' 日期时间
     .col-sm-5
       .input-group
         input.form-control id='datetime' type='text' ng-model='datetime' ng-datetime='' data-date-format="YYYY-MM-DD hh:mm:ss"
@@ -27,10 +27,10 @@ form.form-horizontal.form-ipc role='form'
   .row
     .col-sm-offset-2
       input type='radio' id='user_ntp' name="datetime_type" value='2' ng-model='datetime_type' ng-icheck=''
-      label.icheck-label for='user_ntp' User NTP
+      label.icheck-label for='user_ntp' 自动同步
   br
   .form-group    
-    label.col-sm-3.control-label for='ntp_server' NTP Server
+    label.col-sm-3.control-label for='ntp_server' NTP服务器
     .col-sm-5
         input.form-control id='ntp_server' type='text' ng-model='ntp_server'
     .col-sm-4

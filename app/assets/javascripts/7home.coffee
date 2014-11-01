@@ -3,6 +3,9 @@ ipcApp.controller 'HomeController', [
   '$timeout'
   '$http'
   ($scope, $timeout, $http) ->
+    # 设置默认cookie传输
+    $http.defaults.headers.common['Set-Cookie'] = 'token=' + getCookie('token');
+    
     $scope.speed = 50
     $scope.restore_val = 0
     $scope.light = false
@@ -25,7 +28,7 @@ ipcApp.controller 'HomeController', [
       $scope.light = data.items.force_night_mode
     .error (response, status, headers, config) ->
       if status == 401
-        location.href == '/login'
+        location.href = '/login'
 
     $scope.$watch('light', (newValue, oldValue) ->
       if newValue != oldValue
@@ -136,7 +139,7 @@ ipcApp.controller 'HomeController', [
         return
       .error (response, status, headers, config) ->
         if status == 401
-          location.href == '/login'
+          location.href = '/login'
 
     resolution_mapping = {
       '1080P':
@@ -189,7 +192,7 @@ ipcApp.controller 'HomeController', [
         playVlc(stream)
       .error (response, status, headers, config) ->
         if status == 401
-          location.href == '/login'
+          location.href = '/login'
 
     getVideo($scope.current_stream)
 

@@ -8,9 +8,10 @@ ipcApp.controller 'SettingController', [
   ($scope, $timeout, $http) ->
     $scope.type = 'base_info'
     $scope.url = window.apiUrl
-    # $scope.url = 'http://ipcbf.info/api/1.0'
-    $scope.message_type = 0
-    $scope.message = ''
+    $scope.ajax_msg = {
+      type: 'success',
+      content: ''
+    }
     timer = null
 
     # 设置默认cookie传输
@@ -25,39 +26,37 @@ ipcApp.controller 'SettingController', [
         delCookie('userrole')
         delCookie('token')
         setTimeout(->
-          location.href == '/login'
+          location.href = '/login'
         , 200)
       else
-        $scope.message_type = 2
-        $scope.message = '获取信息失败'
-        $timeout.cancel timer
-        timer = $timeout ->
-          $scope.message_type = 0
-        , 3000
+        $scope.show_msg('alert-danger', '获取信息失败')
 
     $scope.success = (message) ->
-      $scope.message_type = 1
-      $scope.message = message
-      $timeout.cancel timer
-      timer = $timeout ->
-        $scope.message_type = 0
-      , 3000
+      $scope.show_msg('alert-success', '保存成功')
 
     $scope.error = (response, status, headers, config) ->
-      if status == 401
+      if status == 401 
         delCookie('username')
         delCookie('userrole')
         delCookie('token')
         setTimeout(->
-          location.href == '/login'
+          location.href = '/login'
         , 200)
+      else if status == 403
+        location.href = '/login'
       else
-        $scope.message_type = 2
-        $scope.message = '保存失败'
-        $timeout.cancel timer
-        timer = $timeout ->
-          $scope.message_type = 0
-        , 3000
+        $scope.show_msg('alert-danger', '保存失败')
+
+    $scope.show_msg = (type, msg) ->
+      $scope.ajax_msg = {
+        type: type,
+        content: msg
+      }
+      $('#msg_modal').modal()
+      $timeout.cancel timer
+      timer = $timeout ->
+        $('#msg_modal').modal('hide')
+      , 2000
 ]
 
 
@@ -88,16 +87,16 @@ ipcApp.controller 'BaseInfoController', [
 
     valid = (msg_name, value, msg) ->
       if value && value.length > 32
-        $scope[msg_name] = 'Length cannot exceed 32 characters'
+        $scope[msg_name] = '长度不能超过32个字符'
       else
         $scope[msg_name] = ''
 
     add_watch = ->
       $scope.$watch('device_name', (newValue) ->
         if !newValue
-          $scope.device_name_msg = 'Can not be empty'
+          $scope.device_name_msg = '设备名称不能为空'
         else if newValue.length > 32
-          $scope.device_name_msg = 'Length cannot exceed 32 characters'
+          $scope.device_name_msg = '长度不能超过32个字符'
         else
           $scope.device_name_msg = ''
       )
@@ -117,7 +116,7 @@ ipcApp.controller 'BaseInfoController', [
           comment: $scope.comment
           location: $scope.location
       .success ->
-        $scope.$parent.success('Save Success')
+        $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
         $scope.$parent.error(response, status, headers, config)
 ]
@@ -155,16 +154,6 @@ ipcApp.controller 'UsersController', [
     get_video_access_authentication()
     get_user_list()
 
-    show_msg = (type, msg) ->
-      $scope.ajax_msg = {
-        type: type,
-        content: msg
-      }
-      $('#msg_modal').modal()
-      setTimeout(->
-        $('#msg_modal').modal('hide')
-      , 2000)
-
     $scope.show_add_modal = ->
       $scope.operate_type = 'add'
       $scope.add_user_name = ''
@@ -194,16 +183,16 @@ ipcApp.controller 'UsersController', [
     $scope.add_or_edit_user = ->
       reg = /^\w-+|$/
       if $scope.add_user_name == ''
-        return $scope.add_user_msg = 'Please enter the username'
+        return $scope.add_user_msg = '请输入用户名'
       else if $scope.add_user_name.length > 16 || !reg.test($scope.add_user_name)
-        return $scope.add_user_msg = 'Please enter the correct user name'
+        return $scope.add_user_msg = '用户名格式错误'
       if $scope.operate_type == 'add'
         if $scope.add_password == ''
-          return $scope.add_user_msg = 'Please enter the password'
+          return $scope.add_user_msg = '请输入密码'
         else if $scope.add_password.length > 16
-          return $scope.add_user_msg = 'Password length can not exceed 16'
+          return $scope.add_user_msg = '密码长度不能超过16个字符'
       if $scope.add_role == ''
-        return $scope.add_user_msg = 'Please select a role'
+        return $scope.add_user_msg = '请选择角色'
 
       if $scope.operate_type == 'add'
         http_type = 'post'
@@ -225,17 +214,17 @@ ipcApp.controller 'UsersController', [
       ).success (result) ->
         if result.items && result.items.length != 0
           $('#user_modal').modal('hide')
-          show_msg('alert-success', 'success')
+          $scope.$parent.show_msg('alert-success', '操作成功')
           get_user_list()
         else
           $('#user_modal').modal('hide')
-          show_msg('alert-danger', 'error')
+          $scope.$parent.show_msg('alert-danger', '操作失败')
       .error (response, status, headers, config) ->
         if status == 401
           location.href = '/login'
         else
           $('#user_modal').modal('hide')
-          show_msg('alert-danger', 'error')
+          $scope.$parent.show_msg('alert-danger', '操作失败')
 
     $scope.delete_user = ->
       $.ajax({
@@ -246,16 +235,19 @@ ipcApp.controller 'UsersController', [
             username: $scope.current_user
           }]
         }),
+        headers: {
+          'Set-Cookie': 'token=' + getCookie('token')
+        },
         success: (data) ->
           $('#confirm_modal').modal('hide')
-          show_msg('alert-success', 'delete success')
+          $scope.$parent.show_msg('alert-success', '删除成功')
           get_user_list()
         error: (jqXHR, textStatus, errorThrown) ->
           if jqXHR.status == 401
             location.href = '/login'
           else
             $('#confirm_modal').modal('hide')
-            show_msg('alert-danger', 'delete error')
+            $scope.$parent.show_msg('alert-danger', '删除失败')
       })
     $scope.save = ->
       $http.put "#{$scope.$parent.url}/misc.json",
@@ -288,30 +280,30 @@ ipcApp.controller 'DateTimeController', [
     $scope.datetime_msg = ''
     $scope.ntp_server_msg = ''
 
-    valid = (msg_name, value, msg) ->
+    valid = (msg_name, value, name) ->
       if !value
-        $scope[msg_name] = 'Can not be empty'
+        $scope[msg_name] = name + '不能为空'
       else if value.length > 32
-        $scope[msg_name] = 'Length cannot exceed 32 characters'
+        $scope[msg_name] = name + '长度不能超过32个字符'
       else
         $scope[msg_name] = ''
 
     add_watch = ->
       $scope.$watch('datetime_type', (newValue) ->
         if $scope.datetime_type == '1'
-          valid('datetime_msg', $scope.datetime)
+          valid('datetime_msg', $scope.datetime, '日期时间')
           $scope.ntp_server_msg = ''
         else if $scope.datetime_type == '2'
-          valid('ntp_server_msg', $scope.ntp_server)
+          valid('ntp_server_msg', $scope.ntp_server, 'NTP服务器')
           $scope.datetime_msg = ''
       )
       $scope.$watch('datetime', (newValue) ->
         if $scope.datetime_type == '1'
-          valid('datetime_msg', newValue)
+          valid('datetime_msg', newValue, '日期时间')
       )
       $scope.$watch('ntp_server', (newValue) ->
         if $scope.datetime_type == '2'
-          valid('ntp_server_msg', newValue)
+          valid('ntp_server_msg', newValue, 'NTP服务器')
       )
 
     $scope.save = ->
@@ -329,81 +321,108 @@ ipcApp.controller 'DateTimeController', [
       $http.put "#{$scope.$parent.url}/datetime.json",
         items: postData
       .success ->
-        $scope.$parent.success('Save Success')
+        $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
         $scope.$parent.error(response, status, headers, config)
 ]
 
 ipcApp.controller 'MaintenanceController', [
   '$scope'
-  '$http'
-  ($scope, $http) ->
+  '$http',
+  '$timeout'
+  ($scope, $http, $timeout) ->
     $scope.operate_type = ''
     $scope.confirm_content = ''
     $scope.upgrading = false
     $scope.step = 1
+    $scope.upload_msg = ''
+    $scope.activeIndex = 1
+    upgrade_timeout = null
+    anim_timeout = null
 
     show_confirm = ->
-      $('#confirm_modal').modal()
+      $('#maint_confirm_modal').modal()
 
     hide_confirm = ->
-      $('#confirm_modal').modal('hide')
+      $('#maint_confirm_modal').modal('hide')
 
     $scope.soft_reset = ->
       $scope.operate_type = 'soft_reset'
-      $scope.confirm_content = 'Are you sure you want to soft reset ?'
+      $scope.confirm_content = '确定进行软复位？'
       show_confirm()
 
     $scope.hard_reset = ->
       $scope.operate_type = 'hard_reset'
-      $scope.confirm_content = 'Are you sure you want to hard reset ?'
+      $scope.confirm_content = '确定进行硬复位？'
       show_confirm()
 
     $scope.reboot = ->
       $scope.operate_type = 'reboot'
-      $scope.confirm_content = 'Are you sure you want to reboot ?'
+      $scope.confirm_content = '确定重启设备吗？'
       show_confirm()
 
     $scope.reset_or_reboot = ->
       $http.put "#{$scope.$parent.url}/#{$scope.operate_type}.json"
       .success (msg) ->
         hide_confirm()
-        $scope.$parent.success('Success')
+        $scope.$parent.success('操作成功')
       .error (response, status, headers, config) ->
         hide_confirm()
         $scope.$parent.error(response, status, headers, config)
 
+    upgrade_animation = ->
+      $timeout.cancel anim_timeout
+      anim_timeout = $timeout ->
+        if $scope.step == 0
+          clearInterval(interval)
+          return
+        $scope.activeIndex = $scope.activeIndex + 1
+        if $scope.activeIndex > 3
+          $scope.activeIndex = 1
+        upgrade_animation()
+      , 1000
+
+    get_upgrade = ->
+      $timeout.cancel upgrade_timeout
+      upgrade_timeout = $timeout ->
+        $http.get "#{$scope.$parent.url}/upgrade.json"
+        .success (data)->
+          if data.status == 0
+            $scope.step = 1
+            $scope.upgrading = false
+            $scope.$parent.show_msg('alert-danger', '文件错误')
+            window.onbeforeunload = null
+            $timeout.cancel anim_timeout
+            return
+          $scope.step = data.status
+          get_upgrade()
+        .error (response, status, headers, config) ->
+          window.onbeforeunload = null
+          $scope.step = 4
+          $timeout ->
+            $scope.step = 5
+            location.href = '/login'
+          , 30000
+      , 1000
+
     $scope.upload_file = ->
-      $scope.upgrading = true
-      window.onbeforeunload = ->
-        returnValue = '系统正在进行升级，请等待升级完成后再进行操作！'
+      $scope.upload_msg = ''
       if $('#file_path').val() == ''
+        $scope.upload_msg = '请选择更新文件'
         return
       $scope.upgrading = true
+      upgrade_animation()
+      window.onbeforeunload = ->
+        returnValue = '系统正在进行升级，请等待升级完成后再进行操作！'
       $.ajaxFileUpload({
-        url: "http://192.168.1.217",
+        url: "#{window.uploadUrl}/upload.fcgi",
         secureuri: false,
         fileElementId: 'file_path',
-        dataType: 'JSON',
         success: (data, status) ->
-          # debugger
-          # $.ajaxFileUpload({
-          #   url: '/',
-          #   secureuri: false,
-          #   fileElementId: 'file_path',
-          #   dataType: 'JSON',
-          #   success: (data, status) ->
-          # })
+          get_upgrade()
         error: (data, status, e) ->
           alert(e);
       })
-      return false;
-      temp = setInterval(->
-        $scope.progress_val = $scope.progress_val + 10
-        $scope.$apply()
-        if $scope.progress_val == 100
-          clearInterval(temp)
-      , 1000)
 ]
 
 
@@ -429,13 +448,13 @@ ipcApp.controller 'StreamController', [
 
     valid = (name, value, min, max, msg) ->
       if value == null
-        $scope.valid_msg = name + ' can not be empty'
+        $scope.valid_msg = name + '不能为空'
         return false
       else if value == undefined
-        $scope.valid_msg = name + ' must be numeric'
+        $scope.valid_msg = name + '必须为数字'
         return false
       else if value < min || value > max
-        $scope.valid_msg = name + ' numerical range of ' + min + ' - ' + max
+        $scope.valid_msg = name + '的范围为' + min + ' - ' + max
         return false
       else
         $scope.valid_msg = ''
@@ -443,23 +462,23 @@ ipcApp.controller 'StreamController', [
 
     add_watch = ->
       $scope.$watch('main_profile.frame_rate', (newValue) ->
-        valid('Master frame rate', newValue, 1, 30)
+        valid('主码流帧率', newValue, 1, 30)
       )
       $scope.$watch('main_profile.bit_rate_value', (newValue) ->
-        valid('Master bit rate', newValue, 128, 10240)
+        valid('主码流码率', newValue, 128, 10240)
       )
       $scope.$watch('sub_profile.frame_rate', (newValue) ->
-        valid('Slave frame rate', newValue, 1, 30)
+        valid('次码流帧率', newValue, 1, 30)
       )
       $scope.$watch('sub_profile.bit_rate_value', (newValue) ->
-        valid('Slave bit rate', newValue, 128, 10240)
+        valid('次码流码率', newValue, 128, 10240)
       )
 
     isValid = ->
-      if valid('Master frame rate', $scope.main_profile.frame_rate, 1, 30) &&
-      valid('Master bit rate', $scope.main_profile.bit_rate_value, 128, 10240) &&
-      valid('Slave frame rate', $scope.sub_profile.frame_rate, 1, 30) &&
-      valid('Slave bit rate', $scope.sub_profile.bit_rate_value, 128, 10240)
+      if valid('主码流帧率', $scope.main_profile.frame_rate, 1, 30) &&
+      valid('主码流码率', $scope.main_profile.bit_rate_value, 128, 10240) &&
+      valid('次码流帧率', $scope.sub_profile.frame_rate, 1, 30) &&
+      valid('次码流码率', $scope.sub_profile.bit_rate_value, 128, 10240)
         return true
       else
         return false
@@ -475,7 +494,7 @@ ipcApp.controller 'StreamController', [
           main_profile: $scope.main_profile
           sub_profile: $scope.sub_profile
       .success ->
-        $scope.$parent.success('Save Success')
+        $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
         $scope.$parent.error(response, status, headers, config)
 ]
@@ -570,8 +589,6 @@ ipcApp.controller 'PrivacyBlockController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    playVlc()
-
     $http.get "#{$scope.$parent.url}/privacy_block.json",
       params:
         'items[]': ['region1','region2']
@@ -595,6 +612,8 @@ ipcApp.controller 'PrivacyBlockController', [
       add_watch()
     .error (response, status, headers, config) ->
       $scope.$parent.error(response, status, headers, config)
+
+    playVlc()
 
     add_watch = ->
       $scope.$watch('region1.color', (newValue) ->
@@ -626,7 +645,7 @@ ipcApp.controller 'PrivacyBlockController', [
           region1: $scope.region1
           region2: $scope.region2
       .success ->
-        $scope.$parent.success('Save Success')
+        $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
         $scope.$parent.error(response, status, headers, config)
 ]
@@ -652,7 +671,7 @@ ipcApp.controller 'DayNightModeController', [
           night_mode_threshold: $scope.night_mode_threshold
           ir_intensity: $scope.ir_intensity
       .success ->
-        $scope.$parent.success('Save Success')
+        $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
         $scope.$parent.error(response, status, headers, config)
 ]
@@ -667,6 +686,9 @@ ipcApp.controller 'OsdController', [
         url: "#{$scope.$parent.url}/osd.json",
         data: {
           items: params
+        },
+        headers: {
+          'Set-Cookie': 'token=' + getCookie('token')
         },
         success: (data) ->
           $scope.device_name = data.items[name].device_name
@@ -705,11 +727,11 @@ ipcApp.controller 'OsdController', [
         getOsdInfo('slave', slave_params)
 
     obj = {
-      'device_name': 'Device name',
-      'comment': 'Comment',
-      'frame_rate': 'Frame rate',
-      'bit_rate': 'Bit rate',
-      'datetime': 'Datetime'
+      'device_name': '【设备名称】',
+      'comment': '【设备说明】',
+      'frame_rate': '【帧率】',
+      'bit_rate': '【码率】',
+      'datetime': '【日期时间】'
     }
 
     add_watch = ->
@@ -717,25 +739,25 @@ ipcApp.controller 'OsdController', [
       # 添加校验监听
       for name of obj
         $scope.$watch("#{name}.size", (newValue) ->
-          valid_font_size(obj[this.exp.split('.size')[0]], ' font size', newValue)
+          valid_font_size(obj[this.exp.split('.size')[0]], '字号', newValue)
         )
         $scope.$watch("#{name}.left", (newValue) ->
-          valid_left_or_top(obj[this.exp.split('.left')[0]], ' left', newValue)
+          valid_left_or_top(obj[this.exp.split('.left')[0]], '左边距', newValue)
         )
         $scope.$watch("#{name}.top", (newValue) ->
-          valid_left_or_top(obj[this.exp.split('.top')[0]], ' top', newValue)
+          valid_left_or_top(obj[this.exp.split('.top')[0]], '上边距', newValue)
         )
 
     # 校验font size
     valid_font_size = (name, field, value) ->
       if value == null
-          $scope.valid_msg = name + field + ' can not be empty'
+          $scope.valid_msg = name + field + '不能为空'
           return false
         else if value == undefined
-          $scope.valid_msg = name + field + ' must be numeric'
+          $scope.valid_msg = name + field + '必须为数字'
           return false
         else if value < 1 || value > 100
-          $scope.valid_msg = name + field + ' numerical range of 1 - 100'
+          $scope.valid_msg = name + field + '的范围为1 - 100'
           return false
         else
           $scope.valid_msg = ''
@@ -744,13 +766,13 @@ ipcApp.controller 'OsdController', [
     # 校验left或top
     valid_left_or_top = (name, field, value) ->
       if !value
-          $scope.valid_msg = name + field + ' can not be empty'
+          $scope.valid_msg = name + field + '不能为空'
           return false
         else if isNaN(value)
-          $scope.valid_msg = name + field + ' must be numeric'
+          $scope.valid_msg = name + field + '必须为数字'
           return false
         else if parseFloat(value) < 1 || parseFloat(value) > 100
-          $scope.valid_msg = name + field + ' numerical range of 1 - 100'
+          $scope.valid_msg = name + field + '的范围为 1.0% - 100.0%'
           return false
         else
           $scope.valid_msg = ''
@@ -758,11 +780,11 @@ ipcApp.controller 'OsdController', [
 
     isValid = ->
       for name of obj
-        if !valid_font_size(obj[name], ' font size', $scope[name].size)
+        if !valid_font_size(obj[name], '字号', $scope[name].size)
           return false
-        else if !valid_left_or_top(obj[name], ' left', $scope[name].left)
+        else if !valid_left_or_top(obj[name], '左边距', $scope[name].left)
           return false
-        else if !valid_left_or_top(obj[name], ' top', $scope[name].top)
+        else if !valid_left_or_top(obj[name], '上边距', $scope[name].top)
           return false
       return true
 
@@ -797,7 +819,7 @@ ipcApp.controller 'OsdController', [
       $http.put "#{$scope.$parent.url}/osd.json",
         items: data
       .success ->
-        $scope.$parent.success('Save Success')
+        $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
         $scope.$parent.error(response, status, headers, config)
 
@@ -830,21 +852,21 @@ ipcApp.controller 'SzycController', [
     valid = {
       train_num: (value) ->
         if !train_num_reg.test(value)
-          $scope.train_num_msg = 'Please enter the correct train number.'
+          $scope.train_num_msg = '请输入正确的车次号'
           return false
         else
           $scope.train_num_msg = ''
           return true
       carriage_num: (value) ->
         if !carriage_num_reg.test(value) || parseInt(value, 10) < 1 || parseInt(value, 10) > 32
-          $scope.carriage_num_msg = 'Please enter the correct carriage number.'
+          $scope.carriage_num_msg = '请输入正确的车厢号'
           return false
         else
           $scope.carriage_num_msg = ''
           return true
       position_num: (value) ->
         if !position_num_reg.test(value)
-          $scope.position_num_msg = 'Please enter the correct index no.'
+          $scope.position_num_msg = '请输入正确的位置'
           return false
         else
           $scope.position_num_msg = ''
@@ -872,7 +894,7 @@ ipcApp.controller 'SzycController', [
           carriage_num: $scope.carriage_num
           position_num: $scope.position_num
       .success ->
-        $scope.$parent.success('Save Success')
+        $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
         $scope.$parent.error(response, status, headers, config)
 ]
@@ -912,42 +934,42 @@ ipcApp.controller 'InterfaceController', [
     valid = {
       common: (name, value, msg) ->
         if value && !ip_reg.test(value)
-          $scope[name] = 'Please enter the correct ' + msg
+          $scope[name] = '请输入正确的' + msg
           return false
         else
           $scope[name] = ''
           return true
       common_required: (name, value, msg) ->
         if !ip_reg.test(value)
-          $scope[name] = msg
+          $scope[name] = '请输入正确的' + msg
           return false
         else
           $scope[name] = ''
           return true
       network_username: (value) ->
         if !value
-          $scope.network_username_msg = 'Please enter the username'
+          $scope.network_username_msg = '请输入用户名'
           return false
         else
           $scope.network_username_msg = ''
           return true
       network_password: (value) ->
         if !value
-          $scope.network_password_msg = 'Please enter the password'
+          $scope.network_password_msg = '请输入密码'
           return false
         else
           $scope.network_password_msg = ''
           return true
       network_address: (value) ->
-        this.common_required('network_address_msg', value, 'address')
+        this.common_required('network_address_msg', value, 'IP地址')
       network_netmask: (value) ->
-        this.common_required('network_netmask_msg', value, 'netmask')
+        this.common_required('network_netmask_msg', value, '子网掩码')
       network_gateway: (value) ->
-        this.common('network_gateway_msg', value, 'gateway')
+        this.common('network_gateway_msg', value, '网关地址')
       network_primary_dns: (value) ->
-        this.common('network_primary_dns_msg', value, 'primary DNS')
+        this.common('network_primary_dns_msg', value, '主DNS')
       network_second_dns: (value) ->
-        this.common('network_second_dns_msg', value, 'second DNS')
+        this.common('network_second_dns_msg', value, '次DNS')
     }
 
     add_watch = ->
@@ -1025,7 +1047,7 @@ ipcApp.controller 'InterfaceController', [
       $http.put "#{$scope.$parent.url}/network.json",
         items: postData
       .success ->
-        $scope.$parent.success('Save Success')
+        $scope.$parent.success('保存成功')
         if postData.method == 'static'
           location.href = 'http://' + postData.address.ipaddr + (if $scope.http_port == 80 then '' else ':' + $scope.http_port)
       .error (response, status, headers, config) ->
@@ -1057,20 +1079,20 @@ ipcApp.controller 'PortController', [
     valid = {
       common: (name, value, msg) ->
         if !value
-          $scope[name] = 'Please enter the ' + msg + ' port'
+          $scope[name] = '请输入' + msg + '端口'
           return false
         else if !number_reg.test(value)
-          $scope[name] = 'Please enter the correct ' + msg + ' port'
+          $scope[name] = '请输入正确的' + msg + '端口'
           return false
         else
           $scope[name] = ''
           return true
       http_port: (value) ->
-        this.common('http_port_msg', value, 'http')
+        this.common('http_port_msg', value, 'HTTP')
       ftp_port: (value) ->
-        this.common('ftp_port_msg', value, 'ftp')
+        this.common('ftp_port_msg', value, 'FTP')
       rtsp_port: (value) ->
-        this.common('rtsp_port_msg', value, 'rtsp')
+        this.common('rtsp_port_msg', value, 'RTSP')
     }
 
     add_watch = ->
@@ -1089,7 +1111,7 @@ ipcApp.controller 'PortController', [
         return false
       if $scope.http_port == $scope.ftp_port || $scope.http_port == $scope.rtsp_port ||
       $scope.ftp_port == $scope.rtsp_port
-        $scope.common_msg = 'Port cannot be the same'
+        $scope.common_msg = '端口不能相同'
         return false
       $scope.common_msg = ''
       return true
@@ -1104,7 +1126,7 @@ ipcApp.controller 'PortController', [
             ftp: parseInt($scope.ftp_port, 10)
             rtsp: parseInt($scope.rtsp_port, 10)
       .success ->
-        $scope.$parent.success('Save Success')
+        $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
         $scope.$parent.error(response, status, headers, config)
 ]
@@ -1129,7 +1151,7 @@ ipcApp.controller 'InputController', [
         items:
           input1: $scope.input1
       .success ->
-        $scope.$parent.success('Save Success')
+        $scope.$parent.success('保存成功')
 ]
 
 ipcApp.controller 'OutputController', [
@@ -1158,16 +1180,16 @@ ipcApp.controller 'OutputController', [
     valid = {
       common: (name, value, msg) ->
         if !value
-          $scope[name] = 'Please enter the ' + msg
+          $scope[name] = '请输入' + msg
           return false
         else if !number_reg.test(value) || parseInt(value) < 1 || parseInt(value) > 3600
-          $scope[name] = 'Please enter the correct ' + msg
+          $scope[name] = '请输入正确的' + msg
           return false
         else
           $scope[name] = ''
           return true
       output1_period: (value) ->
-        this.common('output1_period_msg', value, 'output1 period')
+        this.common('output1_period_msg', value, '保持时间')
       # output2_period: (value) ->
       #   this.common('output2_period_msg', value, 'output2 period')
     }
@@ -1201,7 +1223,7 @@ ipcApp.controller 'OutputController', [
             normal: if $scope.output1_normal == true then 'open' else 'close'
             period: parseInt($scope.output1_period)
       .success ->
-        $scope.$parent.success('Save Success')
+        $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
         $scope.$parent.error(response, status, headers, config)
 ]
@@ -1256,7 +1278,7 @@ ipcApp.controller 'MotionDetectController', [
           region1: $scope.region1
           region2: $scope.region2
       .success ->
-        $scope.$parent.success('Save Success')
+        $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
         $scope.$parent.error(response, status, headers, config)
 ]
@@ -1311,7 +1333,7 @@ ipcApp.controller 'VideoCoverageController', [
           region1: $scope.region1
           region2: $scope.region2
       .success ->
-        $scope.$parent.success('Save Success')
+        $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
         $scope.$parent.error(response, status, headers, config)
 ]
@@ -1337,7 +1359,7 @@ ipcApp.controller 'EventProcessController', [
           motion: $scope.motion
           cover: $scope.cover
       .success ->
-        $scope.$parent.success('Save Success')
+        $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
         $scope.$parent.error(response, status, headers, config)
 ]
