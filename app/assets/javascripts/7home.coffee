@@ -4,7 +4,7 @@ ipcApp.controller 'HomeController', [
   '$http'
   ($scope, $timeout, $http) ->
     # 设置默认cookie传输
-    $http.defaults.headers.common['Set-Cookie'] = 'token=' + getCookie('token');
+    $http.defaults.headers.common['Set-Cookie'] = 'token=' + getCookie('token')
     
     $scope.speed = 50
     $scope.restore_val = 0
@@ -18,6 +18,7 @@ ipcApp.controller 'HomeController', [
     $scope.play_status = 'play'
     $scope.ptz_position = 'left'
     $scope.ptz_status = 'show'
+    $scope.role = getCookie('userrole')
 
     restore_interval = null
 

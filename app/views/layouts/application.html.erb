@@ -29,13 +29,13 @@
         <li class="active">
           <a href="/home"><i class="fa fa-video-camera"></i> 实时预览</a>
         </li>
-        <li>
+        <li ng-if="role=='administrator'">
           <a href="/settings"><i class="fa fa-cog"></i> 参数设置</a>
         </li>
         <!-- <li>
           <a href="/playback"><i class="fa fa-play-circle"></i> 视频回放</a>
         </li> -->
-        <li>
+        <li ng-if="role=='administrator'||role=='operator'">
           <a href="/system/information"><i class="fa fa-info-circle"></i> 系统信息</a>
         </li>
         <!-- <li>

@@ -129,13 +129,12 @@ ipcApp.controller 'navbarController', [
     $http.defaults.headers.common['Set-Cookie'] = 'token=' + getCookie('token');
     roleObj = {
       administrator: '管理员',
-      operate: '操作员',
+      operator: '操作员',
       user: '用户'
     }
-    role = getCookie('userrole')
-
+    $scope.role = getCookie('userrole')
     $scope.username = getCookie('username') || ''
-    $scope.userrole = roleObj[role] || ''
+    $scope.userrole = roleObj[$scope.role] || ''
 
     $scope.logout = ->
       $http.get "#{window.apiUrl}/logout.json"
