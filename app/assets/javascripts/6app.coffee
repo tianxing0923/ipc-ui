@@ -11,67 +11,48 @@ window.getVlc = ->
     vlc = document.getElementById('vlc')
   return vlc
 
-window.playVlc = (profile) ->
+window.playVlc = (stream_url) ->
+  stream_url = stream_url || 'main_profile'
+  stream_url = if stream_url == 'main_profile' then 'main_stream_url' else 'sub_stream_url'
   vlc = getVlc()
   if vlc
     ip = location.hostname
     rtsp_auth = false
     port = 554
-    profile = profile || 'main_profile'
+    stream_path = 'main_stream'
     $.ajax({
-      async: false,
+      cache: false,
       url: "#{window.apiUrl}/misc.json",
       data: {
-        'items[]': ['rtsp_auth']
+        'items[]': [stream_url]
       },
       headers: {
         'Set-Cookie': 'token=' + getCookie('token')
       },
+      dataType: 'json',
       success: (data) ->
         rtsp_auth = data.items.rtsp_auth
-    })
-    $.ajax({
-      async: false,
-      url: "#{window.apiUrl}/network.json",
-      data: {
-        'items[]': ['port']
-      },
-      headers: {
-        'Set-Cookie': 'token=' + getCookie('token')
-      },
-      success: (data) ->
-        port = data.items.port.rtsp
-    })
-    $.ajax({
-      async: false,
-      url: "#{window.apiUrl}/video.json",
-      data: {
-        'items[]': [profile]
-      },
-      headers: {
-        'Set-Cookie': 'token=' + getCookie('token')
-      },
-      success: (data) ->
-        profile = data.items.stream_path
+        port = data.items.port
+        stream_path = data.items.stream_path
     })
     mrl = 'rtsp://'
     if rtsp_auth == true
-      mrl += getCookie('username') + ':' + getCookie('password_plain') + '@'
+      mrl += getCookie('username') + ':' + getCookie('password') + '@'
     mrl += ip
     if port != 554
       mrl += ':' + port
-    mrl += '/' + profile
+    mrl += '/' + stream_path
     vlc.MRL = mrl
     setTimeout(->
-      vlc.Stop()
-      vlc.Play()
+      vlc.Stop && vlc.Stop()
+      vlc.Play && vlc.Play()
     , 500)
 
 window.stopVlc = ->
   vlc = getVlc()
   if vlc
     setTimeout(->
-      vlc.Stop()
+      vlc.Stop && vlc.Stop()
     , 500)
 
 # 写入cookie

@@ -6,7 +6,7 @@ ipcApp.controller 'SettingController', [
   '$timeout'
   '$http'
   ($scope, $timeout, $http) ->
-    $scope.type = 'base_info'
+    $scope.type = 'port'
     $scope.url = window.apiUrl
     $scope.ajax_msg = {
       type: 'success',

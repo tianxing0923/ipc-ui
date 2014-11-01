@@ -7,7 +7,9 @@ ipcApp.controller 'HomeController', [
     $http.defaults.headers.common['Set-Cookie'] = 'token=' + getCookie('token')
     
     $scope.speed = 50
-    $scope.restore_val = 0
+    $scope.aperture_val = 0
+    $scope.distance_val = 0
+    $scope.zoom_val = 0
     $scope.light = false
     $scope.wiper = false
     $scope.current_stream = 'main_profile'
@@ -19,6 +21,7 @@ ipcApp.controller 'HomeController', [
     $scope.ptz_position = 'left'
     $scope.ptz_status = 'show'
     $scope.role = getCookie('userrole')
+    $scope.current_size = {}
 
     restore_interval = null
 
@@ -39,20 +42,20 @@ ipcApp.controller 'HomeController', [
     )
 
     # 复位光圈、焦距、变焦
-    $('.special').on({
-      slide: ->
-        clearInterval(restore_interval)
-        restore_interval = setInterval(->
-          if $scope.restore_val > 0
-            console.log('++++++')
-          else
-            console.log('------')
-        , 500)
-      change: ->
-        $scope.restore_val = 0
-        $(this).val(0)
-        clearInterval(restore_interval)
-    })
+    $('#home_content').on('slide', '.special', ->
+      clearInterval(restore_interval)
+      restore_interval = setInterval(->
+        if $scope.aperture_val > 0
+          console.log('++++++')
+        else
+          console.log('------')
+      , 500)
+    )
+    $('#home_content').on('change', '.special', ->
+      $scope.aperture_val = 0
+      $(this).val(0)
+      clearInterval(restore_interval)
+    )
 
     direction_status = false
     $scope.start_direction = (direction) ->
@@ -109,7 +112,7 @@ ipcApp.controller 'HomeController', [
 
     $scope.change_stream = (stream) ->
       $scope.current_stream = stream
-      getVideo(stream)
+      getVideo()
 
     $scope.toggle_microphone = ->
       $scope.off_microphone = !$scope.off_microphone
@@ -163,41 +166,43 @@ ipcApp.controller 'HomeController', [
         height: 288
     }
 
-    getVideo = (stream)->
+    getVideo = ->
       $http.get "#{window.apiUrl}/video.json",
         params:
-          'items[]': [stream]
+          'items[]': [$scope.current_stream]
       .success (data) ->
-        size = resolution_mapping[data.items[stream].resolution]
-        $screen_wrap = $('#screen_wrap')
-        actual_size = {
-          width: $screen_wrap.width(),
-          height: $screen_wrap.height()
-        }
-        _width = size.width
-        _height = size.height
-        if size.width > actual_size.width && size.height > actual_size.height
-          width_ratio = actual_size.width / size.width
-          height_ratio = actual_size.height / size.height
-          ratio = width_ratio
-          if width_ratio > height_ratio
-            ratio = height_ratio
-          _width = size.width * ratio
-          _height = size.height * ratio
-        $('#vlc').width(_width).height(_height)
-        if _height < actual_size.height
-          margin_top = (actual_size.height - _height) / 2
-          $('#vlc').css('margin-top', margin_top + 'px')
-        else
-          $('#vlc').css('margin-top', '0px')
-        playVlc(stream)
+        $scope.current_size = resolution_mapping[data.items[$scope.current_stream].resolution]
+        playVlc($scope.current_stream)
       .error (response, status, headers, config) ->
         if status == 401
           location.href = '/login'
 
-    getVideo($scope.current_stream)
+    getVideo()
+
+    resizeVideo = ->
+      $screen_wrap = $('#screen_wrap')
+      actual_size = {
+        width: $screen_wrap.width(),
+        height: $screen_wrap.height()
+      }
+      _width = $scope.current_size.width
+      _height = $scope.current_size.height
+      if $scope.current_size.width > actual_size.width && $scope.current_size.height > actual_size.height
+        width_ratio = actual_size.width / $scope.current_size.width
+        height_ratio = actual_size.height / $scope.current_size.height
+        ratio = width_ratio
+        if width_ratio > height_ratio
+          ratio = height_ratio
+        _width = $scope.current_size.width * ratio
+        _height = $scope.current_size.height * ratio
+      $('#vlc').width(_width).height(_height)
+      if _height < actual_size.height
+        margin_top = (actual_size.height - _height) / 2
+        $('#vlc').css('margin-top', margin_top + 'px')
+      else
+        $('#vlc').css('margin-top', '0px')
 
     $(window).on('resize', (e) ->
-      getVideo($scope.current_stream)
+      resizeVideo()
     )
 ]

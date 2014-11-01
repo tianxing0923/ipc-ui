@@ -42,19 +42,19 @@
               span 光圈
               .slide-wrap
                 i.icon.icon-aperture-min
-                .special ng-slider='' ng-model='restore_val' min='-10' max='10'
+                .special ng-slider='' ng-model='aperture_val' min='-10' max='10'
                 i.icon.icon-aperture-max
             li
               span 焦距
               .slide-wrap
                 i.icon.icon-focal-distance-min
-                .special ng-slider='' ng-model='restore_val' min='-10' max='10'
+                .special ng-slider='' ng-model='distance_val' min='-10' max='10'
                 i.icon.icon-focal-distance-max
             li
               span 变焦
               .slide-wrap
                 i.icon.icon-zoom-min
-                .special ng-slider='' ng-model='restore_val' min='-10' max='10'
+                .special ng-slider='' ng-model='zoom_val' min='-10' max='10'
                 i.icon.icon-zoom-max
             li
               span.light 灯光
@@ -76,7 +76,7 @@
       / i.fa.fa-search-plus href='javascript:;' title='放大'
       / i.fa.fa-arrows-alt href='javascript:;' title='全屏'
       / i.fa.fa-camera href='javascript:;' title='抓拍'
-      .ptz-position ng-click='change_ptz_position()' title='切换云台位置'
+      .ptz-position ng-click='change_ptz_position()' title='切换云台位置' ng-if="role=='administrator'||role=='operator'"
         .bg-origin
           .handle ng-class='ptz_position'
     .play-control

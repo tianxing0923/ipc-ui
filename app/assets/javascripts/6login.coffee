@@ -53,6 +53,7 @@ ipcApp.controller 'loginController', [
       .success (data) ->
         if data.success == true
           setCookie('username', $scope.username)
+          setCookie('password', $scope.password)
           setCookie('userrole', data.role)
           setCookie('token', data.token)
           setTimeout(->
