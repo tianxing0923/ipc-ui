@@ -44,16 +44,16 @@ window.playVlc = (stream_url) ->
       mrl += ':' + port
     mrl += '/' + stream_path
     vlc.MRL = mrl
+    vlc.Stop()
     setTimeout(->
-      vlc.Stop && vlc.Stop()
-      vlc.Play && vlc.Play()
+      vlc.Play()
     , 500)
 
 window.stopVlc = ->
   vlc = getVlc()
   if vlc
     setTimeout(->
-      vlc.Stop && vlc.Stop()
+      vlc.Stop()
     , 500)
 
 # 写入cookie
