@@ -515,7 +515,7 @@ ipcApp.controller 'StreamController', [
         items:
           profile: $scope.profile
           flip: $scope.flip
-          mirrow: $scope.mirror
+          mirror: $scope.mirror
           main_profile: $scope.main_profile
           sub_profile: $scope.sub_profile
       .success ->
