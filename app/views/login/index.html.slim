@@ -5,7 +5,7 @@
   form role="form"
     .form-group ng-class="{'has-error': username_msg!=''}"
         label for="userName" 用户名
-        input.form-control type="text" name="userName" ng-model="username" ng-blur="valid_username()" ng-keydown="user_keydown($event)"
+        input.form-control type="text" name="userName" ng-model="username" ng-blur="valid_username()" ng-keydown="user_keydown($event)" autofocus=""
         .help-block ng-bind="username_msg"
     .form-group ng-class="{'has-error': password_msg!=''}"
         label for="password" 密 码
@@ -30,4 +30,4 @@
           /     | English
     .form-group ng-class="{'has-error': login_fail_msg!=''}"
       .help-block ng-bind="login_fail_msg"
-    button.btn.btn-lg.btn-primary.btn-block type="button" ng-click="login()" 登 录
+    button.btn.btn-lg.btn-primary.btn-block type="button" ng-click="login($event)" data-loading-text="登录中..." 登 录

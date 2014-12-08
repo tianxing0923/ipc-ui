@@ -89,6 +89,10 @@
   height: 16px;
 }
 
+body {
+  min-width: 1024px;
+}
+
 // 顶部导航
 .navbar-ipc {
   background: $navbar-ipc-bg;

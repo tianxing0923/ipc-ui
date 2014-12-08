@@ -92,4 +92,4 @@ form.form-horizontal.form-ipc role='form'
       .modal-body ng-bind='confirm_content'
       .modal-footer
         button.btn.btn-default type='button' data-dismiss='modal' 取 消
-        button.btn.btn-primary type='button' ng-click='reset_or_reboot()' 确 定
+        button.btn.btn-primary type='button' ng-click='reset_or_reboot($event)' data-loading-text="操作中..." 确 定

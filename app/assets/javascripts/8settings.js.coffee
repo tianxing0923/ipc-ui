@@ -16,6 +16,7 @@ ipcApp.controller 'SettingController', [
 
     # 设置默认cookie传输
     $http.defaults.headers.common['Set-Cookie'] = 'token=' + getCookie('token');
+    $http.defaults.headers.common['Cache-Control'] = 'no-cache';
 
     $scope.changeType = (type) ->
       stopVlc()
@@ -109,17 +110,21 @@ ipcApp.controller 'BaseInfoController', [
         valid('location_msg', newValue)
       )
 
-    $scope.save = ->
+    $scope.save = (e)->
       if $scope.device_name_msg || $scope.comment_msg || $scope.location_msg
         return
+      $btn = $(e.target)
+      $btn.button('loading')
       $http.put "#{$scope.$parent.url}/base_info.json",
         items:
           device_name: $scope.device_name
           comment: $scope.comment
           location: $scope.location
       .success ->
+        $btn.button('reset')
         $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
+        $btn.button('reset')
         $scope.$parent.error(response, status, headers, config)
 ]
 
@@ -182,7 +187,7 @@ ipcApp.controller 'UsersController', [
       $('#confirm_modal').modal()
       return
 
-    $scope.add_or_edit_user = ->
+    $scope.add_or_edit_user = (e) ->
       reg = /^\w-+|$/
       if $scope.add_user_name == ''
         return $scope.add_user_msg = '请输入用户名'
@@ -211,9 +216,12 @@ ipcApp.controller 'UsersController', [
         }
         if $scope.add_password
           postData.password = $scope.add_password
+      $btn = $(e.target)
+      $btn.button('loading')
       $http[http_type]("#{$scope.$parent.url}/users.json", 
         items: [postData]
       ).success (result) ->
+        $btn.button('reset')
         if result.items && result.items.length != 0
           $('#user_modal').modal('hide')
           $scope.$parent.show_msg('alert-success', '操作成功')
@@ -222,13 +230,16 @@ ipcApp.controller 'UsersController', [
           $('#user_modal').modal('hide')
           $scope.$parent.show_msg('alert-danger', '操作失败')
       .error (response, status, headers, config) ->
+        $btn.button('reset')
         if status == 401
           location.href = '/login'
         else
           $('#user_modal').modal('hide')
           $scope.$parent.show_msg('alert-danger', '操作失败')
 
-    $scope.delete_user = ->
+    $scope.delete_user = (e) ->
+      $btn = $(e.target)
+      $btn.button('loading')
       $.ajax({
         url: "#{$scope.$parent.url}/users.json",
         type: 'DELETE',
@@ -241,10 +252,12 @@ ipcApp.controller 'UsersController', [
           'Set-Cookie': 'token=' + getCookie('token')
         },
         success: (data) ->
+          $btn.button('reset')
           $('#confirm_modal').modal('hide')
           $scope.$parent.show_msg('alert-success', '删除成功')
           get_user_list()
         error: (jqXHR, textStatus, errorThrown) ->
+          $btn.button('reset')
           if jqXHR.status == 401
             location.href = '/login'
           else
@@ -252,12 +265,16 @@ ipcApp.controller 'UsersController', [
             $scope.$parent.show_msg('alert-danger', '删除失败')
       })
     $scope.save = ->
+      $btn = $(e.target)
+      $btn.button('loading')
       $http.put "#{$scope.$parent.url}/misc.json",
         items:
           rtsp_auth: $scope.rtsp_auth
       .success ->
+        $btn.button('reset')
         $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
+        $btn.button('reset')
         $scope.$parent.error(response, status, headers, config)
 ]
 
@@ -320,11 +337,15 @@ ipcApp.controller 'DateTimeController', [
         postData.ntp_server = $scope.ntp_server
       else
         postData.datetime = $scope.datetime
+      $btn = $(e.target)
+      $btn.button('loading')
       $http.put "#{$scope.$parent.url}/datetime.json",
         items: postData
       .success ->
+        $btn.button('reset')
         $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
+        $btn.button('reset')
         $scope.$parent.error(response, status, headers, config)
 ]
 
@@ -370,10 +391,13 @@ ipcApp.controller 'MaintenanceController', [
       $scope.confirm_content = '确定重启设备吗？'
       show_confirm()
 
-    $scope.reset_or_reboot = ->
+    $scope.reset_or_reboot = (e) ->
+      $btn = $(e.target)
+      $btn.button('loading')
       $http.post "#{$scope.$parent.url}/system.json",
         action: $scope.operate_type
       .success (msg) ->
+        $btn.button('reset')
         hide_confirm()
         reboot_animation()
         $scope.is_reboot = true
@@ -382,6 +406,7 @@ ipcApp.controller 'MaintenanceController', [
           location.href = '/login'
         , 30000
       .error (response, status, headers, config) ->
+        $btn.button('reset')
         hide_confirm()
         $scope.$parent.error(response, status, headers, config)
 
@@ -508,9 +533,11 @@ ipcApp.controller 'StreamController', [
       else
         return false
 
-    $scope.save = ->
+    $scope.save = (e) ->
       if !isValid()
         return
+      $btn = $(e.target)
+      $btn.button('loading')
       $http.put "#{$scope.$parent.url}/video.json",
         items:
           profile: $scope.profile
@@ -519,8 +546,10 @@ ipcApp.controller 'StreamController', [
           main_profile: $scope.main_profile
           sub_profile: $scope.sub_profile
       .success ->
+        $btn.button('reset')
         $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
+        $btn.button('reset')
         $scope.$parent.error(response, status, headers, config)
 ]
 
@@ -654,7 +683,7 @@ ipcApp.controller 'PrivacyBlockController', [
           $scope.region2_color_hex = hex.toUpperCase()
       )
 
-    $scope.save = ->
+    $scope.save = (e) ->
       $scope.region1.rect = {
         left: Math.round($scope.region1_rect.left / VIDEO_WIDTH * 1000),
         top: Math.round($scope.region1_rect.top / VIDEO_HEIGHT * 1000),
@@ -667,13 +696,17 @@ ipcApp.controller 'PrivacyBlockController', [
         width: Math.round($scope.region2_rect.width / VIDEO_WIDTH * 1000),
         height: Math.round($scope.region2_rect.height / VIDEO_HEIGHT * 1000)
       }
+      $btn = $(e.target)
+      $btn.button('loading')
       $http.put "#{$scope.$parent.url}/privacy_block.json",
         items:
           region1: $scope.region1
           region2: $scope.region2
       .success ->
+        $btn.button('reset')
         $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
+        $btn.button('reset')
         $scope.$parent.error(response, status, headers, config)
 ]
 
@@ -692,14 +725,18 @@ ipcApp.controller 'DayNightModeController', [
     .error (response, status, headers, config) ->
       $scope.$parent.error(response, status, headers, config)
 
-    $scope.save = ->
+    $scope.save = (e) ->
+      $btn = $(e.target)
+      $btn.button('loading')
       $http.put "#{$scope.$parent.url}/day_night_mode.json",
         items:
           night_mode_threshold: $scope.night_mode_threshold
           ir_intensity: $scope.ir_intensity
       .success ->
+        $btn.button('reset')
         $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
+        $btn.button('reset')
         $scope.$parent.error(response, status, headers, config)
 ]
 
@@ -815,7 +852,7 @@ ipcApp.controller 'OsdController', [
           return false
       return true
 
-    $scope.save = ->
+    $scope.save = (e) ->
       if !isValid()
         return
       postData = {
@@ -843,11 +880,15 @@ ipcApp.controller 'OsdController', [
         data = {
           slave: postData
         }
+      $btn = $(e.target)
+      $btn.button('loading')
       $http.put "#{$scope.$parent.url}/osd.json",
         items: data
       .success ->
+        $btn.button('reset')
         $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
+        $btn.button('reset')
         $scope.$parent.error(response, status, headers, config)
 
 ]
@@ -911,18 +952,22 @@ ipcApp.controller 'SzycController', [
         valid.position_num(newValue)
       )
 
-    $scope.save = ->
+    $scope.save = (e) ->
       if !valid.train_num($scope.train_num) || !valid.carriage_num($scope.carriage_num) ||
       !valid.position_num($scope.position_num)
         return
+      $btn = $(e.target)
+      $btn.button('loading')
       $http.put "#{$scope.$parent.url}/szyc.json",
         items:
           train_num: $scope.train_num
           carriage_num: $scope.carriage_num
           position_num: $scope.position_num
       .success ->
+        $btn.button('reset')
         $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
+        $btn.button('reset')
         $scope.$parent.error(response, status, headers, config)
 ]
 
@@ -1052,7 +1097,7 @@ ipcApp.controller 'InterfaceController', [
     $scope.canEdit = ->
       $scope.method != 'static'
 
-    $scope.save = ->
+    $scope.save = (e) ->
       if !isValid()
         return
       postData = {
@@ -1071,13 +1116,17 @@ ipcApp.controller 'InterfaceController', [
           username: $scope.network_username,
           password: $scope.network_password
         }
+      $btn = $(e.target)
+      $btn.button('loading')
       $http.put "#{$scope.$parent.url}/network.json",
         items: postData
       .success ->
+        $btn.button('reset')
         $scope.$parent.success('保存成功')
         if postData.method == 'static'
           location.href = 'http://' + postData.address.ipaddr + (if $scope.http_port == 80 then '' else ':' + $scope.http_port)
       .error (response, status, headers, config) ->
+        $btn.button('reset')
         $scope.$parent.error(response, status, headers, config)
 
 ]
@@ -1143,9 +1192,11 @@ ipcApp.controller 'PortController', [
       $scope.common_msg = ''
       return true
 
-    $scope.save = ->
+    $scope.save = (e) ->
       if !isValid()
         return
+      $btn = $(e.target)
+      $btn.button('loading')
       $http.put "#{$scope.$parent.url}/network.json",
         items:
           port:
@@ -1153,8 +1204,10 @@ ipcApp.controller 'PortController', [
             ftp: parseInt($scope.ftp_port, 10)
             rtsp: parseInt($scope.rtsp_port, 10)
       .success ->
+        $btn.button('reset')
         $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
+        $btn.button('reset')
         $scope.$parent.error(response, status, headers, config)
 ]
 
@@ -1173,11 +1226,14 @@ ipcApp.controller 'InputController', [
     .error (response, status, headers, config) ->
       $scope.$parent.error(response, status, headers, config)
 
-    $scope.save = ->
+    $scope.save = (e) ->
+      $btn = $(e.target)
+      $btn.button('loading')
       $http.put "#{$scope.$parent.url}/event_input.json",
         items:
           input1: $scope.input1
       .success ->
+        $btn.button('reset')
         $scope.$parent.success('保存成功')
 ]
 
@@ -1241,17 +1297,21 @@ ipcApp.controller 'OutputController', [
         return false
       return true
 
-    $scope.save = ->
+    $scope.save = (e) ->
       if !isValid()
         return
+      $btn = $(e.target)
+      $btn.button('loading')
       $http.put "#{$scope.$parent.url}/event_output.json",
         items:
           output1:
             normal: if $scope.output1_normal == true then 'open' else 'close'
             period: parseInt($scope.output1_period)
       .success ->
+        $btn.button('reset')
         $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
+        $btn.button('reset')
         $scope.$parent.error(response, status, headers, config)
 ]
 
@@ -1287,7 +1347,7 @@ ipcApp.controller 'MotionDetectController', [
     .error (response, status, headers, config) ->
       $scope.$parent.error(response, status, headers, config)
 
-    $scope.save = ->
+    $scope.save = (e) ->
       $scope.region1.rect = {
         left: Math.round($scope.region1_rect.left / VIDEO_WIDTH * 1000),
         top: Math.round($scope.region1_rect.top / VIDEO_HEIGHT * 1000),
@@ -1300,13 +1360,17 @@ ipcApp.controller 'MotionDetectController', [
         width: Math.round($scope.region2_rect.width / VIDEO_WIDTH * 1000),
         height: Math.round($scope.region2_rect.height / VIDEO_HEIGHT * 1000)
       }
+      $btn = $(e.target)
+      $btn.button('loading')
       $http.put "#{$scope.$parent.url}/event_motion.json",
         items:
           region1: $scope.region1
           region2: $scope.region2
       .success ->
+        $btn.button('reset')
         $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
+        $btn.button('reset')
         $scope.$parent.error(response, status, headers, config)
 ]
 
@@ -1342,7 +1406,7 @@ ipcApp.controller 'VideoCoverageController', [
     .error (response, status, headers, config) ->
       $scope.$parent.error(response, status, headers, config)
 
-    $scope.save = ->
+    $scope.save = (e) ->
       $scope.region1.rect = {
         left: Math.round($scope.region1_rect.left / VIDEO_WIDTH * 1000),
         top: Math.round($scope.region1_rect.top / VIDEO_HEIGHT * 1000),
@@ -1355,13 +1419,17 @@ ipcApp.controller 'VideoCoverageController', [
         width: Math.round($scope.region2_rect.width / VIDEO_WIDTH * 1000),
         height: Math.round($scope.region2_rect.height / VIDEO_HEIGHT * 1000)
       }
+      $btn = $(e.target)
+      $btn.button('loading')
       $http.put "#{$scope.$parent.url}/event_cover.json",
         items:
           region1: $scope.region1
           region2: $scope.region2
       .success ->
+        $btn.button('reset')
         $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
+        $btn.button('reset')
         $scope.$parent.error(response, status, headers, config)
 ]
 
@@ -1379,15 +1447,19 @@ ipcApp.controller 'EventProcessController', [
     .error (response, status, headers, config) ->
       $scope.$parent.error(response, status, headers, config)
 
-    $scope.save = ->
+    $scope.save = (e) ->
+      $btn = $(e.target)
+      $btn.button('loading')
       $http.put "#{$scope.$parent.url}/event_proc.json",
         items:
           input1: $scope.input1
           motion: $scope.motion
           cover: $scope.cover
       .success ->
+        $btn.button('reset')
         $scope.$parent.success('保存成功')
       .error (response, status, headers, config) ->
+        $btn.button('reset')
         $scope.$parent.error(response, status, headers, config)
 ]
 

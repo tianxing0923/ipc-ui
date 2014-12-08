@@ -43,14 +43,17 @@ ipcApp.controller 'loginController', [
       if e.which == 13
         $scope.login()
 
-    $scope.login = ->
+    $scope.login = (e)->
       if !valid.username($scope.username) || !valid.password($scope.password)
         return
       pwd = CryptoJS.SHA1($scope.password).toString()
+      $btn = $(e.target)
+      $btn.button('loading')
       $http.post "#{window.apiUrl}/login.json",
         username: $scope.username
         password: pwd
       .success (data) ->
+        $btn.button('reset')
         if data.success == true
           setCookie('username', $scope.username)
           setCookie('password', $scope.password)

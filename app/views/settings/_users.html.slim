@@ -61,7 +61,7 @@ form.form-horizontal.form-ipc-footer role='form'
       .modal-footer
         span.text-danger.pull-left ng-bind='add_user_msg'
         button.btn.btn-default type='button' data-dismiss='modal' 取 消
-        button.btn.btn-primary type='button' ng-click='add_or_edit_user()' 确 定
+        button.btn.btn-primary type='button' ng-click='add_or_edit_user($event)' data-loading-text="操作中..." 确 定
 
 .modal.fade#confirm_modal
   .modal-dialog.modal-sm
@@ -74,4 +74,4 @@ form.form-horizontal.form-ipc-footer role='form'
       .modal-body 确定要删除该用户吗？
       .modal-footer
         button.btn.btn-default type='button' data-dismiss='modal' 取 消
-        button.btn.btn-primary type='button' ng-click='delete_user()' 确 定
+        button.btn.btn-primary type='button' ng-click='delete_user($event)' data-loading-text="删除中..." 确 定

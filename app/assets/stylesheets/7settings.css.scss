@@ -8,7 +8,7 @@
 @media screen and (min-width: 768px) {
   .sidebar-mask {
     display: block;
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     bottom: 0;
@@ -20,7 +20,9 @@
   margin-right: -15px;
   @include sidebar-control;
 }
-
+.setting-main {
+  position: relative;
+}
 .setting-content {
   *width: 77% !important;
 }
