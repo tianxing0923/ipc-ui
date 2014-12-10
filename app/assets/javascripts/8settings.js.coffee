@@ -6,7 +6,7 @@ ipcApp.controller 'SettingController', [
   '$timeout'
   '$http'
   ($scope, $timeout, $http) ->
-    $scope.type = 'base_info'
+    $scope.type = 'port'
     $scope.url = window.apiUrl
     $scope.ajax_msg = {
       type: 'success',
@@ -15,8 +15,8 @@ ipcApp.controller 'SettingController', [
     timer = null
 
     # 设置默认cookie传输
-    $http.defaults.headers.common['Set-Cookie'] = 'token=' + getCookie('token');
-    $http.defaults.headers.common['Cache-Control'] = 'no-cache';
+    # $http.defaults.headers.common['Set-Cookie'] = 'token=' + getCookie('token');
+    # $http.defaults.headers.common['Cache-Control'] = 'no-cache';
 
     $scope.changeType = (type) ->
       stopVlc()
@@ -70,6 +70,7 @@ ipcApp.controller 'BaseInfoController', [
     $http.get "#{$scope.$parent.url}/base_info.json",
       params:
         'items[]': ['device_name', 'hwaddr', 'comment', 'location', 'manufacturer', 'model', 'serial', 'firmware', 'hardware']
+        v: new Date().getTime()
     .success (data) ->
       $scope.serial = data.items.serial
       $scope.mac = data.items.hwaddr
@@ -144,6 +145,7 @@ ipcApp.controller 'UsersController', [
       $http.get "#{$scope.$parent.url}/misc.json",
         params:
           'items[]': ['rtsp_auth']
+          v: new Date().getTime()
       .success (data) ->
         $scope.rtsp_auth = data.items.rtsp_auth
       .error (response, status, headers, config) ->
@@ -153,6 +155,7 @@ ipcApp.controller 'UsersController', [
       $http.get "#{$scope.$parent.url}/users.json",
         params:
           'items[]': ['role']
+          v: new Date().getTime()
       .success (data) ->
         $scope.items = data.items
       .error (response, status, headers, config) ->
@@ -285,6 +288,7 @@ ipcApp.controller 'DateTimeController', [
     $http.get "#{$scope.$parent.url}/datetime.json",
       params:
         'items[]': ['timezone', 'use_ntp', 'ntp_server', 'datetime']
+        v: new Date().getTime()
     .success (data) ->
       $scope.timezone = data.items.timezone
       $scope.datetime_type = if data.items.use_ntp then '2' else '1'
@@ -435,7 +439,9 @@ ipcApp.controller 'MaintenanceController', [
     get_upgrade = ->
       $timeout.cancel upgrade_timeout
       upgrade_timeout = $timeout ->
-        $http.get "#{$scope.$parent.url}/upgrade.json"
+        $http.get "#{$scope.$parent.url}/upgrade.json",
+          params:
+            v: new Date().getTime()
         .success (data)->
           if data.status == 0
             $scope.step = 1
@@ -483,6 +489,7 @@ ipcApp.controller 'StreamController', [
     $http.get "#{$scope.$parent.url}/video.json",
       params:
         'items[]': ['profile', 'flip', 'mirror', 'main_profile', 'sub_profile']
+        v: new Date().getTime()
     .success (data) ->
       $scope.profile = data.items.profile
       $scope.flip = data.items.flip
@@ -560,6 +567,7 @@ ipcApp.controller 'ImageController', [
     $http.get "#{$scope.$parent.url}/image.json",
       params:
         'items[]': ['watermark','3ddnr','brightness','chrominance','contrast','saturation','scenario']
+        v: new Date().getTime()
     .success (data) ->
       $scope.watermark = data.items.watermark
       $scope.dnr = data.items['3ddnr']
@@ -648,6 +656,7 @@ ipcApp.controller 'PrivacyBlockController', [
     $http.get "#{$scope.$parent.url}/privacy_block.json",
       params:
         'items[]': ['region1','region2']
+        v: new Date().getTime()
     .success (data) ->
       $scope.region1 = data.items.region1
       $scope.region2 = data.items.region2
@@ -717,6 +726,7 @@ ipcApp.controller 'DayNightModeController', [
     $http.get "#{$scope.$parent.url}/day_night_mode.json",
       params:
         'items[]': ['night_mode_threshold', 'ir_intensity']
+        v: new Date().getTime()
     .success (data) ->
       $scope.night_mode_threshold = data.items.night_mode_threshold
       $scope.ir_intensity = data.items.ir_intensity
@@ -900,6 +910,7 @@ ipcApp.controller 'SzycController', [
     $http.get "#{$scope.$parent.url}/szyc.json",
       params:
         'items[]': ['train_num', 'carriage_num', 'position_num']
+        v: new Date().getTime()
     .success (data) ->
       $scope.train_num = data.items.train_num
       $scope.carriage_num = data.items.carriage_num
@@ -979,6 +990,7 @@ ipcApp.controller 'InterfaceController', [
     $http.get "#{$scope.$parent.url}/network.json",
       params:
         'items[]': ['method', 'address', 'pppoe', 'port']
+        v: new Date().getTime()
     .success (data) ->
       $scope.method = data.items.method
       $scope.network_username = data.items.pppoe.username
@@ -1138,6 +1150,7 @@ ipcApp.controller 'PortController', [
     $http.get "#{$scope.$parent.url}/network.json",
       params:
         'items[]': ['port']
+        v: new Date().getTime()
     .success (data) ->
       $scope.http_port = data.items.port.http
       $scope.ftp_port = data.items.port.ftp
@@ -1219,6 +1232,7 @@ ipcApp.controller 'InputController', [
     $http.get "#{$scope.$parent.url}/event_input.json",
       params:
         'items[]': ['input1']
+        v: new Date().getTime()
     .success (data) ->
       $scope.input1 = data.items.input1
       $scope.current_input = 'input1'
@@ -1244,6 +1258,7 @@ ipcApp.controller 'OutputController', [
     $http.get "#{$scope.$parent.url}/event_output.json",
       params:
         'items[]': ['output1', 'output2']
+        v: new Date().getTime()
     .success (data) ->
       # $scope.output1 = data.items.output1
       $scope.output1_normal = if data.items.output1.normal == 'open' then true else false
@@ -1324,6 +1339,7 @@ ipcApp.controller 'MotionDetectController', [
     $http.get "#{$scope.$parent.url}/event_motion.json",
       params:
         'items[]': ['region1', 'region2']
+        v: new Date().getTime()
     .success (data) ->
       $scope.region1 = data.items.region1
       $scope.region1_rect = {
@@ -1383,6 +1399,7 @@ ipcApp.controller 'VideoCoverageController', [
     $http.get "#{$scope.$parent.url}/event_cover.json",
       params:
         'items[]': ['region1', 'region2']
+        v: new Date().getTime()
     .success (data) ->
       $scope.region1 = data.items.region1
       $scope.region1_rect = {
@@ -1440,6 +1457,7 @@ ipcApp.controller 'EventProcessController', [
     $http.get "#{$scope.$parent.url}/event_proc.json",
       params:
         'items[]': ['input1', 'motion', 'cover']
+        v: new Date().getTime()
     .success (data) ->
       $scope.input1 = data.items.input1
       $scope.motion = data.items.motion

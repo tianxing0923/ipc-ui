@@ -3,9 +3,6 @@ ipcApp.controller 'SystemInfoController', [
   '$http'
   '$timeout'
   ($scope, $http, $timeout) ->
-    # 设置默认cookie传输
-    $http.defaults.headers.common['Set-Cookie'] = 'token=' + getCookie('token');
-
     $scope.cpu_usage = 0
     $scope.memory_usage = 0
     $scope.net_speed = 0
@@ -74,7 +71,9 @@ ipcApp.controller 'SystemInfoController', [
       , 5000
 
     get_system_info = ->
-      $http.get "#{window.apiUrl}/sysinfo.json"
+      $http.get "#{window.apiUrl}/sysinfo.json",
+        params: 
+          v: new Date().getTime()
       .success (data)->
         $scope.cpu = data.sysinfo.cpu
         $scope.memory = data.sysinfo.memory

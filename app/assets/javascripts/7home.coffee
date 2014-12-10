@@ -28,6 +28,7 @@ ipcApp.controller 'HomeController', [
     $http.get "#{window.apiUrl}/day_night_mode.json",
       params:
         'items[]': ['force_night_mode']
+        v: new Date().getTime()
     .success (data) ->
       $scope.light = data.items.force_night_mode
     .error (response, status, headers, config) ->
@@ -137,7 +138,9 @@ ipcApp.controller 'HomeController', [
         $scope.ptz_position = 'left'
 
     $scope.show_device_operation_infos = ->
-      $http.get "#{window.apiUrl}/events"
+      $http.get "#{window.apiUrl}/events",
+        params:
+          v: new Date().getTime()
       .success (data) ->
         $('#device_operation_infos').modal()
         return
@@ -170,6 +173,7 @@ ipcApp.controller 'HomeController', [
       $http.get "#{window.apiUrl}/video.json",
         params:
           'items[]': [$scope.current_stream]
+          v: new Date().getTime()
       .success (data) ->
         $scope.current_size = resolution_mapping[data.items[$scope.current_stream].resolution]
         resizeVideo()

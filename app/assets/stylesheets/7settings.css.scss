@@ -1,20 +1,23 @@
 @import "variables";
 
-.sidebar-mask {
-  display: none;
-}
-
 // 左侧导航
-@media screen and (min-width: 768px) {
-  .sidebar-mask {
+.sidebar-mask {
+  width: 167px;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: $sidebar-bg;
+
+  @media (min-width: 1000px) {
+    width: 16.6666666667%;
+  }
+  @media (min-width: 768px) {
     display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    background: $sidebar-bg;
   }
 }
+
 .sidebar {
   margin-left: -15px;
   margin-right: -15px;

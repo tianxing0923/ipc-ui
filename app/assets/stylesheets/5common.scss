@@ -89,8 +89,11 @@
   height: 16px;
 }
 
-body {
-  min-width: 1024px;
+html, body {
+  height: 100%;
+}
+html, body {
+  min-width: 1000px;
 }
 
 // 顶部导航

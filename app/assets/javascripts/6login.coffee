@@ -11,6 +11,8 @@ ipcApp.controller 'loginController', [
     $scope.password_msg = ''
     $scope.login_fail_msg = ''
 
+    $('#user_name').focus()
+
     valid = {
       username: (value) ->
         if value
@@ -41,7 +43,10 @@ ipcApp.controller 'loginController', [
 
     $scope.user_keydown = (e) ->
       if e.which == 13
-        $scope.login()
+        obj = {
+          target: $('#btn_login')[0]
+        }
+        $scope.login(obj)
 
     $scope.login = (e)->
       if !valid.username($scope.username) || !valid.password($scope.password)

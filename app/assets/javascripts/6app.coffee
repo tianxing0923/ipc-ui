@@ -1,5 +1,5 @@
-window.uploadUrl = 'http://192.168.1.217'
-window.apiUrl = 'http://192.168.1.217/api/1.0'
+window.uploadUrl = 'http://192.168.1.208'
+window.apiUrl = 'http://192.168.1.208/api/1.0'
 
 window.getVlc = ->
   vlc = null
@@ -95,18 +95,28 @@ if location.href.indexOf('login') == -1
   else
     location.href = '/login'
 
+$(->
+  $(document).scroll((e)->
+    left = $(this).scrollLeft()
+    $('.sidebar-mask').css('left', '-' + left + 'px')
+    return
+  )
+)
 
 window.ipcApp = angular.module('ipcApp', [])
-ipcApp.config(['$sceProvider', ($sceProvider) ->
-  $sceProvider.enabled(false)
+ipcApp.config([
+  '$sceProvider'
+  '$httpProvider'
+  ($sceProvider, $httpProvider) ->
+    $sceProvider.enabled(false)
+    # 设置默认cookie传输
+    $httpProvider.defaults.headers.common['Set-Cookie'] = 'token=' + getCookie('token')
 ])
 
 ipcApp.controller 'navbarController', [
   '$scope'
   '$http'
   ($scope, $http) ->
-    # 设置默认cookie传输
-    $http.defaults.headers.common['Set-Cookie'] = 'token=' + getCookie('token');
     roleObj = {
       administrator: '管理员',
       operator: '操作员',
