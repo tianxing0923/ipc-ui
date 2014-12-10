@@ -145,7 +145,7 @@ ipcApp.controller 'UsersController', [
       .success (data) ->
         $scope.rtsp_auth = data.items.rtsp_auth
       .error (response, status, headers, config) ->
-        $scope.$parent.error(response, status, headers, config)
+        $scope.$parent.get_error(response, status, headers, config)
 
     get_user_list = ->
       $http.get "#{$scope.$parent.url}/users.json",
@@ -155,7 +155,7 @@ ipcApp.controller 'UsersController', [
       .success (data) ->
         $scope.items = data.items
       .error (response, status, headers, config) ->
-        $scope.$parent.error(response, status, headers, config)
+        $scope.$parent.get_error(response, status, headers, config)
 
     get_video_access_authentication()
     get_user_list()
@@ -294,7 +294,7 @@ ipcApp.controller 'DateTimeController', [
 
       add_watch()
     .error (response, status, headers, config) ->
-      $scope.$parent.error(response, status, headers, config)
+      $scope.$parent.get_error(response, status, headers, config)
 
     $scope.datetime_msg = ''
     $scope.ntp_server_msg = ''
@@ -495,7 +495,7 @@ ipcApp.controller 'StreamController', [
 
       add_watch()
     .error (response, status, headers, config) ->
-      $scope.$parent.error(response, status, headers, config)
+      $scope.$parent.get_error(response, status, headers, config)
 
     $scope.valid_msg = ''
 
@@ -580,7 +580,7 @@ ipcApp.controller 'ImageController', [
 
       add_watch()
     .error (response, status, headers, config) ->
-      $scope.$parent.error(response, status, headers, config)
+      $scope.$parent.get_error(response, status, headers, config)
 
     playVlc()
 
@@ -672,7 +672,7 @@ ipcApp.controller 'PrivacyBlockController', [
 
       add_watch()
     .error (response, status, headers, config) ->
-      $scope.$parent.error(response, status, headers, config)
+      $scope.$parent.get_error(response, status, headers, config)
 
     playVlc()
 
@@ -729,7 +729,7 @@ ipcApp.controller 'DayNightModeController', [
       $('#night_mode_threshold_slider').val($scope.night_mode_threshold)
       $('#ir_intensity_slider').val($scope.ir_intensity)
     .error (response, status, headers, config) ->
-      $scope.$parent.error(response, status, headers, config)
+      $scope.$parent.get_error(response, status, headers, config)
 
     $scope.save = (e) ->
       $btn = $(e.target)
@@ -914,7 +914,7 @@ ipcApp.controller 'SzycController', [
 
       add_watch()
     .error (response, status, headers, config) ->
-      $scope.$parent.error(response, status, headers, config)
+      $scope.$parent.get_error(response, status, headers, config)
 
     $scope.train_num_msg = ''
     $scope.carriage_num_msg = ''
@@ -1000,7 +1000,7 @@ ipcApp.controller 'InterfaceController', [
 
       add_watch()
     .error (response, status, headers, config) ->
-      $scope.$parent.error(response, status, headers, config)
+      $scope.$parent.get_error(response, status, headers, config)
 
     $scope.network_username_msg = ''
     $scope.network_password_msg = ''
@@ -1153,7 +1153,7 @@ ipcApp.controller 'PortController', [
       $scope.rtsp_port = data.items.port.rtsp
       add_watch()
     .error (response, status, headers, config) ->
-      $scope.$parent.error(response, status, headers, config)
+      $scope.$parent.get_error(response, status, headers, config)
 
     $scope.http_port_msg = ''
     $scope.ftp_port_msg = ''
@@ -1234,7 +1234,7 @@ ipcApp.controller 'InputController', [
       $scope.current_input = 'input1'
       $('#input1_schedules').timegantt('setSelected', $scope.input1.schedules)
     .error (response, status, headers, config) ->
-      $scope.$parent.error(response, status, headers, config)
+      $scope.$parent.get_error(response, status, headers, config)
 
     $scope.save = (e) ->
       $btn = $(e.target)
@@ -1265,7 +1265,7 @@ ipcApp.controller 'OutputController', [
       # $scope.output2_period = 2000
       add_watch()
     .error (response, status, headers, config) ->
-      $scope.$parent.error(response, status, headers, config)
+      $scope.$parent.get_error(response, status, headers, config)
 
     $scope.output1_period_msg = ''
     # $scope.output2_period_msg = ''
@@ -1357,7 +1357,7 @@ ipcApp.controller 'MotionDetectController', [
       $('#region1_schedules').timegantt('setSelected', $scope.region1.schedules)
       $('#region2_schedules').timegantt('setSelected', $scope.region2.schedules)
     .error (response, status, headers, config) ->
-      $scope.$parent.error(response, status, headers, config)
+      $scope.$parent.get_error(response, status, headers, config)
 
     $scope.save = (e) ->
       $scope.region1.rect = {
@@ -1417,7 +1417,7 @@ ipcApp.controller 'VideoCoverageController', [
       $('#region1_schedules').timegantt('setSelected', $scope.region1.schedules)
       $('#region2_schedules').timegantt('setSelected', $scope.region2.schedules)
     .error (response, status, headers, config) ->
-      $scope.$parent.error(response, status, headers, config)
+      $scope.$parent.get_error(response, status, headers, config)
 
     $scope.save = (e) ->
       $scope.region1.rect = {
@@ -1459,7 +1459,7 @@ ipcApp.controller 'EventProcessController', [
       $scope.motion = data.items.motion
       $scope.cover = data.items.cover
     .error (response, status, headers, config) ->
-      $scope.$parent.error(response, status, headers, config)
+      $scope.$parent.get_error(response, status, headers, config)
 
     $scope.save = (e) ->
       $btn = $(e.target)
