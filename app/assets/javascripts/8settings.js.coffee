@@ -14,10 +14,6 @@ ipcApp.controller 'SettingController', [
     }
     timer = null
 
-    # 设置默认cookie传输
-    # $http.defaults.headers.common['Set-Cookie'] = 'token=' + getCookie('token');
-    # $http.defaults.headers.common['Cache-Control'] = 'no-cache';
-
     $scope.changeType = (type) ->
       stopVlc()
       $('#vlc').remove()
