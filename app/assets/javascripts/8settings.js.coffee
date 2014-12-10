@@ -6,7 +6,7 @@ ipcApp.controller 'SettingController', [
   '$timeout'
   '$http'
   ($scope, $timeout, $http) ->
-    $scope.type = 'port'
+    $scope.type = 'base_info'
     $scope.url = window.apiUrl
     $scope.ajax_msg = {
       type: 'success',
@@ -263,7 +263,7 @@ ipcApp.controller 'UsersController', [
             $('#confirm_modal').modal('hide')
             $scope.$parent.show_msg('alert-danger', '删除失败')
       })
-    $scope.save = ->
+    $scope.save = (e) ->
       $btn = $(e.target)
       $btn.button('loading')
       $http.put "#{$scope.$parent.url}/misc.json",
@@ -325,7 +325,7 @@ ipcApp.controller 'DateTimeController', [
           valid('ntp_server_msg', newValue, 'NTP服务器')
       )
 
-    $scope.save = ->
+    $scope.save = (e) ->
       if $scope.datetime_msg || $scope.ntp_server_msg
         return
       use_ntp = if $scope.datetime_type == '1' then false else true
