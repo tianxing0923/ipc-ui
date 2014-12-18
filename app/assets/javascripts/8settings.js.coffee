@@ -489,7 +489,7 @@ ipcApp.controller 'StreamController', [
     .success (data) ->
       $scope.profile = data.items.profile
       $scope.flip = data.items.flip
-      $scope.mirrow = data.items.mirror
+      $scope.mirror = data.items.mirror
       $scope.main_profile = data.items.main_profile
       $scope.sub_profile = data.items.sub_profile
 
