@@ -1,5 +1,10 @@
+<% if Rails.env.development? %>
 window.uploadUrl = 'http://192.168.1.208'
 window.apiUrl = 'http://192.168.1.208/api/1.0'
+<% else %>
+window.uploadUrl = 'http://127.0.0.1'
+window.apiUrl = 'http://127.0.0.1/api/1.0'
+<% end %>
 
 window.getVlc = ->
   vlc = null
