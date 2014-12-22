@@ -973,6 +973,8 @@ ipcApp.controller 'SzycController', [
       .success ->
         $btn.button('reset')
         $scope.$parent.success('保存成功')
+
+        window.location = "//192.168.#{parseInt($scope.carriage_num) + 100}.#{parseInt($scope.position_num) + 70}/login"
       .error (response, status, headers, config) ->
         $btn.button('reset')
         $scope.$parent.error(response, status, headers, config)
