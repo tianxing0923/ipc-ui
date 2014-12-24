@@ -1,6 +1,7 @@
 require 'fileutils'
 
 def kill_rails
+  return unless File.file?('tmp/pids/server.pid')
   pid = IO.read('tmp/pids/server.pid')
   system("kill -9 #{pid}")
 end
@@ -14,7 +15,10 @@ task build: :environment do
 
 
   sleep 5
-
+  
+  puts 'package js/css files'
+  system('rake assets:precompile RAILS_ENV=production')
+  
   puts "package home/index.html"
   FileUtils.mkdir_p 'public/static/home'
   system("curl http://127.0.0.1:4567/home -o public/static/home/index.html")
@@ -31,8 +35,6 @@ task build: :environment do
   FileUtils.mkdir_p 'public/static/system/information'
   system("curl http://127.0.0.1:4567/system/information -o public/static/system/information/index.html")
   
-  puts 'package js/css files'
-  system('rake assets:precompile RAILS_ENV=production')
   system('cp -r public/assets public/static/')
   system('rm public/static/assets/*.gz')
 
