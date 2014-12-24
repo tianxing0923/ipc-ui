@@ -40,7 +40,7 @@ gem 'spring',        group: :development
 
 gem 'bootstrap-sass', '3.1.1.1'
 gem 'font_assets'
-gem 'angularjs-rails'
+gem 'angularjs-rails', '1.2.25'
 gem 'slim'
 gem 'slim-rails'
 gem 'momentjs-rails', '~> 2.5.0'
