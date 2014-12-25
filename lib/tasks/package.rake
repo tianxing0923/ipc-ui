@@ -11,13 +11,13 @@ desc "build app"
 task build: :environment do
   kill_rails
   system('rm -rf public/static/')
-  system('rails s -e production -p 4567 -d')
 
-
-  sleep 5
-  
   puts 'package js/css files'
   system('rake assets:precompile RAILS_ENV=production')
+  
+  system('rails s -e production -p 4567 -d')
+
+  sleep 5
   
   puts "package home/index.html"
   FileUtils.mkdir_p 'public/static/home'
