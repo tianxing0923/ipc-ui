@@ -69,4 +69,10 @@ ipcApp.controller 'loginController', [
           , 200)
         else
           $scope.login_fail_msg = '用户名或密码错误'
+      .error (response, status, headers, config) ->
+        $btn.button('reset')
+        delCookie('username')
+        delCookie('userrole')
+        delCookie('token')
+        $scope.login_fail_msg = '登录失败，请重试'
 ]
