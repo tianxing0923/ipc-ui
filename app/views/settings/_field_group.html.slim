@@ -2,7 +2,7 @@
 - min = if defined?(min) then min else '' end
 - max = if defined?(max) then max else '' end
 
-.form-group
+.form-group ng-class="#{id}_msg != '' ? 'has-error' : ''"
   label.col-sm-3.control-label for=id = label_text
   .col-sm-5
     .input-group

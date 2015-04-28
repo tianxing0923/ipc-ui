@@ -905,11 +905,10 @@ ipcApp.controller 'SzycController', [
   ($scope, $http) ->
     $http.get "#{$scope.$parent.url}/szyc.json",
       params:
-        'items[]': ['train_num', 'carriage_num', 'position_num']
+        'items[]': ['train_num', 'position_num']
         v: new Date().getTime()
     .success (data) ->
       $scope.train_num = data.items.train_num
-      $scope.carriage_num = data.items.carriage_num
       $scope.position_num = data.items.position_num
 
       add_watch()
@@ -917,27 +916,18 @@ ipcApp.controller 'SzycController', [
       $scope.$parent.get_error(response, status, headers, config)
 
     $scope.train_num_msg = ''
-    $scope.carriage_num_msg = ''
     $scope.position_num_msg = ''
 
-    train_num_reg = /^[A-Za-z0-9]{0,7}$/
-    carriage_num_reg = /^[0-9]{1,2}$/
+    train_num_reg = /^[0-9]{6}$/
     position_num_reg = /^[1-8]{1}$/
 
     valid = {
       train_num: (value) ->
         if !train_num_reg.test(value)
-          $scope.train_num_msg = '请输入正确的车次号'
+          $scope.train_num_msg = '请输入正确的车体号'
           return false
         else
           $scope.train_num_msg = ''
-          return true
-      carriage_num: (value) ->
-        if !carriage_num_reg.test(value) || parseInt(value, 10) < 1 || parseInt(value, 10) > 32
-          $scope.carriage_num_msg = '请输入正确的车厢号'
-          return false
-        else
-          $scope.carriage_num_msg = ''
           return true
       position_num: (value) ->
         if !position_num_reg.test(value)
@@ -952,23 +942,18 @@ ipcApp.controller 'SzycController', [
       $scope.$watch('train_num', (newValue) ->
         valid.train_num(newValue)
       )
-      $scope.$watch('carriage_num', (newValue) ->
-        valid.carriage_num(newValue)
-      )
       $scope.$watch('position_num', (newValue) ->
         valid.position_num(newValue)
       )
 
     $scope.save = (e) ->
-      if !valid.train_num($scope.train_num) || !valid.carriage_num($scope.carriage_num) ||
-      !valid.position_num($scope.position_num)
+      if !valid.train_num($scope.train_num) || !valid.position_num($scope.position_num)
         return
       $btn = $(e.target)
       $btn.button('loading')
       $http.put "#{$scope.$parent.url}/szyc.json",
         items:
           train_num: $scope.train_num
-          carriage_num: $scope.carriage_num
           position_num: $scope.position_num
       .success ->
         $btn.button('reset')
@@ -1041,7 +1026,15 @@ ipcApp.controller 'InterfaceController', [
           $scope.network_password_msg = ''
           return true
       network_address: (value) ->
-        this.common_required('network_address_msg', value, 'IP地址')
+        value = value || ''
+        addrArr = value.split('.')
+        last = addrArr[addrArr.length - 1]
+        if !ip_reg.test(value) || (parseInt(last, 10) < 71 || (parseInt(last, 10) > 78)
+          $scope.network_address_msg = '请输入正确的IP地址'
+          return false
+        else
+          $scope.network_address_msg = ''
+          return true
       network_netmask: (value) ->
         this.common_required('network_netmask_msg', value, '子网掩码')
       network_gateway: (value) ->
