@@ -1,28 +1,8 @@
-== README
+== 打包流程
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+1. 安装ruby，具体根据不同平台用不同的安装方法，也可以使用rvm安装，版本2.1.x即可。
+2. 执行命令 gem install bunlder
+3. 执行命令 bundle install
+4. 执行命令 rake build
+5. 等待打包完成，打包好的程序放在 /public/static 目录下.
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.

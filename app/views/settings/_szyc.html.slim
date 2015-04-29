@@ -6,6 +6,11 @@ h3
 form.form-horizontal.form-ipc.clearfix role='form'
   = render 'field', id: 'train_num', label_text: '车体号'
   = render 'field_group', id: 'position_num', label_text: '位置', addon_text: '1 - 8'
+  .row
+    .col-md-offset-3.col-sm-3
+      .text-danger
+        | 修改车厢号和位置,设备地址会发生变化.
+
 
 form.form-horizontal.form-ipc-footer role='form'
   = render 'save_button'
