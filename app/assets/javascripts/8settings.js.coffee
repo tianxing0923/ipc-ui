@@ -1028,15 +1028,7 @@ ipcApp.controller 'InterfaceController', [
           $scope.network_password_msg = ''
           return true
       network_address: (value) ->
-        value = value || ''
-        addrArr = value.split('.')
-        last = addrArr[addrArr.length - 1]
-        if !ip_reg.test(value) || (parseInt(last, 10) < 71 || (parseInt(last, 10) > 78)
-          $scope.network_address_msg = '请输入正确的IP地址'
-          return false
-        else
-          $scope.network_address_msg = ''
-          return true
+        this.common_required('network_address_msg', value, 'IP地址')
       network_netmask: (value) ->
         this.common_required('network_netmask_msg', value, '子网掩码')
       network_gateway: (value) ->
