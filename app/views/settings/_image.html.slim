@@ -15,35 +15,35 @@ form.form-horizontal.form-ipc.clearfix role='form'
   .form-group
     label.col-sm-3.control-label 亮度
     .col-sm-5
-      #brightness_slider ng-slider='' ng-model='brightness' min='0' max='100'
+      #brightness_slider ng-slider='' ng-model='brightness' min='0' max='255'
     .col-sm-4
       p.form-control-static
         span ng-bind='brightness'
-        | &nbsp;(0 - 100)
+        | &nbsp;(0 - 255)
   .form-group
     label.col-sm-3.control-label 色度
     .col-sm-5
-      #chrominance_slider ng-slider='' ng-model='chrominance' min='0' max='100'
+      #chrominance_slider ng-slider='' ng-model='chrominance' min='0' max='255'
     .col-sm-4
       p.form-control-static
         span ng-bind='chrominance'
-        | &nbsp;(0 - 100)
+        | &nbsp;(0 - 255)
   .form-group
     label.col-sm-3.control-label 对比度
     .col-sm-5
-      #contrast_slider ng-slider='' ng-model='contrast' min='0' max='100'
+      #contrast_slider ng-slider='' ng-model='contrast' min='0' max='255'
     .col-sm-4
       p.form-control-static
         span ng-bind='contrast'
-        | &nbsp;(0 - 100)
+        | &nbsp;(0 - 255)
   .form-group
     label.col-sm-3.control-label 饱和度
     .col-sm-5
-      #saturation_slider ng-slider='' ng-model='saturation' min='0' max='100'
+      #saturation_slider ng-slider='' ng-model='saturation' min='0' max='255'
     .col-sm-4
       p.form-control-static
         span ng-bind='saturation'
-        | &nbsp;(0 - 100)
+        | &nbsp;(0 - 255)
   hr
   .form-group
     label.col-sm-3.control-label 场景
