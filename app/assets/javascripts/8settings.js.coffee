@@ -288,7 +288,7 @@ ipcApp.controller 'DateTimeController', [
     .success (data) ->
       $scope.timezone = data.items.timezone
       $scope.datetime_type = if data.items.use_ntp then '2' else '1'
-      $scope.datetime = data.items.datetime
+      $scope.datetime = new Date(data.items.datetime).format('yyyy-MM-dd hh:mm:ss')
       $scope.ntp_server = data.items.ntp_server
       $('[name=datetime_type][value=' + $scope.datetime_type + ']').iCheck('check')
 
@@ -336,7 +336,7 @@ ipcApp.controller 'DateTimeController', [
       if use_ntp
         postData.ntp_server = $scope.ntp_server
       else
-        postData.datetime = $scope.datetime
+        postData.datetime = new Date($scope.datetime).toUTCString()
       $btn = $(e.target)
       $btn.button('loading')
       $http.put "#{$scope.$parent.url}/datetime.json",

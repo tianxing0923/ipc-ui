@@ -100,6 +100,24 @@ if location.href.indexOf('login') == -1
   else
     location.href = '/login'
 
+Date.prototype.format = (fmt) ->
+  o = {
+    "M+": this.getMonth() + 1,
+    "d+": this.getDate(),
+    "h+": this.getHours(),
+    "m+": this.getMinutes(),
+    "s+": this.getSeconds(),
+    "q+": Math.floor((this.getMonth() + 3) / 3),
+    "S": this.getMilliseconds()
+  }
+  if (/(y+)/.test(fmt))
+    fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length))
+  for k, m of o
+    if (new RegExp("(" + k + ")").test(fmt))
+      n = if RegExp.$1.length == 1 then m else ("00" + o[k]).substr(("" + m).length)
+      fmt = fmt.replace(RegExp.$1, n);
+  fmt;
+
 $(->
   $(document).scroll((e)->
     left = $(this).scrollLeft()
