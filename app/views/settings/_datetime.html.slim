@@ -7,7 +7,7 @@ form.form-horizontal.form-ipc role='form'
   .form-group
     label.col-sm-3.control-label for='timezone' 时区
     .col-sm-5
-      = select_tag 'timezone', options_for_select(ActiveSupport::TimeZone.all.map{|tz| [tz.to_s, tz.to_s]}), class: 'form-control', 'ng-model' => 'timezone'
+      select.form-control ng-model="timezone" ng-options="item.value as item.text for item in timezone_list"
   br
   .row
     .col-sm-offset-2
