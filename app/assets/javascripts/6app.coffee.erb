@@ -100,34 +100,6 @@ if location.href.indexOf('login') == -1
   else
     location.href = '/login'
 
-window.dateFormat = (str, format) ->
-  if !str
-    return ''
-  if Object.prototype.toString.call(str) == '[object Date]'
-    d = str
-  else if str.indexOf('/Date(') != -1
-    d = new Date(parseInt(str.replace('/Date(', '').replace(')/', ''), 10));
-  else
-    d = new Date(str)
-  if d.toString() == 'Invalid Date'
-    return ''
-  o = {
-    'M+': d.getMonth() + 1,
-    'd+': d.getDate(),
-    'h+': d.getHours(),
-    'm+': d.getMinutes(),
-    's+': d.getSeconds(),
-    'q+': Math.floor((d.getMonth() + 3) / 3),
-    'S': d.getMilliseconds()
-  }
-  if (/(y+)/.test(format))
-    format = format.replace(RegExp.$1, (d.getFullYear() + '').substr(4 - RegExp.$1.length));
-  for k of o
-    if (new RegExp('(' + k + ')').test(format))
-      n = if RegExp.$1.length == 1 then o[k] else ('00' + o[k]).substr(('' + o[k]).length)
-      format = format.replace(RegExp.$1, n)
-  format
-
 $(->
   $(document).scroll((e)->
     left = $(this).scrollLeft()
